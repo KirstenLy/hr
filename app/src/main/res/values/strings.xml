@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Meteor Job</string>
+    <string name="close_app">Close app</string>
+    <string name="dev_message">Created by Kirsten, 2018</string>
+
+    <!-- Main menu -->
+    <string name="main_menu_title">Технологичные решения</string>
+    <string name="main_menu_text_one">Проектирование, разработка, развитие. Работаем как аутсорс-продакшн.</string>
+    <string name="main_menu_text_two">Обеспечиваем прозрачность и находим оптимальное решение задач.</string>
+    <string name="logo_text">Работа в digital-агентстве \"Метеор\"</string>
+
+    <!-- Left side navigation -->
+    <string name="nav_menu_services">Услуги</string>
+    <string name="nav_menu_reviews">Отзывы</string>
+    <string name="nav_menu_blog">Блог</string>
+    <string name="nav_menu_contacts">Контакты</string>
+
+    <string name="loading">Загрузка…</string>
+    <string name="ok">OK</string>
+    <string name="menu">Меню</string>
+
+    <!-- Contacts -->
+    <string name="contacts">Контакты</string>
+    <string name="text_contacts_phone">Телефон: </string>
+    <string name="contacts_address">Адрес: </string>
+    <string name="contacts_email">E - mail: </string>
+    <string name="contacts_address_formatter"> %1$s, г. %2$s, ул. %3$s, %4$s, офис %5$s (%6$s)</string>
+    <string name="title_activity_service">ServiceActivity</string>
+
+    <!-- Blog -->
+    <string name="blog_date_formatter">Дата публикации: %1$s</string>
+    <string name="blog_author_formatter">Автор: %1$s</string>
+    <string name="blog_empty_content">Пусто</string>
+
+    <!-- Errors -->
+    <string name="error_retrofit_connection">Нет ответа от сервера</string>
+    <string name="error_internet_connection">Нет соединения с сетью</string>
+    <string name="error_email_application">Не обнаружен почтовый клиент</string>
+    <string name="error_blog_tags_loading">Теги не загружены</string>
+    <string name="error_reviews_loading">Отзывы не загружены</string>
+
+    <!-- Push -->
+    <string name="push_title_default">Новое уведомление</string>
+    <string name="push_text_default">Новый пост</string>
+    
+    <!-- ActionBar -->
+    <string name="actionbar_title">Выберите специальность</string>
+
+    <!-- Professions -->
+    <string name="profession_dev">Разработчик</string>
+    <string name="profession_manager">Менеджер</string>
+
+</resources>

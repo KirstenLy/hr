@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_large">25dp</dimen>
+    <dimen name="margin_default">15dp</dimen>
+    <dimen name="margin_medium">10dp</dimen>
+    <dimen name="margin_small">5dp</dimen>
+
+    <dimen name="padding_default">15dp</dimen>
+    <dimen name="padding_medium">10dp</dimen>
+    <dimen name="padding_small">5dp</dimen>
+
+    <dimen name="text_size_big">25sp</dimen>
+    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_default">15sp</dimen>
+
+    <dimen name="dp_small">5dp</dimen>
+    <dimen name="dp_medium">10dp</dimen>
+    <dimen name="dp_default">15dp</dimen>
+    <dimen name="dp_large">15dp</dimen>
+
+    <dimen name="image_size_small">32dp</dimen>
+    <dimen name="image_size_medium">64dp</dimen>
+    <dimen name="image_size_average">96dp</dimen>
+    <dimen name="image_size_default">128dp</dimen>
+    <dimen name="image_size_large">160dp</dimen>
+    <dimen name="image_size_big">192dp</dimen>
+
+    <!-- Windows -->
+    <dimen name="popup_width">270dp</dimen>
+    <dimen name="alert_window_default_width">200dp</dimen>
+
+    <!-- Buttons/TextViews -->
+    <dimen name="button_min_height">40dp</dimen>
+    <dimen name="tag_default_width">120dp</dimen>
+    <dimen name="text_contacts_width">90dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="bottom_line_size_default">2dp</dimen>
+
+    <!-- Images -->
+    <dimen name="image_service_height">102dp</dimen>
+
+</resources>
