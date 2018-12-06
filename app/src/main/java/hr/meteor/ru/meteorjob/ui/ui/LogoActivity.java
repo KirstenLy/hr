@@ -1,4 +1,4 @@
-package hr.meteor.ru.meteorjob.ui;
+package hr.meteor.ru.meteorjob.ui.ui;
 
 import android.content.Intent;
 import android.os.Handler;

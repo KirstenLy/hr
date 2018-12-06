@@ -42,7 +42,7 @@
     <!-- Push -->
     <string name="push_title_default">Новое уведомление</string>
     <string name="push_text_default">Новый пост</string>
-    
+
     <!-- ActionBar -->
     <string name="actionbar_title">Выберите специальность</string>
 
@@ -50,4 +50,21 @@
     <string name="profession_dev">Разработчик</string>
     <string name="profession_manager">Менеджер</string>
 
+    <!-- Developer Strings Start-->
+    <!-- Languages -->
+    <string name="developer_language_web_1">PHP</string>
+    <string name="developer_language_web_2">Java</string>
+    <string name="developer_language_web_3">Ruby</string>
+    <string name="developer_language_web_4">Python</string>
+    <string name="developer_language_web_5">Javascript</string>
+    <string name="developer_language_web_6">HTML</string>
+    <string name="developer_language_web_7">CSS</string>
+    <!-- SQL -->
+    <string name="developer_language_sql_1">MySQL</string>
+    <string name="developer_language_sql_2">PostgreSQL</string>
+    <string name="developer_language_sql_3">MSSQL</string>
+    <string name="developer_language_sql_4">MariaDB</string>
+    <string name="developer_language_sql_5">MongoDB</string>
+    <string name="developer_language_sql_6">Redis</string>
+    <!-- Developer Strings End-->
 </resources>

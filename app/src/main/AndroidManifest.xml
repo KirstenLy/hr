@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.LogoActivity">
+        <activity android:name=".ui.ui.LogoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,10 +20,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.AbstractActivity"></activity>
+        <activity android:name=".ui.ui.AbstractActivity" />
+        <activity android:name=".ui.ui.ManagerProfessionActivity" />
+        <activity android:name=".ui.ui.DeveloperProfessionActivity"></activity>
     </application>
 
 </manifest>

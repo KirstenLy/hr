@@ -1,4 +1,4 @@
-package hr.meteor.ru.meteorjob.ui;
+package hr.meteor.ru.meteorjob.ui.ui;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
