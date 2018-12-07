@@ -5,21 +5,19 @@
 
     <ImageView
         android:id="@+id/img_profession_cell"
-        android:layout_width="@dimen/image_size_default"
-        android:layout_height="@dimen/image_size_default"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/margin_default" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/logo" />
 
     <TextView
         android:id="@+id/text_professional_cell_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/img_profession_cell"
-        android:layout_toRightOf="@+id/img_profession_cell"
+        android:layout_alignBottom="@+id/img_profession_cell"
+        android:layout_centerHorizontal="true"
         android:fontFamily="sans-serif"
-        android:paddingLeft="@dimen/padding_default"
+        android:paddingBottom="@dimen/padding_large"
         android:text="@string/logo_text"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/text_size_large"

@@ -5,6 +5,7 @@
     <dimen name="margin_medium">10dp</dimen>
     <dimen name="margin_small">5dp</dimen>
 
+    <dimen name="padding_large">20dp</dimen>
     <dimen name="padding_default">15dp</dimen>
     <dimen name="padding_medium">10dp</dimen>
     <dimen name="padding_small">5dp</dimen>
@@ -17,7 +18,7 @@
     <dimen name="dp_small">5dp</dimen>
     <dimen name="dp_medium">10dp</dimen>
     <dimen name="dp_default">15dp</dimen>
-    <dimen name="dp_large">15dp</dimen>
+    <dimen name="dp_large">20dp</dimen>
 
     <dimen name="image_size_small">32dp</dimen>
     <dimen name="image_size_medium">64dp</dimen>

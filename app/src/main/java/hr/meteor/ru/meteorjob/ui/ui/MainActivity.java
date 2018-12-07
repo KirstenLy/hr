@@ -24,7 +24,7 @@ public class MainActivity extends AbstractActivity {
         createToolbar(R.id.actionbar_main, 0, R.string.actionbar_title, false);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_main);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         ArrayList<Profession> professionList = new ArrayList<>();
