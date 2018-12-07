@@ -10,13 +10,7 @@
     <string name="logo_text">Работа в digital-агентстве \"Метеор\"</string>
 
     <!-- Left side navigation -->
-    <string name="nav_menu_services">Услуги</string>
-    <string name="nav_menu_reviews">Отзывы</string>
-    <string name="nav_menu_blog">Блог</string>
-    <string name="nav_menu_contacts">Контакты</string>
 
-    <string name="loading">Загрузка…</string>
-    <string name="ok">OK</string>
     <string name="menu">Меню</string>
 
     <!-- Contacts -->
@@ -38,6 +32,7 @@
     <string name="error_email_application">Не обнаружен почтовый клиент</string>
     <string name="error_blog_tags_loading">Теги не загружены</string>
     <string name="error_reviews_loading">Отзывы не загружены</string>
+    <string name="error_loading_file_resume">Ошибка, резюме не загружено</string>
 
     <!-- Push -->
     <string name="push_title_default">Новое уведомление</string>
@@ -97,5 +92,30 @@
     <string name="developer_technology_mobile_8">Ionic</string>
     <string name="developer_technology_mobile_9">Framework 7</string>
     <!-- Developer Strings End-->
+
+    <!-- Manager Strings -->
+    <string name="manager_question_skill">Есть ли у Вас опыт работы?</string>
+    <string name="manager_question_skill_answer_yes">Да, у меня есть опыт работы</string>
+    <string name="manager_question_skill_answer_no">Нет (хочу на стажировку)</string>
+    <string name="manager_sent_name">Имя:</string>
+    <string name="manager_sent_phone">Телефон:</string>
+    <string name="manager_sent_mail">Email:</string>
+    <string name="manager_sent_question">Почему Вы хотите работать менеджером проектов?</string>
+    <string name="manager_sent_comment">Комментарий:</string>
+    <string name="manager_sent_put_resume"><u>Приложить</u></string>
+    <string name="manager_hint_name">Ваше имя</string>
+    <string name="manager_hint_phone">Ваш телефон</string>
+    <string name="manager_hint_mail">Ваш email</string>
+
+
+    <!-- Profession Strings -->
+    <string name="profession_take_resume">Приложить резюме:</string>
+    <string name="profession_take_quest">Приложить пример кода или выполненное тестовое задание:</string>
+
+    <!-- Default Strings -->
+    <string name="default_yes">Да</string>
+    <string name="default_no">Нет</string>
+    <string name="default_loading">Загрузка…</string>
+    <string name="default_ok">Oк</string>
 
 </resources>

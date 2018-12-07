@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="margin_large">25dp</dimen>
+    <dimen name="margin_big">25dp</dimen>
+    <dimen name="margin_large">20dp</dimen>
     <dimen name="margin_default">15dp</dimen>
     <dimen name="margin_medium">10dp</dimen>
     <dimen name="margin_small">5dp</dimen>
@@ -37,6 +38,7 @@
     <dimen name="text_contacts_width">90dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="bottom_line_size_default">2dp</dimen>
+    <dimen name="padding_profession_title">7dp</dimen>
 
     <!-- Images -->
     <dimen name="image_service_height">102dp</dimen>

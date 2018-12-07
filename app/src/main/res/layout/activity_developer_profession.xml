@@ -10,297 +10,364 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="@dimen/padding_small">
+            android:padding="@dimen/padding_default">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:text="@string/developer_language_web_title"
-                android:textColor="@color/colorBlack" />
+                android:textSize="@dimen/text_size_default" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_profession_title"
+                android:paddingTop="@dimen/padding_default"
                 android:text="@string/developer_technology_languages_title" />
 
-            <LinearLayout
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <!-- Technologies Recycles -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_profession_developer_languages"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:paddingTop="@dimen/padding_small">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            </android.support.v7.widget.RecyclerView>
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_languages_1" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_languages_2" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_languages_3" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_languages_4" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_languages_5" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_languages_6" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_languages_7" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- /Web languages layout -->
-            <!-- Databases layout-->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_small"
+                android:paddingTop="@dimen/padding_profession_title"
                 android:text="@string/developer_technology_sql_title" />
 
-            <LinearLayout
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_profession_developer_database"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:paddingTop="@dimen/padding_small">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            </android.support.v7.widget.RecyclerView>
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_sql_1" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_sql_2" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_sql_3" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_sql_4" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_sql_5" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_sql_6" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- /Databases layout-->
-            <!-- Frameworks layout -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_profession_title"
+                android:paddingTop="@dimen/padding_default"
                 android:text="@string/developer_technology_framework_title" />
 
-            <LinearLayout
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_profession_developer_frameworks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:paddingTop="@dimen/padding_small">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            </android.support.v7.widget.RecyclerView>
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_framework_1" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_framework_2" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_framework_3" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_framework_4" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_framework_5" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_framework_6" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_framework_7" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_framework_8" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_framework_9" />
-                </LinearLayout>
-            </LinearLayout>
-            <!-- /Frameworks layout-->
-            <!-- Mobile layout -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_profession_title"
+                android:paddingTop="@dimen/padding_default"
                 android:text="@string/developer_technology_mobile_title" />
 
-            <LinearLayout
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_profession_developer_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:paddingTop="@dimen/padding_small">
 
-                <LinearLayout
+            </android.support.v7.widget.RecyclerView>
+
+            <!-- /Technologies Recycles -->
+            <!-- Form with question about skills -->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/padding_large">
+
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/border_solid_orange">
+
+                    <TextView
+                        android:id="@+id/text_profession_manager_question"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:paddingTop="@dimen/padding_default"
+                        android:text="@string/manager_question_skill" />
+
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/text_profession_manager_question"
+                        android:layout_centerHorizontal="true"
+                        android:padding="@dimen/padding_default">
+
+                        <RadioButton
+                            android:id="@+id/radiobutton_profession_manager_yes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/padding_default"
+                            android:paddingRight="@dimen/padding_default"
+                            android:text="@string/manager_question_skill_answer_yes" />
+
+                        <RadioButton
+                            android:id="@+id/radiobutton_profession_manager_no"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/padding_default"
+                            android:text="@string/manager_question_skill_answer_no" />
+                    </RadioGroup>
+                </RelativeLayout>
+
+                <!-- /Form with question about skills -->
+                <!-- Form with user's callback data -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:background="@drawable/border_solid_orange"
                     android:orientation="vertical">
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_mobile_1" />
+                        android:paddingLeft="@dimen/padding_default">
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:text="@string/manager_sent_name" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_big"
+                            android:layout_marginRight="@dimen/margin_big">
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/manager_hint_name"
+                                android:inputType="textPersonName" />
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_mobile_2" />
+                        android:paddingLeft="@dimen/padding_default">
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:text="@string/manager_sent_phone" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_big"
+                            android:layout_marginRight="@dimen/margin_big">
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/manager_hint_phone"
+                                android:inputType="phone" />
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_mobile_3" />
+                        android:paddingLeft="@dimen/padding_default">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:text="@string/manager_sent_mail" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_big"
+                            android:layout_marginRight="@dimen/margin_big">
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/manager_hint_mail"
+                                android:inputType="textEmailAddress" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:visibility="invisible">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/manager_sent_question" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_marginLeft="@dimen/margin_small"
+                            android:layout_marginRight="@dimen/margin_small" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/padding_default"
+                            android:text="@string/manager_sent_comment" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_marginLeft="@dimen/margin_small"
+                            android:layout_marginRight="@dimen/margin_small"
+                            android:layout_marginBottom="@dimen/padding_small"
+                            android:background="@drawable/border_solid_orange" />
+                    </LinearLayout>
                 </LinearLayout>
 
+                <!-- /Form with user's callback data -->
+                <!-- Form with user's test task or code file -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margin_default"
+                    android:background="@drawable/border_solid_orange"
                     android:orientation="vertical">
 
-                    <CheckBox
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_mobile_4" />
+                        android:layout_gravity="center_horizontal"
+                        android:padding="@dimen/padding_default"
+                        android:text="@string/profession_take_quest" />
 
-                    <CheckBox
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_mobile_5" />
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="@dimen/padding_default">
 
+                        <TextView
+                            android:id="@+id/link_profession_developer_take_file"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/manager_sent_put_resume"
+                            android:textColor="@android:color/holo_blue_dark" />
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_mobile_6" />
-
+                        <ImageView
+                            android:id="@+id/image_profession_developer_clear_img"
+                            android:layout_width="@dimen/image_size_small"
+                            android:layout_height="@dimen/image_size_small"
+                            android:paddingLeft="@dimen/padding_default"
+                            android:src="@drawable/icon_delete" />
+                    </LinearLayout>
                 </LinearLayout>
 
+                <!-- /Form with user's test task or code file -->
+                <!-- Form with user's resume file -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margin_default"
+                    android:background="@drawable/border_solid_orange"
                     android:orientation="vertical">
 
-                    <CheckBox
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_mobile_7" />
+                        android:layout_gravity="center_horizontal"
+                        android:padding="@dimen/padding_default"
+                        android:text="@string/profession_take_resume" />
 
-                    <CheckBox
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_mobile_8" />
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="@dimen/padding_default">
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/developer_technology_mobile_9" />
+                        <TextView
+                            android:id="@+id/link_profession_developer_take_resume"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/manager_sent_put_resume"
+                            android:textColor="@android:color/holo_blue_dark" />
 
+                        <ImageView
+                            android:id="@+id/image_profession_developer_clear_img_resume"
+                            android:layout_width="@dimen/image_size_small"
+                            android:layout_height="@dimen/image_size_small"
+                            android:paddingLeft="@dimen/padding_default"
+                            android:src="@drawable/icon_delete" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

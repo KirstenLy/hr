@@ -29,7 +29,7 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:background="@drawable/rounded_button_border"
             android:minHeight="@dimen/button_min_height"
-            android:text="@string/ok"
+            android:text="@string/default_ok"
             android:textSize="@dimen/text_size_default" />
 
     </RelativeLayout>
