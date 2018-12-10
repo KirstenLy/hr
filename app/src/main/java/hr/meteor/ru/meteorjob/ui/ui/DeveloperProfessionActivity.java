@@ -1,36 +1,38 @@
 package hr.meteor.ru.meteorjob.ui.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
 
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
 
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setTextOnTextViewFromFilePath;
+
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
-    final int TAKE_USER_QUEST_OR_CODE_FILE_REQUEST = 101;
-    final int TAKE_USER_RESUME_FILE_REQUEST = 102;
-    TextView userTestQuestOrCodeFile;
-    TextView userResumeFile;
+    TextView userTaskOrCodeFile;
+    TextView userBriefFile;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == TAKE_USER_QUEST_OR_CODE_FILE_REQUEST && data != null) {
-            File file = new File(data.getData().getPath());
-            userTestQuestOrCodeFile.setText(file.getName());
-        } else {
-            Toast.makeText(this, R.string.error_loading_file_resume, Toast.LENGTH_LONG).show();
+        if (data != null) {
+            if ((requestCode == TAKE_USER_BRIEF_FILE_REQUEST || requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) && data.getData() != null) {
+                if (requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) {
+                    setTextOnTextViewFromFilePath(data.getData().getPath(), userTaskOrCodeFile);
+                } else {
+                    setTextOnTextViewFromFilePath(data.getData().getPath(), userBriefFile);
+                }
+            }
         }
     }
 
@@ -66,41 +68,87 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         frameworksRecycler.setAdapter(frameworkAdapter);
         mobileRecycler.setAdapter(mobileAdapter);
 
-        userTestQuestOrCodeFile = findViewById(R.id.link_profession_developer_take_file);
-        userTestQuestOrCodeFile.setOnClickListener(this);
+        userTaskOrCodeFile = findViewById(R.id.text_profession_developer_get_task);
+        userTaskOrCodeFile.setOnClickListener(this);
 
-        userResumeFile = findViewById(R.id.link_profession_developer_take_resume);
-        userResumeFile.setOnClickListener(this);
+        ImageView clearUserTaskOrCodeFile = findViewById(R.id.image_profession_developer_task_clear);
+        clearUserTaskOrCodeFile.setOnClickListener(this);
 
-        ImageView clearUserFileImg = findViewById(R.id.image_profession_developer_clear_img);
-        clearUserFileImg.setOnClickListener(this);
-    }
+        TextView webTestTaskLink = findViewById(R.id.text_profession_developer_web_task_link);
+        webTestTaskLink.setOnClickListener(this);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+        TextView androidTestTaskLink = findViewById(R.id.text_profession_developer_android_task_link);
+        androidTestTaskLink.setOnClickListener(this);
+
+        userBriefFile = findViewById(R.id.text_profession_developer_get_brief);
+        userBriefFile.setOnClickListener(this);
+
+        ImageView clearUserBriefFile = findViewById(R.id.image_profession_developer_brief_clear);
+        clearUserBriefFile.setOnClickListener(this);
+
+        Button sendData = findViewById(R.id.button_profession_developer_send);
+        sendData.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case (R.id.link_profession_developer_take_file):
+        int elementId = v.getId();
 
-                Intent intent = new Intent();
-                intent.setType("file/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
+        if (elementId == R.id.text_profession_developer_get_task || elementId == R.id.text_profession_developer_get_brief) {
+            Intent intent = new Intent();
+            intent.setType("file/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            if (elementId == R.id.text_profession_developer_get_task) {
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.default_choose_file)), TAKE_USER_TASK_OR_CODE_FILE_REQUEST);
+            } else {
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.default_choose_file)), TAKE_USER_BRIEF_FILE_REQUEST);
+            }
+        }
 
-                startActivityForResult(Intent.createChooser(intent, "Select File"), TAKE_USER_QUEST_OR_CODE_FILE_REQUEST);
-                break;
-            case (R.id.image_profession_developer_clear_img): {
-                if (userTestQuestOrCodeFile != null && userTestQuestOrCodeFile.getText() != null) {
-                    Log.d("UserFileTag", String.valueOf(userTestQuestOrCodeFile.getText()));
-                    userTestQuestOrCodeFile.setText(getString(R.string.manager_sent_put_resume));
-                }
+        if (elementId == R.id.image_profession_developer_task_clear || elementId == R.id.image_profession_developer_brief_clear) {
+            if (elementId == R.id.image_profession_developer_task_clear) {
+                userTaskOrCodeFile.setText(MeteorUtility.getUnderlineSpanned(getString(R.string.developer_sent_file)));
+            } else {
+                userBriefFile.setText(MeteorUtility.getUnderlineSpanned(getString(R.string.developer_sent_file)));
+            }
+        }
+
+        if (elementId == R.id.text_profession_developer_web_task_link || elementId == R.id.text_profession_developer_android_task_link) {
+            String url = "http://eralash.ru";
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        }
+
+        if (elementId == R.id.button_profession_developer_send) {
+            if (validationSuccess()) {
+                MeteorUtility.sendData();
+            } else {
+                Toast.makeText(this, R.string.error_validation, Toast.LENGTH_LONG).show();
             }
         }
     }
+
+    public boolean validationSuccess() {
+        boolean isSuccess = true;
+        EditText name = findViewById(R.id.edit_profession_developer_contacts_name);
+        EditText phone = findViewById(R.id.edit_profession_developer_contacts_phone);
+        EditText email = findViewById(R.id.edit_profession_developer_contacts_email);
+
+        if (name.getText() == null || name.getText().length() == 0) {
+            name.setError(getString(R.string.error_validation_name));
+            isSuccess = false;
+        }
+        if (phone.getText() == null || phone.getText().length() == 0) {
+            phone.setError(getString(R.string.error_validation_phone));
+            isSuccess = false;
+        }
+
+        if (email.getText() == null || email.getText().length() == 0 || !MeteorUtility.isValidEmail(String.valueOf(email.getText()))) {
+            email.setError(getString(R.string.error_validation_mail));
+            isSuccess = false;
+        }
+        return isSuccess;
+    }
 }
+

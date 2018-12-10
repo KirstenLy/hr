@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -14,6 +15,8 @@ import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
 
 public abstract class AbstractActivity extends AppCompatActivity {
+    final int TAKE_USER_TASK_OR_CODE_FILE_REQUEST = 101;
+    final int TAKE_USER_BRIEF_FILE_REQUEST = 102;
     Dialog loadingDialog;
 
     public boolean isInternetActive() {
@@ -44,5 +47,13 @@ public abstract class AbstractActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(isHomeActive);
         return toolbar;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

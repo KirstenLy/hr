@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Patterns;
 import android.util.TypedValue;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import hr.meteor.ru.meteorjob.R;
@@ -20,6 +24,29 @@ public class MeteorUtility {
         return Html.fromHtml("<u>" + string + "</u>");
     }
 
+    public static void sendData() {
+        //Sending data on server...
+    }
+
+    public static boolean isValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+
+    public static void setLinearLayoutParam(LinearLayout linearLayout, int weight, int height, int visibility) {
+        linearLayout.setVisibility(visibility);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
+        params.weight = weight;
+        params.height = height;
+        linearLayout.setLayoutParams(params);
+    }
+
+    public static void setTextOnTextViewFromFilePath(String filePath, TextView textView) {
+        File file = new File(filePath);
+        if (file.length() > 0) {
+            textView.setText(file.getName());
+        }
+    }
     public static ArrayList<String> initializeLanguageList(Context context) {
         ArrayList<String> languageArrayList = new ArrayList<>();
         languageArrayList.add(context.getString(R.string.developer_technology_languages_1));

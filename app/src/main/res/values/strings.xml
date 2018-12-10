@@ -4,27 +4,15 @@
     <string name="dev_message">Created by Kirsten, 2018</string>
 
     <!-- Main menu -->
-    <string name="main_menu_title">Технологичные решения</string>
-    <string name="main_menu_text_one">Проектирование, разработка, развитие. Работаем как аутсорс-продакшн.</string>
-    <string name="main_menu_text_two">Обеспечиваем прозрачность и находим оптимальное решение задач.</string>
     <string name="logo_text">Работа в digital-агентстве \"Метеор\"</string>
 
-    <!-- Left side navigation -->
-
-    <string name="menu">Меню</string>
-
-    <!-- Contacts -->
-    <string name="contacts">Контакты</string>
-    <string name="text_contacts_phone">Телефон: </string>
-    <string name="contacts_address">Адрес: </string>
-    <string name="contacts_email">E - mail: </string>
-    <string name="contacts_address_formatter"> %1$s, г. %2$s, ул. %3$s, %4$s, офис %5$s (%6$s)</string>
-    <string name="title_activity_service">ServiceActivity</string>
-
-    <!-- Blog -->
-    <string name="blog_date_formatter">Дата публикации: %1$s</string>
-    <string name="blog_author_formatter">Автор: %1$s</string>
-    <string name="blog_empty_content">Пусто</string>
+    <!-- Default Strings -->
+    <string name="default_yes">Да</string>
+    <string name="default_no">Нет</string>
+    <string name="default_loading">Загрузка…</string>
+    <string name="default_ok">Oк</string>
+    <string name="default_send">Отправить</string>
+    <string name="default_choose_file">Выберите файл</string>
 
     <!-- Errors -->
     <string name="error_retrofit_connection">Нет ответа от сервера</string>
@@ -32,11 +20,12 @@
     <string name="error_email_application">Не обнаружен почтовый клиент</string>
     <string name="error_blog_tags_loading">Теги не загружены</string>
     <string name="error_reviews_loading">Отзывы не загружены</string>
-    <string name="error_loading_file_resume">Ошибка, резюме не загружено</string>
-
-    <!-- Push -->
-    <string name="push_title_default">Новое уведомление</string>
-    <string name="push_text_default">Новый пост</string>
+    <string name="error_loading_file">Ошибка при загрузке файла</string>
+    <string name="error_validation">Часть полей заполнена некорректно</string>
+    <string name="error_validation_name">Некорректное имя</string>
+    <string name="error_validation_phone">Некорректный телефон</string>
+    <string name="error_validation_mail">Некорректный e - mail</string>
+    <string name="error_validation_question">Это обязательное поле</string>
 
     <!-- ActionBar -->
     <string name="actionbar_title">Выберите специальность</string>
@@ -46,6 +35,20 @@
     <string name="profession_manager">Менеджер</string>
 
     <!-- Developer Strings Start-->
+    <string name="developer_sent_name">Имя:</string>
+    <string name="developer_sent_phone">Телефон:</string>
+    <string name="developer_sent_email">Email:</string>
+    <string name="developer_sent_file"><u>Приложить</u></string>
+    <string name="developer_download_web"><u>Для web</u></string>
+    <string name="developer_download_android"><u>Для Android</u></string>
+    <string name="developer_question_skill_answer_yes">Да, у меня есть опыт работы</string>
+    <string name="developer_question_skill_answer_no">Нет (хочу на стажировку)</string>
+    <string name="developer_hint_name">Ваше имя</string>
+    <string name="developer_hint_phone">Ваш телефон</string>
+    <string name="developer_hint_email">Ваш email</string>
+    <string name="developer_hint_comment">Комментирий</string>
+
+
     <!-- Web -->
     <string name="developer_language_web_title">Выберите технологии, которыми Вы владеете:</string>
     <!-- Languages -->
@@ -99,23 +102,19 @@
     <string name="manager_question_skill_answer_no">Нет (хочу на стажировку)</string>
     <string name="manager_sent_name">Имя:</string>
     <string name="manager_sent_phone">Телефон:</string>
-    <string name="manager_sent_mail">Email:</string>
-    <string name="manager_sent_question">Почему Вы хотите работать менеджером проектов?</string>
+    <string name="manager_sent_email">Email:</string>
     <string name="manager_sent_comment">Комментарий:</string>
-    <string name="manager_sent_put_resume"><u>Приложить</u></string>
+    <string name="manager_sent_question">Почему вы хотите работать менеджером проектов?</string>
+    <string name="manager_sent_file"><u>Приложить</u></string>
     <string name="manager_hint_name">Ваше имя</string>
     <string name="manager_hint_phone">Ваш телефон</string>
-    <string name="manager_hint_mail">Ваш email</string>
-
+    <string name="manager_hint_email">Ваш email</string>
+    <string name="manager_hint_comment">Дополнительная информация</string>
+    <string name="manager_hint_answer">Впишите ваш ответ сюда</string>
 
     <!-- Profession Strings -->
-    <string name="profession_take_resume">Приложить резюме:</string>
-    <string name="profession_take_quest">Приложить пример кода или выполненное тестовое задание:</string>
-
-    <!-- Default Strings -->
-    <string name="default_yes">Да</string>
-    <string name="default_no">Нет</string>
-    <string name="default_loading">Загрузка…</string>
-    <string name="default_ok">Oк</string>
+    <string name="profession_get_resume">Приложить резюме:</string>
+    <string name="profession_get_task">Приложить пример кода или выполненное тестовое задание:</string>
+    <string name="profession_download_task">Скачать тестовое задание для web/android:</string>
 
 </resources>
