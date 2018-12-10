@@ -16,7 +16,7 @@ import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
 
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setTextOnTextViewFromFilePath;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setFileNameOnTextView;
 
 
 public class ManagerProfessionActivity extends AbstractActivity implements View.OnClickListener {
@@ -28,7 +28,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (data != null) {
             if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && data.getData() != null) {
-                setTextOnTextViewFromFilePath(data.getData().getPath(), userBriefFile);
+                setFileNameOnTextView(data.getData().getPath(), userBriefFile);
             }
         }
     }

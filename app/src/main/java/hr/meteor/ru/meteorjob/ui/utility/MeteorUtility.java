@@ -41,7 +41,7 @@ public class MeteorUtility {
         linearLayout.setLayoutParams(params);
     }
 
-    public static void setTextOnTextViewFromFilePath(String filePath, TextView textView) {
+    public static void setFileNameOnTextView(String filePath, TextView textView) {
         File file = new File(filePath);
         if (file.length() > 0) {
             textView.setText(file.getName());

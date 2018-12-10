@@ -17,7 +17,7 @@ import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
 
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setTextOnTextViewFromFilePath;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setFileNameOnTextView;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
     TextView userTaskOrCodeFile;
@@ -28,9 +28,9 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         if (data != null) {
             if ((requestCode == TAKE_USER_BRIEF_FILE_REQUEST || requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) && data.getData() != null) {
                 if (requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) {
-                    setTextOnTextViewFromFilePath(data.getData().getPath(), userTaskOrCodeFile);
+                    setFileNameOnTextView(data.getData().getPath(), userTaskOrCodeFile);
                 } else {
-                    setTextOnTextViewFromFilePath(data.getData().getPath(), userBriefFile);
+                    setFileNameOnTextView(data.getData().getPath(), userBriefFile);
                 }
             }
         }
