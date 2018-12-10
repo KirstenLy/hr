@@ -46,7 +46,7 @@
     <string name="developer_hint_name">Ваше имя</string>
     <string name="developer_hint_phone">Ваш телефон</string>
     <string name="developer_hint_email">Ваш email</string>
-    <string name="developer_hint_comment">Комментирий</string>
+    <string name="developer_hint_comment">Дополнительная информация</string>
 
 
     <!-- Web -->
