@@ -32,7 +32,6 @@ public class MeteorUtility {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-
     public static void setLinearLayoutParam(LinearLayout linearLayout, int weight, int height, int visibility) {
         linearLayout.setVisibility(visibility);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
@@ -47,6 +46,7 @@ public class MeteorUtility {
             textView.setText(file.getName());
         }
     }
+
     public static ArrayList<String> initializeLanguageList(Context context) {
         ArrayList<String> languageArrayList = new ArrayList<>();
         languageArrayList.add(context.getString(R.string.developer_technology_languages_1));
