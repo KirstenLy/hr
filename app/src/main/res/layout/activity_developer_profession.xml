@@ -131,6 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:paddingTop="@dimen/padding_default"
+                        android:paddingBottom="@dimen/padding_default"
                         android:text="@string/manager_question_skill" />
 
                     <RadioGroup
@@ -138,7 +139,9 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/text_profession_manager_question"
                         android:layout_centerHorizontal="true"
-                        android:padding="@dimen/padding_default">
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        android:paddingBottom="@dimen/padding_default">
 
                         <RadioButton
                             android:id="@+id/radiobutton_profession_developer_yes"
