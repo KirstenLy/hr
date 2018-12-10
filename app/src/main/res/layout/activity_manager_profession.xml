@@ -80,7 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="@dimen/padding_large"
+                        android:paddingLeft="@dimen/padding_default"
                         android:paddingTop="@dimen/padding_small"
                         android:text="@string/manager_sent_name" />
 
