@@ -8,19 +8,19 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import hr.meteor.ru.meteorjob.R;
 
 public class DeveloperTechnologiesAdapter extends RecyclerView.Adapter<DeveloperTechnologiesAdapter.ViewHolder> {
     private ArrayList<String> techNameList;
+    private boolean[] selectedCheckboxData;
     private Context context;
 
     public DeveloperTechnologiesAdapter(Context context, ArrayList<String> techNameList) {
         this.techNameList = techNameList;
         this.context = context;
+        this.selectedCheckboxData = new boolean[techNameList.size()];
     }
 
     @Override
@@ -32,6 +32,15 @@ public class DeveloperTechnologiesAdapter extends RecyclerView.Adapter<Developer
     @Override
     public void onBindViewHolder(final DeveloperTechnologiesAdapter.ViewHolder viewHolder, final int i) {
         viewHolder.techName.setText(techNameList.get(i));
+        if (selectedCheckboxData[i]) {
+            viewHolder.techCheckbox.setChecked(true);
+        }
+        viewHolder.techCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedCheckboxData[i] = !selectedCheckboxData[i];
+            }
+        });
     }
 
     @Override
@@ -45,8 +54,16 @@ public class DeveloperTechnologiesAdapter extends RecyclerView.Adapter<Developer
 
         ViewHolder(View view) {
             super(view);
-            techCheckbox = view.findViewById(R.id.tech_checkbox);
             techName = view.findViewById(R.id.tech_name);
+            techCheckbox = view.findViewById(R.id.tech_checkbox);
         }
+    }
+
+    public boolean[] getSelectedCheckboxData() {
+        return selectedCheckboxData;
+    }
+
+    public void setSelectedCheckboxData(boolean[] selectedCheckboxData) {
+        this.selectedCheckboxData = selectedCheckboxData;
     }
 }

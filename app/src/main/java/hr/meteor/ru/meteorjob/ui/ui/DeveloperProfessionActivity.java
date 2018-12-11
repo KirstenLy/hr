@@ -23,6 +23,11 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     TextView userTaskOrCodeFile;
     TextView userBriefFile;
 
+    DeveloperTechnologiesAdapter languagesAdapter;
+    DeveloperTechnologiesAdapter databasesAdapter;
+    DeveloperTechnologiesAdapter frameworkAdapter;
+    DeveloperTechnologiesAdapter mobilesAdapter;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (data != null) {
@@ -58,15 +63,15 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         frameworksRecycler.setLayoutManager(layoutManagerForFrameworks);
         mobileRecycler.setLayoutManager(layoutManagerForMobile);
 
-        DeveloperTechnologiesAdapter languagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
-        DeveloperTechnologiesAdapter databasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
-        DeveloperTechnologiesAdapter frameworkAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
-        DeveloperTechnologiesAdapter mobileAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
+        languagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
+        databasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
+        frameworkAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
+        mobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
 
         languagesRecycler.setAdapter(languagesAdapter);
         databasesRecycler.setAdapter(databasesAdapter);
         frameworksRecycler.setAdapter(frameworkAdapter);
-        mobileRecycler.setAdapter(mobileAdapter);
+        mobileRecycler.setAdapter(mobilesAdapter);
 
         languagesRecycler.setNestedScrollingEnabled(false);
         databasesRecycler.setNestedScrollingEnabled(false);
@@ -93,6 +98,43 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         Button sendData = findViewById(R.id.button_profession_developer_send);
         sendData.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        boolean[] languagesSelectedCheckboxData = languagesAdapter.getSelectedCheckboxData();
+        boolean[] databasesSelectedCheckboxData = databasesAdapter.getSelectedCheckboxData();
+        boolean[] frameworksSelectedCheckboxData = frameworkAdapter.getSelectedCheckboxData();
+        boolean[] mobilesSelectedCheckboxData = mobilesAdapter.getSelectedCheckboxData();
+
+        outState.putBooleanArray("languagesCheckboxes", languagesSelectedCheckboxData);
+        outState.putBooleanArray("databasesCheckboxes", databasesSelectedCheckboxData);
+        outState.putBooleanArray("frameworksCheckboxes", frameworksSelectedCheckboxData);
+        outState.putBooleanArray("mobilesCheckboxes", mobilesSelectedCheckboxData);
+
+        if (userBriefFile != null) {
+            outState.putString("userBriefFileKey", String.valueOf(userBriefFile.getText()));
+        }
+        if (userTaskOrCodeFile != null) {
+            outState.putString("userTaskOrCodeFileKey", String.valueOf(userTaskOrCodeFile.getText()));
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        languagesAdapter.setSelectedCheckboxData(savedInstanceState.getBooleanArray("languagesCheckboxes"));
+        databasesAdapter.setSelectedCheckboxData(savedInstanceState.getBooleanArray("databasesCheckboxes"));
+        frameworkAdapter.setSelectedCheckboxData(savedInstanceState.getBooleanArray("frameworksCheckboxes"));
+        mobilesAdapter.setSelectedCheckboxData(savedInstanceState.getBooleanArray("mobilesCheckboxes"));
+
+        if (userBriefFile != null && savedInstanceState.getString("userBriefFileKey") != null) {
+            userBriefFile.setText(savedInstanceState.getString("userBriefFileKey"));
+        }
+        if (userTaskOrCodeFile != null && savedInstanceState.getString("userTaskOrCodeFileKey") != null)
+            userTaskOrCodeFile.setText(savedInstanceState.getString("userTaskOrCodeFileKey"));
     }
 
     @Override

@@ -22,7 +22,6 @@ import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setFileNameOnTextV
 public class ManagerProfessionActivity extends AbstractActivity implements View.OnClickListener {
     TextView userBriefFile;
     LinearLayout invisibleLayoutWithExtraQuestion;
-    View invisibleLineUnderLayout;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -46,7 +45,6 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         contactsFormNoButton.setOnClickListener(this);
 
         invisibleLayoutWithExtraQuestion = findViewById(R.id.layout_professions_manager_contacts_invisible);
-        invisibleLineUnderLayout = findViewById(R.id.line_professions_manager_contacts_invisible);
 
         userBriefFile = findViewById(R.id.text_profession_manager_get_brief);
         userBriefFile.setOnClickListener(this);
@@ -56,6 +54,22 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         Button sendData = findViewById(R.id.button_profession_manager_send);
         sendData.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (userBriefFile != null) {
+            outState.putString("userBriefFileKey", String.valueOf(userBriefFile.getText()));
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (userBriefFile != null && savedInstanceState.getString("userBriefFileKey") != null) {
+            userBriefFile.setText(savedInstanceState.getString("userBriefFileKey"));
+        }
     }
 
     @Override
@@ -71,12 +85,10 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         if (elementId == R.id.radiobutton_profession_manager_yes) {
             setLinearLayoutParam(invisibleLayoutWithExtraQuestion, LinearLayout.LayoutParams.MATCH_PARENT, 0, View.INVISIBLE);
-            invisibleLineUnderLayout.setVisibility(View.INVISIBLE);
         }
 
         if (elementId == R.id.radiobutton_profession_manager_no) {
             setLinearLayoutParam(invisibleLayoutWithExtraQuestion, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, View.VISIBLE);
-            invisibleLineUnderLayout.setVisibility(View.VISIBLE);
         }
 
         if (elementId == R.id.image_profession_manager_brief_clear) {

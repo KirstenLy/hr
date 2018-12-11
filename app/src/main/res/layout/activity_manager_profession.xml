@@ -63,6 +63,7 @@
                         android:text="@string/manager_question_skill_answer_no" />
                 </RadioGroup>
             </RelativeLayout>
+            <!-- /Form with question about skills -->
 
             <!-- Form with user's callback data -->
             <LinearLayout
@@ -73,119 +74,105 @@
                 android:background="@drawable/border_solid_orange"
                 android:orientation="vertical">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/padding_default">
 
                     <TextView
                         android:id="@+id/text_profession_manager_contacts_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:paddingLeft="@dimen/padding_large"
-                        android:paddingBottom="1dp"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="@dimen/padding_default"
                         android:text="@string/manager_sent_name"
                         android:textSize="@dimen/text_size_large" />
 
                     <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingLeft="@dimen/padding_default"
                         android:paddingRight="@dimen/padding_default"
                         app:hintEnabled="false">
 
                         <EditText
                             android:id="@+id/edit_profession_manager_contacts_name"
-                            android:layout_width="150dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="start"
                             android:hint="@string/developer_hint_name"
                             android:inputType="textPersonName" />
 
                     </android.support.design.widget.TextInputLayout>
-                </RelativeLayout>
+                </LinearLayout>
 
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorPrimaryDark" />
-
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/padding_default">
 
                     <TextView
                         android:id="@+id/text_profession_manager_contacts_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:paddingLeft="@dimen/padding_large"
-                        android:paddingBottom="1dp"
+                        android:layout_gravity="center_horizontal"
                         android:text="@string/manager_sent_phone"
                         android:textSize="@dimen/text_size_large" />
 
                     <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingLeft="@dimen/padding_default"
                         android:paddingRight="@dimen/padding_default"
                         app:hintEnabled="false">
 
                         <EditText
                             android:id="@+id/edit_profession_manager_contacts_phone"
-                            android:layout_width="150dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="start"
                             android:hint="@string/manager_hint_phone"
                             android:inputType="phone" />
 
                     </android.support.design.widget.TextInputLayout>
-                </RelativeLayout>
+                </LinearLayout>
 
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorPrimaryDark" />
-
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/padding_default">
 
                     <TextView
                         android:id="@+id/text_profession_manager_contacts_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:paddingLeft="@dimen/padding_large"
-                        android:paddingBottom="1dp"
+                        android:layout_gravity="center_horizontal"
                         android:text="@string/manager_sent_email"
                         android:textSize="@dimen/text_size_large" />
 
                     <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingLeft="@dimen/padding_default"
                         android:paddingRight="@dimen/padding_default"
                         app:hintEnabled="false">
 
                         <EditText
                             android:id="@+id/edit_profession_manager_contacts_email"
-                            android:layout_width="150dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="start"
                             android:hint="@string/manager_hint_email"
                             android:inputType="textEmailAddress" />
 
                     </android.support.design.widget.TextInputLayout>
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorPrimaryDark" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_professions_manager_contacts_invisible"
@@ -193,23 +180,30 @@
                     android:layout_height="0dp"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
+                    android:paddingBottom="@dimen/padding_default"
                     android:visibility="invisible">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/manager_sent_question" />
+                        android:layout_gravity="center_horizontal"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        android:text="@string/manager_sent_question"
+                        android:textSize="@dimen/text_size_large" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="@dimen/padding_default">
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        app:hintEnabled="false">
 
                         <EditText
                             android:id="@+id/edit_profession_manager_contacts_invisible"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="start"
                             android:hint="@string/manager_hint_answer"
                             android:inputType="textMultiLine"
@@ -219,33 +213,30 @@
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
-                <View
-                    android:id="@+id/line_professions_manager_contacts_invisible"
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:visibility="invisible" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/padding_default">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/manager_sent_comment" />
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/manager_sent_comment"
+                        android:textSize="@dimen/text_size_large" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="@dimen/padding_default">
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        app:hintEnabled="false">
 
                         <EditText
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="start"
                             android:hint="@string/manager_hint_comment"
                             android:inputType="textMultiLine"
