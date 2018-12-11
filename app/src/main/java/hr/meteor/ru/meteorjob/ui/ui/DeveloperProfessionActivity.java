@@ -69,6 +69,9 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         mobileRecycler.setAdapter(mobileAdapter);
 
         languagesRecycler.setNestedScrollingEnabled(false);
+        databasesRecycler.setNestedScrollingEnabled(false);
+        frameworksRecycler.setNestedScrollingEnabled(false);
+        mobileRecycler.setNestedScrollingEnabled(false);
 
         userTaskOrCodeFile = findViewById(R.id.text_profession_developer_get_task);
         userTaskOrCodeFile.setOnClickListener(this);
