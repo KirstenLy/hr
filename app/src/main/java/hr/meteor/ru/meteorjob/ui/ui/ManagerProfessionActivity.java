@@ -3,6 +3,7 @@ package hr.meteor.ru.meteorjob.ui.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import hr.meteor.ru.meteorjob.R;
+import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
+import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setFileNameOnTextView;
@@ -22,6 +28,12 @@ import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setFileNameOnTextV
 public class ManagerProfessionActivity extends AbstractActivity implements View.OnClickListener {
     TextView userBriefFile;
     LinearLayout invisibleLayoutWithExtraQuestion;
+
+    RadioButton contactsFormYesButton;
+    RadioButton contactsFormNoButton;
+    EditText name;
+    EditText phone;
+    EditText email;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -38,10 +50,10 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         setContentView(R.layout.activity_manager_profession);
         createToolbar(R.id.actionbar_profession_manager, 0, R.string.profession_manager, true);
 
-        RadioButton contactsFormYesButton = findViewById(R.id.radiobutton_profession_manager_yes);
+        contactsFormYesButton = findViewById(R.id.radiobutton_profession_manager_yes);
         contactsFormYesButton.setOnClickListener(this);
 
-        RadioButton contactsFormNoButton = findViewById(R.id.radiobutton_profession_manager_no);
+        contactsFormNoButton = findViewById(R.id.radiobutton_profession_manager_no);
         contactsFormNoButton.setOnClickListener(this);
 
         invisibleLayoutWithExtraQuestion = findViewById(R.id.layout_professions_manager_contacts_invisible);
@@ -97,7 +109,21 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         if (elementId == R.id.button_profession_manager_send) {
             if (validationSuccess()) {
-                MeteorUtility.sendData();
+                EditText comment = findViewById(R.id.edit_profession_manager_contacts_comment);
+                EditText question = null;
+
+                if (contactsFormYesButton.isChecked()) {
+                    question = findViewById(R.id.edit_profession_manager_contacts_invisible);
+                }
+
+                sendData(new ManagerData(
+                        contactsFormYesButton.isChecked(),
+                        name.getText().toString(),
+                        phone.getText().toString(),
+                        email.getText().toString(),
+                        question == null ? null : question.getText().toString(),
+                        comment.getText().toString()
+                ));
             } else {
                 Toast.makeText(this, R.string.error_validation, Toast.LENGTH_LONG).show();
             }
@@ -106,9 +132,9 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
     public boolean validationSuccess() {
         boolean isSuccess = true;
-        EditText name = findViewById(R.id.edit_profession_manager_contacts_name);
-        EditText phone = findViewById(R.id.edit_profession_manager_contacts_phone);
-        EditText email = findViewById(R.id.edit_profession_manager_contacts_email);
+        name = findViewById(R.id.edit_profession_manager_contacts_name);
+        phone = findViewById(R.id.edit_profession_manager_contacts_phone);
+        email = findViewById(R.id.edit_profession_manager_contacts_email);
 
         if (name.getText() == null || name.getText().length() == 0) {
             name.setError(getString(R.string.error_validation_name));
@@ -132,5 +158,24 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
             }
         }
         return isSuccess;
+    }
+
+    public void sendData(ManagerData managerData) {
+        getMeteorService().postManagerData(managerData).enqueue(new Callback<ManagerData>() {
+            @Override
+            public void onResponse
+                    (Call<ManagerData> call, Response<ManagerData> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    Log.e("TAGConnection", "Done");
+                } else {
+                    Log.e("TAGConnection", "Connection error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ManagerData> call, Throwable t) {
+                DialogUtility.showErrorDialog(ManagerProfessionActivity.this, R.string.error_retrofit_connection, true);
+            }
+        });
     }
 }

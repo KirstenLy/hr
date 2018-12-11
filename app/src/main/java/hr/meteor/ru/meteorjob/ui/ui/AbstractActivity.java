@@ -12,7 +12,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import hr.meteor.ru.meteorjob.R;
+import hr.meteor.ru.meteorjob.ui.retrofit.services.MeteorService;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public abstract class AbstractActivity extends AppCompatActivity {
     final int TAKE_USER_TASK_OR_CODE_FILE_REQUEST = 101;
@@ -47,6 +50,11 @@ public abstract class AbstractActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(isHomeActive);
         return toolbar;
+    }
+
+    public MeteorService getMeteorService() {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://139.162.213.204/android-training/").addConverterFactory(GsonConverterFactory.create()).build();
+        return retrofit.create(MeteorService.class);
     }
 
     @Override

@@ -24,9 +24,6 @@ public class MeteorUtility {
         return Html.fromHtml("<u>" + string + "</u>");
     }
 
-    public static void sendData() {
-        //Sending data on server...
-    }
 
     public static boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();

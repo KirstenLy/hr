@@ -6,22 +6,34 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
+import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
+import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
+import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setFileNameOnTextView;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
     TextView userTaskOrCodeFile;
     TextView userBriefFile;
+    EditText name;
+    EditText phone;
+    EditText email;
+    RadioButton contactsFormYesButton;
 
     DeveloperTechnologiesAdapter languagesAdapter;
     DeveloperTechnologiesAdapter databasesAdapter;
@@ -169,7 +181,16 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         if (elementId == R.id.button_profession_developer_send) {
             if (validationSuccess()) {
-                MeteorUtility.sendData();
+                EditText comment = findViewById(R.id.edit_profession_developer_contacts_comment);
+                contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
+
+                sendData(new DeveloperData(
+                        contactsFormYesButton.isChecked(),
+                        name.getText().toString(),
+                        phone.getText().toString(),
+                        email.getText().toString(),
+                        comment.getText().toString()
+                ));
             } else {
                 Toast.makeText(this, R.string.error_validation, Toast.LENGTH_LONG).show();
             }
@@ -178,9 +199,9 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
     public boolean validationSuccess() {
         boolean isSuccess = true;
-        EditText name = findViewById(R.id.edit_profession_developer_contacts_name);
-        EditText phone = findViewById(R.id.edit_profession_developer_contacts_phone);
-        EditText email = findViewById(R.id.edit_profession_developer_contacts_email);
+        name = findViewById(R.id.edit_profession_developer_contacts_name);
+        phone = findViewById(R.id.edit_profession_developer_contacts_phone);
+        email = findViewById(R.id.edit_profession_developer_contacts_email);
 
         if (name.getText() == null || name.getText().length() == 0) {
             name.setError(getString(R.string.error_validation_name));
@@ -196,6 +217,25 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             isSuccess = false;
         }
         return isSuccess;
+    }
+
+    public void sendData(DeveloperData developerData) {
+        getMeteorService().postDeveloperData(developerData).enqueue(new Callback<DeveloperData>() {
+            @Override
+            public void onResponse
+                    (Call<DeveloperData> call, Response<DeveloperData> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    Log.e("TAGConnection", "Done");
+                } else {
+                    Log.e("TAGConnection", "Connection error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeveloperData> call, Throwable t) {
+                DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.error_retrofit_connection, true);
+            }
+        });
     }
 }
 
