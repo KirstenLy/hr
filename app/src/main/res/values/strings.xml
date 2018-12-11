@@ -104,13 +104,12 @@
     <string name="manager_sent_phone">Телефон:</string>
     <string name="manager_sent_email">Email:</string>
     <string name="manager_sent_comment">Комментарий:</string>
-    <string name="manager_sent_question">Почему вы хотите работать менеджером проектов?</string>
+    <string name="manager_hint_question">Почему вы хотите работать менеджером проектов?</string>
     <string name="manager_sent_file"><u>Приложить</u></string>
     <string name="manager_hint_name">Ваше имя</string>
     <string name="manager_hint_phone">Ваш телефон</string>
     <string name="manager_hint_email">Ваш email</string>
     <string name="manager_hint_comment">Дополнительная информация</string>
-    <string name="manager_hint_answer">Впишите ваш ответ сюда</string>
 
     <!-- Profession Strings -->
     <string name="profession_get_resume">Приложить резюме:</string>
