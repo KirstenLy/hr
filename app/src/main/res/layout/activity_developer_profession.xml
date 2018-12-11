@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="@dimen/padding_default">
+            android:padding="@dimen/padding_small">
 
             <TextView
                 android:layout_width="match_parent"
@@ -112,7 +112,7 @@
             <!-- /Technologies Recycles -->
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -123,6 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margin_default"
                     android:background="@drawable/border_solid_orange">
 
                     <TextView
@@ -167,7 +168,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/margin_large"
-                    android:background="@drawable/border_solid_orange"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -176,22 +176,21 @@
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/padding_default">
 
-                        <TextView
-                            android:id="@+id/text_profession_developer_contacts_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:paddingTop="@dimen/padding_default"
-                            android:text="@string/developer_sent_name"
-                            android:textSize="@dimen/text_size_large" />
+                        <!--<TextView-->
+                        <!--android:id="@+id/text_profession_developer_contacts_name"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center_horizontal"-->
+                        <!--android:paddingTop="@dimen/padding_default"-->
+                        <!--android:text="@string/developer_sent_name"-->
+                        <!--android:textSize="@dimen/text_size_large" />-->
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:paddingLeft="@dimen/padding_default"
-                            android:paddingRight="@dimen/padding_default"
-                            app:hintEnabled="false">
+                            android:paddingRight="@dimen/padding_default">
 
                             <EditText
                                 android:id="@+id/edit_profession_developer_contacts_name"
@@ -210,21 +209,20 @@
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/padding_default">
 
-                        <TextView
-                            android:id="@+id/text_profession_developer_contacts_phone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="@string/developer_sent_phone"
-                            android:textSize="@dimen/text_size_large" />
+                        <!--<TextView-->
+                        <!--android:id="@+id/text_profession_developer_contacts_phone"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center_horizontal"-->
+                        <!--android:text="@string/developer_sent_phone"-->
+                        <!--android:textSize="@dimen/text_size_large" />-->
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:paddingLeft="@dimen/padding_default"
-                            android:paddingRight="@dimen/padding_default"
-                            app:hintEnabled="false">
+                            android:paddingRight="@dimen/padding_default">
 
                             <EditText
                                 android:id="@+id/edit_profession_developer_contacts_phone"
@@ -243,21 +241,20 @@
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/padding_default">
 
-                        <TextView
-                            android:id="@+id/text_profession_developer_contacts_email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="@string/developer_sent_email"
-                            android:textSize="@dimen/text_size_large" />
+                        <!--<TextView-->
+                        <!--android:id="@+id/text_profession_developer_contacts_email"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center_horizontal"-->
+                        <!--android:text="@string/developer_sent_email"-->
+                        <!--android:textSize="@dimen/text_size_large" />-->
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:paddingLeft="@dimen/padding_default"
-                            android:paddingRight="@dimen/padding_default"
-                            app:hintEnabled="false">
+                            android:paddingRight="@dimen/padding_default">
 
                             <EditText
                                 android:id="@+id/edit_profession_developer_contacts_email"
@@ -276,20 +273,19 @@
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/padding_default">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="@string/manager_sent_comment"
-                            android:textSize="@dimen/text_size_large" />
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center_horizontal"-->
+                        <!--android:text="@string/manager_sent_comment"-->
+                        <!--android:textSize="@dimen/text_size_large" />-->
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:paddingLeft="@dimen/padding_default"
-                            android:paddingRight="@dimen/padding_default"
-                            app:hintEnabled="false">
+                            android:paddingRight="@dimen/padding_default">
 
                             <EditText
                                 android:layout_width="match_parent"
@@ -305,13 +301,17 @@
                 </LinearLayout>
                 <!-- /Form with user's callback data -->
 
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/colorPrimaryDark" />
+
                 <!-- Form with user's test task or code file -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_default"
-                    android:background="@drawable/border_solid_orange"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:orientation="vertical">
 
                     <TextView
@@ -337,21 +337,27 @@
 
                         <ImageView
                             android:id="@+id/image_profession_developer_task_clear"
-                            android:layout_width="@dimen/image_size_small"
-                            android:layout_height="@dimen/image_size_small"
-                            android:paddingLeft="@dimen/padding_default"
-                            android:src="@drawable/icon_delete" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:src="@drawable/delete_new" />
                     </LinearLayout>
                 </LinearLayout>
                 <!-- /Form with user's test task or code file -->
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/colorPrimaryDark" />
 
                 <!-- Download test tasks form -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_default"
-                    android:background="@drawable/border_solid_orange"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:orientation="vertical">
 
                     <TextView
@@ -363,8 +369,9 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:layout_gravity="center_horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="@dimen/padding_default">
 
                         <TextView
                             android:id="@+id/text_profession_developer_web_task_link"
@@ -384,13 +391,17 @@
                 </LinearLayout>
                 <!-- /Download test tasks form -->
 
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/colorPrimaryDark" />
+
                 <!-- Form with user's brief file -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_default"
-                    android:background="@drawable/border_solid_orange"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:orientation="vertical">
 
                     <TextView
@@ -416,21 +427,27 @@
 
                         <ImageView
                             android:id="@+id/image_profession_developer_brief_clear"
-                            android:layout_width="@dimen/image_size_small"
-                            android:layout_height="@dimen/image_size_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/padding_default"
-                            android:src="@drawable/icon_delete" />
+                            android:src="@drawable/delete_new" />
                     </LinearLayout>
                 </LinearLayout>
                 <!-- /Form with user's brief file -->
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginRight="@dimen/margin_small"
+                    android:background="@color/colorPrimaryDark" />
 
                 <!-- Send data button -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_default"
-                    android:background="@drawable/border_solid_orange"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:orientation="vertical">
 
                     <Button
