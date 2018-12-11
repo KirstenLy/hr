@@ -51,7 +51,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         RecyclerView languagesRecycler = findViewById(R.id.recycler_profession_developer_languages);
         RecyclerView databasesRecycler = findViewById(R.id.recycler_profession_developer_database);
         RecyclerView frameworksRecycler = findViewById(R.id.recycler_profession_developer_frameworks);
-        RecyclerView mobileRecycler = findViewById(R.id.recycler_profession_developer_mobile);
+        RecyclerView mobilesRecycler = findViewById(R.id.recycler_profession_developer_mobile);
 
         RecyclerView.LayoutManager layoutManagerForLanguages = new GridLayoutManager(this, 3);
         RecyclerView.LayoutManager layoutManagerForDatabases = new GridLayoutManager(this, 3);
@@ -61,7 +61,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         languagesRecycler.setLayoutManager(layoutManagerForLanguages);
         databasesRecycler.setLayoutManager(layoutManagerForDatabases);
         frameworksRecycler.setLayoutManager(layoutManagerForFrameworks);
-        mobileRecycler.setLayoutManager(layoutManagerForMobile);
+        mobilesRecycler.setLayoutManager(layoutManagerForMobile);
 
         languagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
         databasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
@@ -71,12 +71,12 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         languagesRecycler.setAdapter(languagesAdapter);
         databasesRecycler.setAdapter(databasesAdapter);
         frameworksRecycler.setAdapter(frameworkAdapter);
-        mobileRecycler.setAdapter(mobilesAdapter);
+        mobilesRecycler.setAdapter(mobilesAdapter);
 
         languagesRecycler.setNestedScrollingEnabled(false);
         databasesRecycler.setNestedScrollingEnabled(false);
         frameworksRecycler.setNestedScrollingEnabled(false);
-        mobileRecycler.setNestedScrollingEnabled(false);
+        mobilesRecycler.setNestedScrollingEnabled(false);
 
         userTaskOrCodeFile = findViewById(R.id.text_profession_developer_get_task);
         userTaskOrCodeFile.setOnClickListener(this);
