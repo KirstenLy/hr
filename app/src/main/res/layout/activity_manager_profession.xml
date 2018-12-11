@@ -16,11 +16,13 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
+            android:paddingLeft="@dimen/padding_small"
             android:paddingTop="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_small"
             android:paddingBottom="@dimen/padding_default">
 
             <!-- Form with question about skills -->
@@ -72,7 +74,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_large"
-                android:background="@drawable/border_solid_orange"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -95,8 +96,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default"
-                        app:hintEnabled="false">
+                        android:paddingRight="@dimen/padding_default">
 
                         <EditText
                             android:id="@+id/edit_profession_manager_contacts_name"
@@ -115,21 +115,12 @@
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/padding_default">
 
-                    <TextView
-                        android:id="@+id/text_profession_manager_contacts_phone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/manager_sent_phone"
-                        android:textSize="@dimen/text_size_large" />
-
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default"
-                        app:hintEnabled="false">
+                        android:paddingRight="@dimen/padding_default">
 
                         <EditText
                             android:id="@+id/edit_profession_manager_contacts_phone"
@@ -148,21 +139,12 @@
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/padding_default">
 
-                    <TextView
-                        android:id="@+id/text_profession_manager_contacts_email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/manager_sent_email"
-                        android:textSize="@dimen/text_size_large" />
-
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default"
-                        app:hintEnabled="false">
+                        android:paddingRight="@dimen/padding_default">
 
                         <EditText
                             android:id="@+id/edit_profession_manager_contacts_email"
@@ -184,22 +166,12 @@
                     android:paddingBottom="@dimen/padding_default"
                     android:visibility="invisible">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default"
-                        android:text="@string/manager_sent_question"
-                        android:textSize="@dimen/text_size_large" />
-
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default"
-                        app:hintEnabled="false">
+                        android:paddingRight="@dimen/padding_default">
 
                         <EditText
                             android:id="@+id/edit_profession_manager_contacts_invisible"
@@ -220,20 +192,12 @@
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/padding_default">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/manager_sent_comment"
-                        android:textSize="@dimen/text_size_large" />
-
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default"
-                        app:hintEnabled="false">
+                        android:paddingRight="@dimen/padding_default">
 
                         <EditText
                             android:layout_width="match_parent"
@@ -249,13 +213,17 @@
             </LinearLayout>
             <!-- /Form with user's callback data -->
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
+
             <!-- Form with user's brief file -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_default"
-                android:background="@drawable/border_solid_orange"
+                android:layout_marginTop="@dimen/margin_small"
                 android:orientation="vertical">
 
                 <TextView
@@ -284,18 +252,22 @@
                         android:layout_width="@dimen/image_size_small"
                         android:layout_height="@dimen/image_size_small"
                         android:paddingLeft="@dimen/padding_default"
-                        android:src="@drawable/icon_delete" />
+                        android:src="@drawable/delete_new" />
                 </LinearLayout>
             </LinearLayout>
             <!-- /Form with user's brief file -->
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
 
             <!-- Send data button -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_default"
-                android:background="@drawable/border_solid_orange"
+                android:layout_marginTop="@dimen/margin_small"
                 android:orientation="vertical">
 
                 <Button

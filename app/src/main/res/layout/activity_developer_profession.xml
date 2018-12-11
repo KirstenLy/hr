@@ -176,15 +176,6 @@
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/padding_default">
 
-                        <!--<TextView-->
-                        <!--android:id="@+id/text_profession_developer_contacts_name"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center_horizontal"-->
-                        <!--android:paddingTop="@dimen/padding_default"-->
-                        <!--android:text="@string/developer_sent_name"-->
-                        <!--android:textSize="@dimen/text_size_large" />-->
-
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -208,14 +199,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/padding_default">
-
-                        <!--<TextView-->
-                        <!--android:id="@+id/text_profession_developer_contacts_phone"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center_horizontal"-->
-                        <!--android:text="@string/developer_sent_phone"-->
-                        <!--android:textSize="@dimen/text_size_large" />-->
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
@@ -241,14 +224,6 @@
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/padding_default">
 
-                        <!--<TextView-->
-                        <!--android:id="@+id/text_profession_developer_contacts_email"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center_horizontal"-->
-                        <!--android:text="@string/developer_sent_email"-->
-                        <!--android:textSize="@dimen/text_size_large" />-->
-
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -272,13 +247,6 @@
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/padding_default">
-
-                        <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center_horizontal"-->
-                        <!--android:text="@string/manager_sent_comment"-->
-                        <!--android:textSize="@dimen/text_size_large" />-->
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
