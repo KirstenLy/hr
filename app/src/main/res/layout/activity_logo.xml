@@ -8,16 +8,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
         android:src="@drawable/logo" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/img_logo"
-        android:layout_centerHorizontal="true"
-        android:fontFamily="sans-serif"
-        android:paddingTop="@dimen/padding_default"
-        android:text="@string/logo_text"
-        android:textSize="@dimen/text_size_large"
-        android:textStyle="italic"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/img_logo">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif"
+            android:text="@string/logo_text"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="italic" />
+    </RelativeLayout>
 </RelativeLayout>
