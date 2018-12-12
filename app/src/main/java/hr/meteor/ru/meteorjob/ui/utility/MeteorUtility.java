@@ -2,8 +2,10 @@ package hr.meteor.ru.meteorjob.ui.utility;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
 import android.widget.LinearLayout;
@@ -24,7 +26,6 @@ public class MeteorUtility {
         return Html.fromHtml("<u>" + string + "</u>");
     }
 
-
     public static boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
@@ -37,7 +38,7 @@ public class MeteorUtility {
         linearLayout.setLayoutParams(params);
     }
 
-    public static void setFileNameOnTextView(String filePath, TextView textView) {
+    public static void setFileNameOnTextView(String filePath, TextView textView, Uri fileUri) {
         File file = new File(filePath);
         if (file.length() > 0) {
             textView.setText(file.getName());

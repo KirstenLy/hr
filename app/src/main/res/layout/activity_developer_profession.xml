@@ -311,7 +311,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="@dimen/padding_default"
                             android:layout_marginRight="@dimen/padding_default"
-                            android:src="@drawable/icon_delete" />
+                            android:src="@drawable/ic_delete" />
                     </LinearLayout>
                 </LinearLayout>
                 <!-- /Form with user's test task or code file -->
@@ -399,7 +399,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/padding_default"
-                            android:src="@drawable/icon_delete" />
+                            android:src="@drawable/ic_delete" />
                     </LinearLayout>
                 </LinearLayout>
                 <!-- /Form with user's brief file -->
@@ -419,13 +419,22 @@
                     android:layout_marginTop="@dimen/margin_small"
                     android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/button_profession_developer_send"
+                    <com.andexert.library.RippleView
+                        android:id="@+id/more"
+                        rv_centered="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/padding_default"
-                        android:text="@string/default_send" />
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp">
+
+                        <Button
+                            android:id="@+id/button_profession_developer_send"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/padding_default"
+                            android:text="@string/default_send" />
+                    </com.andexert.library.RippleView>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

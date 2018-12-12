@@ -1,7 +1,10 @@
 package hr.meteor.ru.meteorjob.ui.ui;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -13,16 +16,25 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.muddzdev.styleabletoast.StyleableToast;
+import com.nononsenseapps.filepicker.FilePickerActivity;
+import com.nononsenseapps.filepicker.Utils;
+
+import java.io.File;
+import java.util.LinkedHashMap;
+
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
-import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
+import hr.meteor.ru.meteorjob.ui.retrofit.services.MeteorService;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setFileNameOnTextView;
 
 
 public class ManagerProfessionActivity extends AbstractActivity implements View.OnClickListener {
@@ -35,12 +47,14 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     EditText phone;
     EditText email;
 
+    Uri fileUri;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (data != null) {
-            if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && data.getData() != null) {
-                setFileNameOnTextView(data.getData().getPath(), userBriefFile);
-            }
+        if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && resultCode == Activity.RESULT_OK) {
+            fileUri = data.getData();
+            File file = Utils.getFileForUri(data.getData());
+            userBriefFile.setText(file.getName());
         }
     }
 
@@ -70,7 +84,8 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (userBriefFile != null) {
+        boolean isDefaultStringText = userBriefFile.getText().toString().equals(getString(R.string.manager_sent_file));
+        if (userBriefFile != null && !isDefaultStringText) {
             outState.putString("userBriefFileKey", String.valueOf(userBriefFile.getText()));
         }
         super.onSaveInstanceState(outState);
@@ -89,10 +104,12 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         int elementId = v.getId();
 
         if (elementId == R.id.text_profession_manager_get_brief) {
-            Intent intent = new Intent();
-            intent.setType("file/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.default_choose_file)), TAKE_USER_BRIEF_FILE_REQUEST);
+            Intent intent = new Intent(this, FilePickerActivity.class);
+            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+            intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+            intent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+            startActivityForResult(intent, TAKE_USER_BRIEF_FILE_REQUEST);
         }
 
         if (elementId == R.id.radiobutton_profession_manager_yes) {
@@ -116,16 +133,18 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
                     question = findViewById(R.id.edit_profession_manager_contacts_invisible);
                 }
 
-                sendData(new ManagerData(
-                        contactsFormYesButton.isChecked(),
-                        name.getText().toString(),
-                        phone.getText().toString(),
-                        email.getText().toString(),
-                        question == null ? null : question.getText().toString(),
-                        comment.getText().toString()
-                ));
+                ManagerData managerData = new ManagerData();
+                managerData.setSkilled(contactsFormYesButton.isChecked());
+                managerData.setName(name.getText().toString());
+                managerData.setPhone(phone.getText().toString());
+                managerData.setEmail(email.getText().toString());
+                managerData.setAnswer(question == null ? null : question.getText().toString());
+                managerData.setComment(comment.getText().toString());
+
+                sendData(managerData, fileUri);
+
             } else {
-                Toast.makeText(this, R.string.error_validation, Toast.LENGTH_LONG).show();
+                StyleableToast.makeText(this, getString(R.string.error_validation), Toast.LENGTH_LONG, R.style.ToastValidationError).show();
             }
         }
     }
@@ -160,21 +179,31 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         return isSuccess;
     }
 
-    public void sendData(ManagerData managerData) {
-        getMeteorService().postManagerData(managerData).enqueue(new Callback<ManagerData>() {
+    private void sendData(ManagerData managerData, Uri fileUri) {
+        MeteorService service = getMeteorService();
+        File file = new File(fileUri.getPath());
+
+        RequestBody requestFileBody = RequestBody.create(
+                MediaType.parse(getContentResolver().getType(fileUri)),
+                file
+        );
+
+        MultipartBody.Part requestFile = MultipartBody.Part.createFormData("brief_file", "ds", requestFileBody);
+
+        LinkedHashMap<String, String> requestHashMap = new LinkedHashMap<>();
+        requestHashMap.put("TestKey", "TestKeyResult");
+
+        Call<ManagerData> call = service.postManagerData(new LinkedHashMap<String, String>(), requestFile);
+        call.enqueue(new Callback<ManagerData>() {
             @Override
-            public void onResponse
-                    (Call<ManagerData> call, Response<ManagerData> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    Log.e("TAGConnection", "Done");
-                } else {
-                    Log.e("TAGConnection", "Connection error");
-                }
+            public void onResponse(Call<ManagerData> call,
+                                   Response<ManagerData> response) {
+                Log.v("Upload", "success");
             }
 
             @Override
             public void onFailure(Call<ManagerData> call, Throwable t) {
-                DialogUtility.showErrorDialog(ManagerProfessionActivity.this, R.string.error_retrofit_connection, true);
+                Log.e("Upload error:", t.getMessage());
             }
         });
     }

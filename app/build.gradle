@@ -1,10 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'key0'
+            keyPassword 'qeadws12'
+            storeFile file('/home/kirsten/AndroidStudioProjects/meteor_hr_key.jks')
+            storePassword 'qeadws12'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "hr.meteor.ru.meteorjob"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -14,6 +22,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -32,4 +41,10 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+
+    implementation 'com.muddzdev:styleabletoast:2.2.0'
+
+    implementation 'com.patrickpissurno:ripple-effect:1.3.1'
+
+    implementation 'com.nononsenseapps:filepicker:4.1.0'
 }

@@ -241,10 +241,10 @@
 
                     <ImageView
                         android:id="@+id/image_profession_manager_brief_clear"
-                        android:layout_width="@dimen/image_size_small"
-                        android:layout_height="@dimen/image_size_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_default"
-                        android:src="@drawable/icon_delete" />
+                        android:src="@drawable/ic_delete" />
                 </LinearLayout>
             </LinearLayout>
             <!-- /Form with user's brief file -->
@@ -262,13 +262,22 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/button_profession_manager_send"
+                <com.andexert.library.RippleView
+                    android:id="@+id/more"
+                    rv_centered="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/padding_default"
-                    android:text="@string/default_send" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp">
+
+                    <Button
+                        android:id="@+id/button_profession_manager_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/padding_default"
+                        android:text="@string/default_send" />
+                </com.andexert.library.RippleView>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

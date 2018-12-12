@@ -24,11 +24,48 @@
     <!-- ProgressBar -->
     <style name="ProgressBarStyle" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
     </style>
 
     <!-- ActionBar -->
     <style name="ActionBarStyle">
         <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="ToastValidationError">
+        <item name="stTextBold">true</item>
+        <item name="stIconStart">@drawable/ic_sad</item>
+        <item name="stTextColor">@color/colorBlack</item>
+        <item name="stTextSize">@dimen/text_size_medium</item>
+        <item name="stColorBackground">@color/colorPrimaryDark</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">10dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stLength">SHORT</item>
+        <item name="stGravity">center</item>
+        <item name="stRadius">10dp</item>
+    </style>
+
+    <!-- You can also inherit from NNF_BaseTheme.Light -->
+    <style name="FilePickerTheme" parent="NNF_BaseTheme.Light">
+        <!-- Set these to match your theme -->
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+
+        <!-- Setting a divider is entirely optional -->
+        <item name="nnf_list_item_divider">?android:attr/listDivider</item>
+
+        <!-- Need to set this also to style create folder dialog -->
+        <item name="alertDialogTheme">@style/FilePickerAlertDialogTheme</item>
+
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

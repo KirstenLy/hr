@@ -28,9 +28,9 @@ public class DeveloperData {
     @Expose
     private String[] languages;
 
-    @SerializedName("Databases")
+    @SerializedName("databases")
     @Expose
-    private String[] Databases;
+    private String[] databases;
 
     @SerializedName("Frameworks")
     @Expose
@@ -39,18 +39,6 @@ public class DeveloperData {
     @SerializedName("Mobiles")
     @Expose
     private String[] mobiles;
-
-    public DeveloperData(boolean isSkilled, String name, String phone, String email, String comment, String[] languages, String[] databases, String[] frameworks, String[] mobiles) {
-        this.isSkilled = isSkilled;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.comment = comment;
-        this.languages = languages;
-        Databases = databases;
-        this.frameworks = frameworks;
-        this.mobiles = mobiles;
-    }
 
     public boolean isSkilled() {
         return isSkilled;
@@ -101,11 +89,11 @@ public class DeveloperData {
     }
 
     public String[] getDatabases() {
-        return Databases;
+        return databases;
     }
 
     public void setDatabases(String[] databases) {
-        Databases = databases;
+        this.databases = databases;
     }
 
     public String[] getFrameworks() {

@@ -28,8 +28,8 @@ public class MainActivity extends AbstractActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         ArrayList<Profession> professionList = new ArrayList<>();
-        professionList.add(new Profession(1, R.drawable.icon_profession_developer, getString(R.string.profession_dev)));
-        professionList.add(new Profession(2, R.drawable.icon_profession_manager, getString(R.string.profession_manager)));
+        professionList.add(new Profession(1, R.drawable.ic_profession_developer, getString(R.string.profession_dev)));
+        professionList.add(new Profession(2, R.drawable.ic_profession_manager, getString(R.string.profession_manager)));
 
         ProfessionListAdapter adapter = new ProfessionListAdapter(getApplicationContext(), professionList);
         recyclerView.setAdapter(adapter);

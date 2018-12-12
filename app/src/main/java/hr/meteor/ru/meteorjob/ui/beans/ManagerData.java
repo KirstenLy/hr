@@ -28,15 +28,6 @@ public class ManagerData {
     @Expose
     private String comment;
 
-    public ManagerData(boolean isSkilled, String name, String phone, String email, String answer, String comment) {
-        this.isSkilled = isSkilled;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.answer = answer;
-        this.comment = comment;
-    }
-
     public boolean isSkilled() {
         return isSkilled;
     }

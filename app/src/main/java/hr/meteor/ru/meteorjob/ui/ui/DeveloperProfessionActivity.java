@@ -1,8 +1,10 @@
 package hr.meteor.ru.meteorjob.ui.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,15 +17,23 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.muddzdev.styleabletoast.StyleableToast;
+import com.nononsenseapps.filepicker.FilePickerActivity;
+import com.nononsenseapps.filepicker.Utils;
+
+import java.io.File;
+
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
 import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
+import hr.meteor.ru.meteorjob.ui.retrofit.services.MeteorService;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getUnderlineSpanned;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setFileNameOnTextView;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
@@ -39,15 +49,18 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     DeveloperTechnologiesAdapter frameworkAdapter;
     DeveloperTechnologiesAdapter mobilesAdapter;
 
+    Uri fileUri;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (data != null) {
-            if ((requestCode == TAKE_USER_BRIEF_FILE_REQUEST || requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) && data.getData() != null) {
-                if (requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) {
-                    setFileNameOnTextView(data.getData().getPath(), userTaskOrCodeFile);
-                } else {
-                    setFileNameOnTextView(data.getData().getPath(), userBriefFile);
-                }
+        if ((requestCode == TAKE_USER_BRIEF_FILE_REQUEST || requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) && resultCode == Activity.RESULT_OK) {
+            fileUri = data.getData();
+            File file = Utils.getFileForUri(data.getData());
+
+            if (requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) {
+                userTaskOrCodeFile.setText(file.getName());
+            } else {
+                userBriefFile.setText(file.getName());
             }
         }
     }
@@ -123,11 +136,14 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         outState.putBooleanArray("frameworksCheckboxes", frameworksSelectedCheckboxData);
         outState.putBooleanArray("mobilesCheckboxes", mobilesSelectedCheckboxData);
 
-        if (userBriefFile != null) {
-            outState.putString("userBriefFileKey", String.valueOf(userBriefFile.getText()));
-        }
-        if (userTaskOrCodeFile != null) {
+        boolean isDefaultStringText = userTaskOrCodeFile.getText().toString().equals(getString(R.string.developer_sent_file));
+        if (userTaskOrCodeFile != null && !isDefaultStringText) {
             outState.putString("userTaskOrCodeFileKey", String.valueOf(userTaskOrCodeFile.getText()));
+        }
+
+        isDefaultStringText = userBriefFile.getText().toString().equals(getString(R.string.developer_sent_file));
+        if (userBriefFile != null && !isDefaultStringText) {
+            outState.putString("userBriefFileKey", String.valueOf(userBriefFile.getText()));
         }
         super.onSaveInstanceState(outState);
     }
@@ -141,11 +157,13 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         frameworkAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("frameworksCheckboxes"));
         mobilesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("mobilesCheckboxes"));
 
+        if (userTaskOrCodeFile != null && savedInstanceState.getString("userTaskOrCodeFileKey") != null) {
+            userTaskOrCodeFile.setText(savedInstanceState.getString("userTaskOrCodeFileKey"));
+        }
+
         if (userBriefFile != null && savedInstanceState.getString("userBriefFileKey") != null) {
             userBriefFile.setText(savedInstanceState.getString("userBriefFileKey"));
         }
-        if (userTaskOrCodeFile != null && savedInstanceState.getString("userTaskOrCodeFileKey") != null)
-            userTaskOrCodeFile.setText(savedInstanceState.getString("userTaskOrCodeFileKey"));
     }
 
     @Override
@@ -153,13 +171,16 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         int elementId = v.getId();
 
         if (elementId == R.id.text_profession_developer_get_task || elementId == R.id.text_profession_developer_get_brief) {
-            Intent intent = new Intent();
-            intent.setType("file/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
+            Intent intent = new Intent(this, FilePickerActivity.class);
+            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+            intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+            intent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+
             if (elementId == R.id.text_profession_developer_get_task) {
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.default_choose_file)), TAKE_USER_TASK_OR_CODE_FILE_REQUEST);
+                startActivityForResult(intent, TAKE_USER_TASK_OR_CODE_FILE_REQUEST);
             } else {
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.default_choose_file)), TAKE_USER_BRIEF_FILE_REQUEST);
+                startActivityForResult(intent, TAKE_USER_BRIEF_FILE_REQUEST);
             }
         }
 
@@ -183,19 +204,21 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
                 EditText comment = findViewById(R.id.edit_profession_developer_contacts_comment);
                 contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
 
-                sendData(new DeveloperData(
-                        contactsFormYesButton.isChecked(),
-                        name.getText().toString(),
-                        phone.getText().toString(),
-                        email.getText().toString(),
-                        comment.getText().toString(),
-                        languagesAdapter.getSelectedTechnologiesArray(),
-                        databasesAdapter.getSelectedTechnologiesArray(),
-                        frameworkAdapter.getSelectedTechnologiesArray(),
-                        mobilesAdapter.getSelectedTechnologiesArray()
-                ));
+                DeveloperData developerData = new DeveloperData();
+                developerData.setSkilled(contactsFormYesButton.isChecked());
+                developerData.setName(name.getText().toString());
+                developerData.setPhone(phone.getText().toString());
+                developerData.setEmail(email.getText().toString());
+                developerData.setComment(comment.getText().toString());
+                developerData.setLanguages(languagesAdapter.getSelectedTechnologiesArray());
+                developerData.setDatabases(databasesAdapter.getSelectedTechnologiesArray());
+                developerData.setFrameworks(frameworkAdapter.getSelectedTechnologiesArray());
+                developerData.setMobiles(mobilesAdapter.getSelectedTechnologiesArray());
+
+                sendData(developerData);
+
             } else {
-                Toast.makeText(this, R.string.error_validation, Toast.LENGTH_LONG).show();
+                StyleableToast.makeText(this, getString(R.string.error_validation), Toast.LENGTH_LONG, R.style.ToastValidationError).show();
             }
         }
     }
