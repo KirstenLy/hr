@@ -14,13 +14,13 @@ import hr.meteor.ru.meteorjob.R;
 
 public class DeveloperTechnologiesAdapter extends RecyclerView.Adapter<DeveloperTechnologiesAdapter.ViewHolder> {
     private ArrayList<String> techNameList;
-    private boolean[] selectedCheckboxData;
+    private boolean[] selectedCheckboxArray;
     private Context context;
 
     public DeveloperTechnologiesAdapter(Context context, ArrayList<String> techNameList) {
         this.techNameList = techNameList;
         this.context = context;
-        this.selectedCheckboxData = new boolean[techNameList.size()];
+        this.selectedCheckboxArray = new boolean[techNameList.size()];
     }
 
     @Override
@@ -32,13 +32,13 @@ public class DeveloperTechnologiesAdapter extends RecyclerView.Adapter<Developer
     @Override
     public void onBindViewHolder(final DeveloperTechnologiesAdapter.ViewHolder viewHolder, final int i) {
         viewHolder.techName.setText(techNameList.get(i));
-        if (selectedCheckboxData[i]) {
+        if (selectedCheckboxArray[i]) {
             viewHolder.techCheckbox.setChecked(true);
         }
         viewHolder.techCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedCheckboxData[i] = !selectedCheckboxData[i];
+                selectedCheckboxArray[i] = !selectedCheckboxArray[i];
             }
         });
     }
@@ -59,11 +59,23 @@ public class DeveloperTechnologiesAdapter extends RecyclerView.Adapter<Developer
         }
     }
 
-    public boolean[] getSelectedCheckboxData() {
-        return selectedCheckboxData;
+    public boolean[] getSelectedCheckboxArray() {
+        return selectedCheckboxArray;
     }
 
-    public void setSelectedCheckboxData(boolean[] selectedCheckboxData) {
-        this.selectedCheckboxData = selectedCheckboxData;
+    public void setSelectedCheckboxArray(boolean[] selectedCheckboxArray) {
+        this.selectedCheckboxArray = selectedCheckboxArray;
+    }
+
+    public String[] getSelectedTechnologiesArray() {
+        ArrayList<String> selectedTechnologiesList = new ArrayList<>();
+        for (int i = 0; i < selectedCheckboxArray.length; i++) {
+            if (selectedCheckboxArray[i]) {
+                selectedTechnologiesList.add(techNameList.get(i));
+            }
+        }
+        String[] result = new String[selectedTechnologiesList.size()];
+        selectedTechnologiesList.toArray(result);
+        return result;
     }
 }

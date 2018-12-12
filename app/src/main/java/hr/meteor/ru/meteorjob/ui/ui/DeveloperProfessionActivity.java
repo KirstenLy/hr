@@ -18,7 +18,6 @@ import android.widget.Toast;
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
 import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
-import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
 import retrofit2.Call;
@@ -114,10 +113,10 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        boolean[] languagesSelectedCheckboxData = languagesAdapter.getSelectedCheckboxData();
-        boolean[] databasesSelectedCheckboxData = databasesAdapter.getSelectedCheckboxData();
-        boolean[] frameworksSelectedCheckboxData = frameworkAdapter.getSelectedCheckboxData();
-        boolean[] mobilesSelectedCheckboxData = mobilesAdapter.getSelectedCheckboxData();
+        boolean[] languagesSelectedCheckboxData = languagesAdapter.getSelectedCheckboxArray();
+        boolean[] databasesSelectedCheckboxData = databasesAdapter.getSelectedCheckboxArray();
+        boolean[] frameworksSelectedCheckboxData = frameworkAdapter.getSelectedCheckboxArray();
+        boolean[] mobilesSelectedCheckboxData = mobilesAdapter.getSelectedCheckboxArray();
 
         outState.putBooleanArray("languagesCheckboxes", languagesSelectedCheckboxData);
         outState.putBooleanArray("databasesCheckboxes", databasesSelectedCheckboxData);
@@ -137,10 +136,10 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        languagesAdapter.setSelectedCheckboxData(savedInstanceState.getBooleanArray("languagesCheckboxes"));
-        databasesAdapter.setSelectedCheckboxData(savedInstanceState.getBooleanArray("databasesCheckboxes"));
-        frameworkAdapter.setSelectedCheckboxData(savedInstanceState.getBooleanArray("frameworksCheckboxes"));
-        mobilesAdapter.setSelectedCheckboxData(savedInstanceState.getBooleanArray("mobilesCheckboxes"));
+        languagesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("languagesCheckboxes"));
+        databasesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("databasesCheckboxes"));
+        frameworkAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("frameworksCheckboxes"));
+        mobilesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("mobilesCheckboxes"));
 
         if (userBriefFile != null && savedInstanceState.getString("userBriefFileKey") != null) {
             userBriefFile.setText(savedInstanceState.getString("userBriefFileKey"));
@@ -189,7 +188,11 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
                         name.getText().toString(),
                         phone.getText().toString(),
                         email.getText().toString(),
-                        comment.getText().toString()
+                        comment.getText().toString(),
+                        languagesAdapter.getSelectedTechnologiesArray(),
+                        databasesAdapter.getSelectedTechnologiesArray(),
+                        frameworkAdapter.getSelectedTechnologiesArray(),
+                        mobilesAdapter.getSelectedTechnologiesArray()
                 ));
             } else {
                 Toast.makeText(this, R.string.error_validation, Toast.LENGTH_LONG).show();

@@ -311,7 +311,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="@dimen/padding_default"
                             android:layout_marginRight="@dimen/padding_default"
-                            android:src="@drawable/delete_new" />
+                            android:src="@drawable/icon_delete" />
                     </LinearLayout>
                 </LinearLayout>
                 <!-- /Form with user's test task or code file -->
@@ -399,7 +399,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/padding_default"
-                            android:src="@drawable/delete_new" />
+                            android:src="@drawable/icon_delete" />
                     </LinearLayout>
                 </LinearLayout>
                 <!-- /Form with user's brief file -->

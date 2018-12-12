@@ -244,7 +244,7 @@
                         android:layout_width="@dimen/image_size_small"
                         android:layout_height="@dimen/image_size_small"
                         android:paddingLeft="@dimen/padding_default"
-                        android:src="@drawable/delete_new" />
+                        android:src="@drawable/icon_delete" />
                 </LinearLayout>
             </LinearLayout>
             <!-- /Form with user's brief file -->
