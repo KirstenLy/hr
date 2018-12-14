@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.RelativeLayout;
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.MeteorService;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -53,7 +56,18 @@ public abstract class AbstractActivity extends AppCompatActivity {
     }
 
     public MeteorService getMeteorService() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://139.162.213.204/android-training/").addConverterFactory(GsonConverterFactory.create()).build();
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                Log.d("OkHttpTAG", message);
+            }
+        });
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://hr.fokgroup.com/vacancy/").addConverterFactory(GsonConverterFactory.create()).client(client).build();
         return retrofit.create(MeteorService.class);
     }
 

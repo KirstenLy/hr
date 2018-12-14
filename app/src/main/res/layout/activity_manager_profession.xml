@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -76,77 +75,58 @@
                 android:layout_marginTop="@dimen/margin_large"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
                     android:paddingBottom="@dimen/padding_default">
 
-                    <android.support.design.widget.TextInputLayout
+                    <EditText
+                        android:id="@+id/edit_profession_manager_contacts_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default">
+                        android:gravity="start"
+                        android:hint="@string/developer_hint_name"
+                        android:inputType="textPersonName" />
 
-                        <EditText
-                            android:id="@+id/edit_profession_manager_contacts_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:hint="@string/developer_hint_name"
-                            android:inputType="textPersonName" />
+                </android.support.design.widget.TextInputLayout>
 
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-
-                <LinearLayout
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
                     android:paddingBottom="@dimen/padding_default">
 
-                    <android.support.design.widget.TextInputLayout
+                    <EditText
+                        android:id="@+id/edit_profession_manager_contacts_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default">
+                        android:gravity="start"
+                        android:hint="@string/manager_hint_phone"
+                        android:inputType="phone" />
+                </android.support.design.widget.TextInputLayout>
 
-                        <EditText
-                            android:id="@+id/edit_profession_manager_contacts_phone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:hint="@string/manager_hint_phone"
-                            android:inputType="phone" />
-
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-
-                <LinearLayout
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
                     android:paddingBottom="@dimen/padding_default">
 
-                    <android.support.design.widget.TextInputLayout
+                    <EditText
+                        android:id="@+id/edit_profession_manager_contacts_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default">
+                        android:gravity="start"
+                        android:hint="@string/manager_hint_email"
+                        android:inputType="textEmailAddress" />
 
-                        <EditText
-                            android:id="@+id/edit_profession_manager_contacts_email"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:hint="@string/manager_hint_email"
-                            android:inputType="textEmailAddress" />
-
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
+                </android.support.design.widget.TextInputLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_professions_manager_contacts_invisible"
@@ -177,33 +157,26 @@
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
-                <LinearLayout
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
                     android:paddingBottom="@dimen/padding_default">
 
-                    <android.support.design.widget.TextInputLayout
+                    <EditText
+                        android:id="@+id/edit_profession_manager_contacts_comment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default">
+                        android:gravity="start"
+                        android:hint="@string/manager_hint_comment"
+                        android:inputType="textMultiLine"
+                        android:lines="4"
+                        android:maxLines="4" />
 
-                        <EditText
-                            android:id="@+id/edit_profession_manager_contacts_comment"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:hint="@string/manager_hint_comment"
-                            android:inputType="textMultiLine"
-                            android:lines="4"
-                            android:maxLines="4" />
-
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-            </LinearLayout>
-            <!-- /Form with user's callback data -->
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout><!-- /Form with user's callback data -->
 
             <View
                 android:layout_width="fill_parent"
@@ -246,8 +219,7 @@
                         android:paddingLeft="@dimen/padding_default"
                         android:src="@drawable/ic_delete" />
                 </LinearLayout>
-            </LinearLayout>
-            <!-- /Form with user's brief file -->
+            </LinearLayout><!-- /Form with user's brief file -->
 
             <View
                 android:layout_width="fill_parent"

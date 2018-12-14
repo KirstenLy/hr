@@ -22,6 +22,7 @@
             android:layout_centerInParent="true"
             android:fontFamily="sans-serif"
             android:text="@string/logo_text"
+            android:textAlignment="center"
             android:textSize="@dimen/text_size_large"
             android:textStyle="italic" />
     </RelativeLayout>

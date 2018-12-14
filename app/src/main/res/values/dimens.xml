@@ -27,6 +27,7 @@
     <dimen name="image_size_default">128dp</dimen>
     <dimen name="image_size_large">160dp</dimen>
     <dimen name="image_size_big">192dp</dimen>
+    <dimen name="image_size_profession_cell">300dp</dimen>
 
     <!-- Windows -->
     <dimen name="popup_width">270dp</dimen>

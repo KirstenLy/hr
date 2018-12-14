@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ManagerData {
-    @SerializedName("IsSkilled")
+    @SerializedName("Skilled")
     @Expose
     private boolean isSkilled;
 

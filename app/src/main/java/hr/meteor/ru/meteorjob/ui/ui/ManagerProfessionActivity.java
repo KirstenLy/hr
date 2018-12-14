@@ -16,16 +16,20 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.MeteorService;
+import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -47,14 +51,13 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     EditText phone;
     EditText email;
 
-    Uri fileUri;
+    File sendFile;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && resultCode == Activity.RESULT_OK) {
-            fileUri = data.getData();
-            File file = Utils.getFileForUri(data.getData());
-            userBriefFile.setText(file.getName());
+            sendFile = Utils.getFileForUri(data.getData());
+            userBriefFile.setText(sendFile.getName());
         }
     }
 
@@ -136,13 +139,12 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
                 ManagerData managerData = new ManagerData();
                 managerData.setSkilled(contactsFormYesButton.isChecked());
                 managerData.setName(name.getText().toString());
-                managerData.setPhone(phone.getText().toString());
                 managerData.setEmail(email.getText().toString());
+                managerData.setPhone(phone.getText().toString());
                 managerData.setAnswer(question == null ? null : question.getText().toString());
                 managerData.setComment(comment.getText().toString());
 
-                sendData(managerData, fileUri);
-
+                sendData(managerData);
             } else {
                 StyleableToast.makeText(this, getString(R.string.error_validation), Toast.LENGTH_LONG, R.style.ToastValidationError).show();
             }
@@ -179,32 +181,38 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         return isSuccess;
     }
 
-    private void sendData(ManagerData managerData, Uri fileUri) {
+    private void sendData(ManagerData managerData) {
         MeteorService service = getMeteorService();
-        File file = new File(fileUri.getPath());
 
-        RequestBody requestFileBody = RequestBody.create(
-                MediaType.parse(getContentResolver().getType(fileUri)),
-                file
-        );
+        LinkedHashMap<String, String> test = new LinkedHashMap<>();
+        test.put("test", "test");
+        test.put("test1", "test1");
 
-        MultipartBody.Part requestFile = MultipartBody.Part.createFormData("brief_file", "ds", requestFileBody);
+        RequestBody reqFile = RequestBody.create(MediaType.parse("*/*"), sendFile);
+        MultipartBody.Part fileBody = MultipartBody.Part.createFormData("resume_file", "resume", reqFile);
 
-        LinkedHashMap<String, String> requestHashMap = new LinkedHashMap<>();
-        requestHashMap.put("TestKey", "TestKeyResult");
+        Map<String, RequestBody> map = new HashMap<>();
+        map.put("testName", toRequestBody("testNameString"));
+        map.put("testName1", toRequestBody("testName2String"));
+        map.put("testName2", toRequestBody("testNam3eString"));
 
-        Call<ManagerData> call = service.postManagerData(new LinkedHashMap<String, String>(), requestFile);
-        call.enqueue(new Callback<ManagerData>() {
+        Call<ResultJson> call = service.postManagerData("ds", fileBody);
+        call.enqueue(new Callback<ResultJson>() {
             @Override
-            public void onResponse(Call<ManagerData> call,
-                                   Response<ManagerData> response) {
-                Log.v("Upload", "success");
+            public void onResponse(Call<ResultJson> call,
+                                   Response<ResultJson> response) {
+                Log.d("EHEHEE", String.valueOf(response.body().getStatus()));
             }
 
             @Override
-            public void onFailure(Call<ManagerData> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
+            public void onFailure(Call<ResultJson> call, Throwable t) {
+                Log.d("EHEHEE", t.getMessage());
             }
         });
+    }
+
+    public static RequestBody toRequestBody(String value) {
+        RequestBody body = RequestBody.create(MediaType.parse("text/plain"), value);
+        return body;
     }
 }

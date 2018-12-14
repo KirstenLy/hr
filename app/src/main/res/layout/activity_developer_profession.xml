@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -111,331 +111,298 @@
             </android.support.v7.widget.RecyclerView>
             <!-- /Technologies Recycles -->
 
+            <!-- Form with question about skills -->
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_default"
+                android:background="@drawable/border_solid_orange">
+
+                <TextView
+                    android:id="@+id/text_profession_manager_question"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:paddingTop="@dimen/padding_default"
+                    android:paddingBottom="@dimen/padding_default"
+                    android:text="@string/manager_question_skill" />
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_profession_manager_question"
+                    android:layout_centerHorizontal="true"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:paddingBottom="@dimen/padding_default">
+
+                    <RadioButton
+                        android:id="@+id/radiobutton_profession_developer_yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        android:text="@string/developer_question_skill_answer_yes" />
+
+                    <RadioButton
+                        android:id="@+id/radiobutton_profession_developer_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_default"
+                        android:text="@string/developer_question_skill_answer_no" />
+                </RadioGroup>
+            </RelativeLayout>
+            <!-- /Form with question about skills -->
+
+            <!-- Form with user's callback data -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/padding_large">
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_large"
+                android:orientation="vertical">
 
-                <!-- Form with question about skills -->
-                <RelativeLayout
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:paddingBottom="@dimen/padding_default">
+
+                    <EditText
+                        android:id="@+id/edit_profession_developer_contacts_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:hint="@string/developer_hint_name"
+                        android:inputType="textPersonName" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:paddingBottom="@dimen/padding_default">
+
+                    <EditText
+                        android:id="@+id/edit_profession_developer_contacts_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:hint="@string/developer_hint_phone"
+                        android:inputType="phone" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:paddingBottom="@dimen/padding_default">
+
+                    <EditText
+                        android:id="@+id/edit_profession_developer_contacts_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:hint="@string/developer_hint_email"
+                        android:inputType="textEmailAddress" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:paddingBottom="@dimen/padding_default">
+
+                    <EditText
+                        android:id="@+id/edit_profession_developer_contacts_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:hint="@string/developer_hint_comment"
+                        android:inputType="textMultiLine"
+                        android:lines="4"
+                        android:maxLines="4" />
+
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+            <!-- /Form with user's callback data -->
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <!-- Form with user's test task or code file -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_small"
+                android:orientation="vertical">
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_default"
-                    android:background="@drawable/border_solid_orange">
+                    android:padding="@dimen/padding_default"
+                    android:text="@string/profession_get_task" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="@dimen/padding_default">
 
                     <TextView
-                        android:id="@+id/text_profession_manager_question"
+                        android:id="@+id/text_profession_developer_get_task"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:paddingTop="@dimen/padding_default"
-                        android:paddingBottom="@dimen/padding_default"
-                        android:text="@string/manager_question_skill" />
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/manager_sent_file"
+                        android:textColor="@android:color/holo_blue_dark" />
 
-                    <RadioGroup
+                    <ImageView
+                        android:id="@+id/image_profession_developer_task_clear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/text_profession_manager_question"
-                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_marginRight="@dimen/padding_default"
+                        android:src="@drawable/ic_delete" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- /Form with user's test task or code file -->
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <!-- Download test tasks form -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_small"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="@dimen/padding_default"
+                    android:text="@string/profession_download_task" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="@dimen/padding_default">
+
+                    <TextView
+                        android:id="@+id/text_profession_developer_web_task_link"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="@dimen/padding_default"
+                        android:text="@string/developer_download_web"
+                        android:textColor="@android:color/holo_blue_dark" />
+
+                    <TextView
+                        android:id="@+id/text_profession_developer_android_task_link"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/developer_download_android"
+                        android:textColor="@android:color/holo_blue_dark" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- /Download test tasks form -->
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <!-- Form with user's brief file -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_small"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="@dimen/padding_default"
+                    android:text="@string/profession_get_resume" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="@dimen/padding_default">
+
+                    <TextView
+                        android:id="@+id/text_profession_developer_get_brief"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/manager_sent_file"
+                        android:textColor="@android:color/holo_blue_dark" />
+
+                    <ImageView
+                        android:id="@+id/image_profession_developer_brief_clear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_default"
                         android:paddingRight="@dimen/padding_default"
-                        android:paddingBottom="@dimen/padding_default">
+                        android:src="@drawable/ic_delete" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- /Form with user's brief file -->
 
-                        <RadioButton
-                            android:id="@+id/radiobutton_profession_developer_yes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/padding_default"
-                            android:paddingRight="@dimen/padding_default"
-                            android:text="@string/developer_question_skill_answer_yes" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:background="@color/colorPrimaryDark" />
 
-                        <RadioButton
-                            android:id="@+id/radiobutton_profession_developer_no"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/padding_default"
-                            android:text="@string/developer_question_skill_answer_no" />
-                    </RadioGroup>
-                </RelativeLayout>
-                <!-- /Form with question about skills -->
+            <!-- Send data button -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_small"
+                android:orientation="vertical">
 
-                <!-- Form with user's callback data -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.andexert.library.RippleView
+                    android:id="@+id/more"
+                    rv_centered="true"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:orientation="vertical">
+                    android:layout_margin="5dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/padding_default">
-
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:paddingLeft="@dimen/padding_default"
-                            android:paddingRight="@dimen/padding_default">
-
-                            <EditText
-                                android:id="@+id/edit_profession_developer_contacts_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="start"
-                                android:hint="@string/developer_hint_name"
-                                android:inputType="textPersonName" />
-
-                        </android.support.design.widget.TextInputLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/padding_default">
-
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:paddingLeft="@dimen/padding_default"
-                            android:paddingRight="@dimen/padding_default">
-
-                            <EditText
-                                android:id="@+id/edit_profession_developer_contacts_phone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="start"
-                                android:hint="@string/developer_hint_phone"
-                                android:inputType="phone" />
-
-                        </android.support.design.widget.TextInputLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/padding_default">
-
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:paddingLeft="@dimen/padding_default"
-                            android:paddingRight="@dimen/padding_default">
-
-                            <EditText
-                                android:id="@+id/edit_profession_developer_contacts_email"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="start"
-                                android:hint="@string/developer_hint_email"
-                                android:inputType="textEmailAddress" />
-                        </android.support.design.widget.TextInputLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/padding_default">
-
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:paddingLeft="@dimen/padding_default"
-                            android:paddingRight="@dimen/padding_default">
-
-                            <EditText
-                                android:id="@+id/edit_profession_developer_contacts_comment"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="start"
-                                android:hint="@string/developer_hint_comment"
-                                android:inputType="textMultiLine"
-                                android:lines="4"
-                                android:maxLines="4" />
-
-                        </android.support.design.widget.TextInputLayout>
-                    </LinearLayout>
-                </LinearLayout>
-                <!-- /Form with user's callback data -->
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorPrimaryDark" />
-
-                <!-- Form with user's test task or code file -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="vertical">
-
-                    <TextView
+                    <Button
+                        android:id="@+id/button_profession_developer_send"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/profession_get_task" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingBottom="@dimen/padding_default">
-
-                        <TextView
-                            android:id="@+id/text_profession_developer_get_task"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/manager_sent_file"
-                            android:textColor="@android:color/holo_blue_dark" />
-
-                        <ImageView
-                            android:id="@+id/image_profession_developer_task_clear"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/padding_default"
-                            android:layout_marginRight="@dimen/padding_default"
-                            android:src="@drawable/ic_delete" />
-                    </LinearLayout>
-                </LinearLayout>
-                <!-- /Form with user's test task or code file -->
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorPrimaryDark" />
-
-                <!-- Download test tasks form -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/profession_download_task" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingBottom="@dimen/padding_default">
-
-                        <TextView
-                            android:id="@+id/text_profession_developer_web_task_link"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingRight="@dimen/padding_default"
-                            android:text="@string/developer_download_web"
-                            android:textColor="@android:color/holo_blue_dark" />
-
-                        <TextView
-                            android:id="@+id/text_profession_developer_android_task_link"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/developer_download_android"
-                            android:textColor="@android:color/holo_blue_dark" />
-                    </LinearLayout>
-                </LinearLayout>
-                <!-- /Download test tasks form -->
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorPrimaryDark" />
-
-                <!-- Form with user's brief file -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/profession_get_resume" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingBottom="@dimen/padding_default">
-
-                        <TextView
-                            android:id="@+id/text_profession_developer_get_brief"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/manager_sent_file"
-                            android:textColor="@android:color/holo_blue_dark" />
-
-                        <ImageView
-                            android:id="@+id/image_profession_developer_brief_clear"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/padding_default"
-                            android:src="@drawable/ic_delete" />
-                    </LinearLayout>
-                </LinearLayout>
-                <!-- /Form with user's brief file -->
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginLeft="@dimen/margin_small"
-                    android:layout_marginRight="@dimen/margin_small"
-                    android:background="@color/colorPrimaryDark" />
-
-                <!-- Send data button -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="vertical">
-
-                    <com.andexert.library.RippleView
-                        android:id="@+id/more"
-                        rv_centered="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="5dp">
-
-                        <Button
-                            android:id="@+id/button_profession_developer_send"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="@dimen/padding_default"
-                            android:text="@string/default_send" />
-                    </com.andexert.library.RippleView>
-                </LinearLayout>
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/padding_default"
+                        android:text="@string/default_send" />
+                </com.andexert.library.RippleView>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
