@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import java.util.concurrent.TimeUnit;
+
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.MeteorService;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
@@ -42,6 +44,10 @@ public abstract class AbstractActivity extends AppCompatActivity {
         loadingDialog.show();
     }
 
+    public void hideLoadingDialog() {
+        loadingDialog.hide();
+    }
+
     public Toolbar createToolbar(int id, int iconId, int titleId, boolean isHomeActive) {
         Toolbar toolbar = findViewById(id);
         if (titleId != 0) {
@@ -62,8 +68,11 @@ public abstract class AbstractActivity extends AppCompatActivity {
                 Log.d("OkHttpTAG", message);
             }
         });
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().
+                connectTimeout(60, TimeUnit.SECONDS).
+                readTimeout(60, TimeUnit.SECONDS).
+                writeTimeout(60, TimeUnit.SECONDS)
                 .addInterceptor(logging)
                 .build();
 

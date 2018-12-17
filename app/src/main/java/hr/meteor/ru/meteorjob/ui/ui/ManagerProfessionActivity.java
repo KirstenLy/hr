@@ -2,11 +2,11 @@ package hr.meteor.ru.meteorjob.ui.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,20 +16,16 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
-import hr.meteor.ru.meteorjob.ui.retrofit.services.MeteorService;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
+import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -38,6 +34,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyPartFromFile;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getFileExternal;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromManagerObject;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.isFileExternalCorrect;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
 
 
@@ -51,13 +51,13 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     EditText phone;
     EditText email;
 
-    File sendFile;
+    File briefFile;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && resultCode == Activity.RESULT_OK) {
-            sendFile = Utils.getFileForUri(data.getData());
-            userBriefFile.setText(sendFile.getName());
+            briefFile = Utils.getFileForUri(data.getData());
+            userBriefFile.setText(briefFile.getName());
         }
     }
 
@@ -102,6 +102,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onClick(View v) {
         int elementId = v.getId();
@@ -129,6 +130,15 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         if (elementId == R.id.button_profession_manager_send) {
             if (validationSuccess()) {
+                showLoadingDialog();
+                if (briefFile != null) {
+                    if (!isFileExternalCorrect(briefFile)) {
+                        hideLoadingDialog();
+                        DialogUtility.showErrorDialog(ManagerProfessionActivity.this, R.string.error_file_format, false);
+                        briefFile = null;
+                        return;
+                    }
+                }
                 EditText comment = findViewById(R.id.edit_profession_manager_contacts_comment);
                 EditText question = null;
 
@@ -137,12 +147,12 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
                 }
 
                 ManagerData managerData = new ManagerData();
-                managerData.setSkilled(contactsFormYesButton.isChecked());
                 managerData.setName(name.getText().toString());
-                managerData.setEmail(email.getText().toString());
                 managerData.setPhone(phone.getText().toString());
-                managerData.setAnswer(question == null ? null : question.getText().toString());
+                managerData.setEmail(email.getText().toString());
+                managerData.setSkilled(contactsFormYesButton.isChecked() ? "y" : "n");
                 managerData.setComment(comment.getText().toString());
+                managerData.setAnswer(question == null ? null : question.getText().toString());
 
                 sendData(managerData);
             } else {
@@ -182,37 +192,27 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     }
 
     private void sendData(ManagerData managerData) {
-        MeteorService service = getMeteorService();
+        String json = getJsonFromManagerObject(managerData);
+        RequestBody jsonBody =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), json);
 
-        LinkedHashMap<String, String> test = new LinkedHashMap<>();
-        test.put("test", "test");
-        test.put("test1", "test1");
+        MultipartBody.Part fileBody = createMultipartBodyPartFromFile(briefFile);
 
-        RequestBody reqFile = RequestBody.create(MediaType.parse("*/*"), sendFile);
-        MultipartBody.Part fileBody = MultipartBody.Part.createFormData("resume_file", "resume", reqFile);
-
-        Map<String, RequestBody> map = new HashMap<>();
-        map.put("testName", toRequestBody("testNameString"));
-        map.put("testName1", toRequestBody("testName2String"));
-        map.put("testName2", toRequestBody("testNam3eString"));
-
-        Call<ResultJson> call = service.postManagerData("ds", fileBody);
+        Call<ResultJson> call = getMeteorService().postManagerData(jsonBody, fileBody);
         call.enqueue(new Callback<ResultJson>() {
             @Override
             public void onResponse(Call<ResultJson> call,
                                    Response<ResultJson> response) {
-                Log.d("EHEHEE", String.valueOf(response.body().getStatus()));
+                hideLoadingDialog();
+                DialogUtility.showErrorDialog(ManagerProfessionActivity.this, R.string.success_data_send, false);
             }
 
             @Override
             public void onFailure(Call<ResultJson> call, Throwable t) {
-                Log.d("EHEHEE", t.getMessage());
+                hideLoadingDialog();
+                DialogUtility.showErrorDialog(ManagerProfessionActivity.this, R.string.error_loading_data, false);
             }
         });
-    }
-
-    public static RequestBody toRequestBody(String value) {
-        RequestBody body = RequestBody.create(MediaType.parse("text/plain"), value);
-        return body;
     }
 }

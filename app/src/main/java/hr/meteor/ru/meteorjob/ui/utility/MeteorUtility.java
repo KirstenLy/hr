@@ -11,10 +11,19 @@ import android.util.TypedValue;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import hr.meteor.ru.meteorjob.R;
+import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
+import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class MeteorUtility {
     public static int dpToPx(int dp, Context context) {
@@ -29,6 +38,80 @@ public class MeteorUtility {
     public static boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
+    public static String getJsonFromManagerObject(ManagerData managerData) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("Name", managerData.getName());
+            json.put("Phone", managerData.getPhone());
+            json.put("Email", managerData.getEmail());
+            json.put("HasExperience", managerData.isSkilled());
+            json.put("Comment", managerData.getComment());
+            if (managerData.getAnswer() != null) {
+                json.put("Answer", managerData.getAnswer());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json.toString();
+    }
+
+    public static String getJsonFromDeveloperObject(DeveloperData developerData) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("Name", developerData.getName());
+            json.put("Phone", developerData.getPhone());
+            json.put("Email", developerData.getEmail());
+            json.put("HasExperience", developerData.isSkilled());
+            json.put("Comment", developerData.getComment());
+            json.put("Languages", Arrays.toString(developerData.getLanguages()));
+            json.put("Databases", Arrays.toString(developerData.getDatabases()));
+            json.put("Framework", Arrays.toString(developerData.getFrameworks()));
+            json.put("Mobiles", Arrays.toString(developerData.getMobiles()));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json.toString();
+    }
+
+    public static boolean isFileExternalCorrect(File file) {
+        return file.getName().endsWith(".doc") || file.getName().endsWith(".pdf") || file.getName().endsWith(".ppt");
+    }
+
+    public static String getFileExternal(File file) {
+        return file.toString().substring(file.toString().lastIndexOf('.') + 1);
+    }
+
+    public static MultipartBody.Part createMultipartBodyPartFromFile(File file) {
+        RequestBody requestBody;
+        String filePath = null;
+        String external;
+
+        if (file != null) {
+            external = getFileExternal(file);
+            switch (external) {
+                case ("doc"): {
+                    requestBody = RequestBody.create(MediaType.parse("application/msword"), file);
+                    break;
+                }
+                case ("pdf"): {
+                    requestBody = RequestBody.create(MediaType.parse("application/pdf"), file);
+                    break;
+                }
+                case (".ppt"): {
+                    requestBody = RequestBody.create(MediaType.parse("application/vnd.ms-powerpoint"), file);
+                    break;
+                }
+                default:
+                    return null;
+            }
+            return MultipartBody.Part.createFormData("resume_file", file.toString().substring(filePath.lastIndexOf('/') + 1), requestBody);
+        } else {
+            return null;
+        }
+    }
+
 
     public static void setLinearLayoutParam(LinearLayout linearLayout, int weight, int height, int visibility) {
         linearLayout.setVisibility(visibility);

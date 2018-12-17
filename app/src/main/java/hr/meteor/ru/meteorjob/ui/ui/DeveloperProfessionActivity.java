@@ -26,15 +26,17 @@ import java.io.File;
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
 import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
-import hr.meteor.ru.meteorjob.ui.retrofit.services.MeteorService;
+import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getUnderlineSpanned;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setFileNameOnTextView;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromDeveloperObject;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
     TextView userTaskOrCodeFile;
@@ -49,18 +51,18 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     DeveloperTechnologiesAdapter frameworkAdapter;
     DeveloperTechnologiesAdapter mobilesAdapter;
 
-    Uri fileUri;
+    File codeFile;
+    File briefFile;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == TAKE_USER_BRIEF_FILE_REQUEST || requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) && resultCode == Activity.RESULT_OK) {
-            fileUri = data.getData();
-            File file = Utils.getFileForUri(data.getData());
-
             if (requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) {
-                userTaskOrCodeFile.setText(file.getName());
+                codeFile = Utils.getFileForUri(data.getData());
+                userTaskOrCodeFile.setText(codeFile.getName());
             } else {
-                userBriefFile.setText(file.getName());
+                briefFile = Utils.getFileForUri(data.getData());
+                userBriefFile.setText(briefFile.getName());
             }
         }
     }
@@ -201,11 +203,27 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         if (elementId == R.id.button_profession_developer_send) {
             if (validationSuccess()) {
+                showLoadingDialog();
+                if (codeFile != null || briefFile != null) {
+                    if (codeFile != null && !codeFile.getName().endsWith(".doc")) {
+                        hideLoadingDialog();
+                        DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.error_file_format, false);
+                        codeFile = null;
+                        return;
+                    }
+
+                    if (briefFile != null && !briefFile.getName().endsWith(".doc")) {
+                        hideLoadingDialog();
+                        DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.error_file_format, false);
+                        briefFile = null;
+                        return;
+                    }
+                }
                 EditText comment = findViewById(R.id.edit_profession_developer_contacts_comment);
                 contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
 
                 DeveloperData developerData = new DeveloperData();
-                developerData.setSkilled(contactsFormYesButton.isChecked());
+                developerData.setSkilled(contactsFormYesButton.isChecked() ? "y" : "n");
                 developerData.setName(name.getText().toString());
                 developerData.setPhone(phone.getText().toString());
                 developerData.setEmail(email.getText().toString());
@@ -246,20 +264,41 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     }
 
     public void sendData(DeveloperData developerData) {
-        getMeteorService().postDeveloperData(developerData).enqueue(new Callback<DeveloperData>() {
+        String json = getJsonFromDeveloperObject(developerData);
+        RequestBody jsonBody =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), json);
+
+        RequestBody reqFileOne;
+        RequestBody reqFileTwo;
+        MultipartBody.Part fileOneBody = null;
+        MultipartBody.Part fileTwoBody = null;
+
+        if (codeFile != null) {
+            String path = codeFile.toString();
+            reqFileOne = RequestBody.create(MediaType.parse("application/msword"), codeFile);
+            fileOneBody = MultipartBody.Part.createFormData("code_file", path.substring(path.lastIndexOf('/') + 1), reqFileOne);
+        }
+        if (briefFile != null) {
+            String path = briefFile.toString();
+            reqFileTwo = RequestBody.create(MediaType.parse("application/msword"), briefFile);
+            fileTwoBody = MultipartBody.Part.createFormData("brief_file", path.substring(path.lastIndexOf('/') + 1), reqFileTwo);
+        }
+
+        Call<ResultJson> call = getMeteorService().postDeveloperData(jsonBody, fileOneBody, fileTwoBody);
+
+        call.enqueue(new Callback<ResultJson>() {
             @Override
-            public void onResponse
-                    (Call<DeveloperData> call, Response<DeveloperData> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    Log.e("TAGConnection", "Done");
-                } else {
-                    Log.e("TAGConnection", "Connection error");
-                }
+            public void onResponse(Call<ResultJson> call,
+                                   Response<ResultJson> response) {
+                hideLoadingDialog();
+                DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.success_data_send, false);
             }
 
             @Override
-            public void onFailure(Call<DeveloperData> call, Throwable t) {
-                DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.error_retrofit_connection, true);
+            public void onFailure(Call<ResultJson> call, Throwable t) {
+                hideLoadingDialog();
+                DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.error_loading_data, false);
             }
         });
     }

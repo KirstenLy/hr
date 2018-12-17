@@ -4,10 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ManagerData {
-    @SerializedName("Skilled")
-    @Expose
-    private boolean isSkilled;
-
     @SerializedName("Name")
     @Expose
     private String name;
@@ -20,19 +16,24 @@ public class ManagerData {
     @Expose
     private String email;
 
-    @SerializedName("Answer")
+    @SerializedName("HasExpirience")
     @Expose
-    private String answer;
+    private String isSkilled;
 
     @SerializedName("Comment")
     @Expose
     private String comment;
 
-    public boolean isSkilled() {
+    @SerializedName("Answer")
+    @Expose
+    private String answer;
+
+
+    public String isSkilled() {
         return isSkilled;
     }
 
-    public void setSkilled(boolean skilled) {
+    public void setSkilled(String skilled) {
         isSkilled = skilled;
     }
 

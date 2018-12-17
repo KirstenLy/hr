@@ -1,18 +1,14 @@
 package hr.meteor.ru.meteorjob.ui.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.azoft.carousellayoutmanager.CarouselLayoutManager;
-import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
-import com.azoft.carousellayoutmanager.CenterScrollListener;
-import com.yarolegovich.discretescrollview.DiscreteScrollView;
-import com.yarolegovich.discretescrollview.InfiniteScrollAdapter;
-import com.yarolegovich.discretescrollview.transform.Pivot;
-import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
+import com.gtomato.android.ui.transformer.LinearViewTransformer;
+import com.gtomato.android.ui.widget.CarouselView;
 
 import java.util.ArrayList;
 
@@ -22,11 +18,7 @@ import hr.meteor.ru.meteorjob.ui.beans.Profession;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 
 public class MainActivity extends AbstractActivity implements View.OnClickListener {
-    DiscreteScrollView scrollView;
-    InfiniteScrollAdapter wrapper;
-
-    CarouselLayoutManager layoutManager;
-    RecyclerView recyclerView;
+    CarouselView carousel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +35,13 @@ public class MainActivity extends AbstractActivity implements View.OnClickListen
         professionList.add(new Profession(1, R.drawable.ic_profession_developer, getString(R.string.profession_dev)));
         professionList.add(new Profession(2, R.drawable.ic_profession_manager, getString(R.string.profession_manager)));
 
-        layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, false);
-        recyclerView = findViewById(R.id.picker);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addOnScrollListener(new CenterScrollListener());
-        layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
-        recyclerView.setAdapter(new ProfessionListAdapter(getApplicationContext(), professionList));
+        carousel = findViewById(R.id.carousel);
+        carousel.setTransformer(new LinearViewTransformer());
+        carousel.setAdapter(new ProfessionListAdapter(getApplicationContext(), professionList));
+        carousel.setInfinite(true);
+        carousel.setEnableFling(false);
+
+        carousel.setOnItemClickListener(new IntentChooser());
 
         ImageView leftScroll = findViewById(R.id.img_main_left_arrow);
         leftScroll.setOnClickListener(this);
@@ -59,13 +52,25 @@ public class MainActivity extends AbstractActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case (R.id.img_main_left_arrow):
-                recyclerView.scrollToPosition(layoutManager.getCenterItemPosition() == 1 ? 0 : 1);
-                break;
-            case (R.id.img_main_right_arrow):
-                recyclerView.scrollToPosition(layoutManager.getCenterItemPosition() == 0 ? 1 : 0);
-                break;
+        if (((v.getId() == R.id.img_main_left_arrow) || (v.getId() == R.id.img_main_right_arrow))) {
+            carousel.scrollToPosition(carousel.getCurrentAdapterPosition() == 1 ? 0 : 1);
+        }
+    }
+
+    class IntentChooser implements CarouselView.OnItemClickListener {
+        Intent intent;
+
+        @Override
+        public void onItemClick(RecyclerView.Adapter adapter, View view, int position, int adapterPosition) {
+            switch (adapterPosition) {
+                case 0:
+                    intent = new Intent(getApplicationContext(), DeveloperProfessionActivity.class);
+                    break;
+                case 1:
+                    intent = new Intent(getApplicationContext(), ManagerProfessionActivity.class);
+                    break;
+            }
+            startActivity(intent);
         }
     }
 }

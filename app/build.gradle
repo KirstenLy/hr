@@ -45,4 +45,6 @@ dependencies {
     implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
     implementation 'com.azoft.carousellayoutmanager:carousel:1.2.4'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+
+    implementation 'com.gtomato.android.library:carouselview:2.0.1'
 }
