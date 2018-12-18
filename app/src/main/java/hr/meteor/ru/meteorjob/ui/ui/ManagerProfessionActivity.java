@@ -200,7 +200,6 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
                 } else {
                     DialogUtility.showErrorDialog(ManagerProfessionActivity.this, responseArray.get("Error"), false);
                 }
-
             }
 
             @Override

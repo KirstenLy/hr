@@ -2,9 +2,11 @@ package hr.meteor.ru.meteorjob.ui.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,16 +16,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
@@ -39,7 +50,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyPartFromFile;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getArrayFromArrayList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromDeveloperObject;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOnSharedPreference;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFeomSharedPreference;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
     TextView userTaskOrCodeFile;
@@ -48,6 +63,8 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     EditText phone;
     EditText email;
     RadioButton contactsFormYesButton;
+    RadioButton contactsFormNoButton;
+    EditText comment;
 
     DeveloperTechnologiesAdapter languagesAdapter;
     DeveloperTechnologiesAdapter databasesAdapter;
@@ -107,6 +124,9 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         frameworksRecycler.setNestedScrollingEnabled(false);
         mobilesRecycler.setNestedScrollingEnabled(false);
 
+        contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
+        contactsFormNoButton = findViewById(R.id.radiobutton_profession_developer_no);
+
         userTaskOrCodeFile = findViewById(R.id.text_profession_developer_get_task);
         userTaskOrCodeFile.setOnClickListener(this);
 
@@ -127,6 +147,8 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         Button sendData = findViewById(R.id.button_profession_developer_send);
         sendData.setOnClickListener(this);
+
+        loadPreferences();
     }
 
     @Override
@@ -210,9 +232,6 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             if (validationSuccess()) {
                 showLoadingDialog();
 
-                EditText comment = findViewById(R.id.edit_profession_developer_contacts_comment);
-                contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
-
                 DeveloperData developerData = new DeveloperData();
                 developerData.setSkilled(contactsFormYesButton.isChecked() ? "y" : "n");
                 developerData.setName(name.getText().toString());
@@ -286,8 +305,108 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         });
     }
 
+    public void savePreferences() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("developerName", String.valueOf(name.getText()));
+        editor.putString("developerPhone", String.valueOf(phone.getText()));
+        editor.putString("developerEmail", String.valueOf(email.getText()));
+        editor.putString("developerComment", String.valueOf(comment.getText()));
+        editor.putBoolean("developerExperience", contactsFormYesButton.isChecked());
+
+        boolean[] checkedLanguages = languagesAdapter.getSelectedCheckboxArray();
+        boolean[] checkedDatabases = databasesAdapter.getSelectedCheckboxArray();
+        boolean[] checkedFrameworks = frameworkAdapter.getSelectedCheckboxArray();
+        boolean[] checkedMobiles = mobilesAdapter.getSelectedCheckboxArray();
+
+        ArrayList<String> checkedLanguagesArrayList = new ArrayList<>();
+        ArrayList<String> checkedDatabasesArrayList = new ArrayList<>();
+        ArrayList<String> checkedFrameworksArrayList = new ArrayList<>();
+        ArrayList<String> checkedMobilesArrayList = new ArrayList<>();
+
+        for (boolean checkedlanguage : checkedLanguages) {
+            checkedLanguagesArrayList.add(String.valueOf(checkedlanguage));
+        }
+
+        for (boolean checkedDatabase : checkedDatabases) {
+            checkedDatabasesArrayList.add(String.valueOf(checkedDatabase));
+        }
+
+        for (boolean checkedFramework : checkedFrameworks) {
+            checkedFrameworksArrayList.add(String.valueOf(checkedFramework));
+        }
+
+        for (boolean checkedMobile : checkedMobiles) {
+            checkedMobilesArrayList.add(String.valueOf(checkedMobile));
+        }
+
+        putArrayListOnSharedPreference(checkedMobilesArrayList, editor, "developerLanguages");
+        putArrayListOnSharedPreference(checkedDatabasesArrayList, editor, "developerDatabases");
+        putArrayListOnSharedPreference(checkedFrameworksArrayList, editor, "developerFrameworks");
+        putArrayListOnSharedPreference(checkedMobilesArrayList, editor, "developerMobiles");
+        editor.apply();
+    }
+
+    public void loadPreferences() {
+        name = findViewById(R.id.edit_profession_developer_contacts_name);
+        phone = findViewById(R.id.edit_profession_developer_contacts_phone);
+        email = findViewById(R.id.edit_profession_developer_contacts_email);
+        comment = findViewById(R.id.edit_profession_developer_contacts_comment);
+        restoreValues();
+    }
+
+    public void restoreValues() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        if (sharedPreferences.getString("developerName", "") != null) {
+            name.setText(sharedPreferences.getString("developerName", ""));
+        }
+
+        if (sharedPreferences.getString("developerPhone", "") != null) {
+            phone.setText(sharedPreferences.getString("developerPhone", ""));
+        }
+
+        if (sharedPreferences.getString("developerEmail", "") != null) {
+            email.setText(sharedPreferences.getString("developerEmail", ""));
+        }
+
+        if (sharedPreferences.getString("developerComment", "") != null) {
+            comment.setText(sharedPreferences.getString("developerComment", ""));
+        }
+
+        if (!sharedPreferences.getString("developerLanguages", "").equals("")) {
+            ArrayList<String> checkedLanguages = putArrayListOutFeomSharedPreference(sharedPreferences, "developerLanguages");
+            boolean[] restoredCheckers = getArrayFromArrayList(checkedLanguages);
+            languagesAdapter.setSelectedCheckboxArray(restoredCheckers);
+        }
+
+        if (!sharedPreferences.getString("developerDatabases", "").equals("")) {
+            ArrayList<String> checkedDarabases = putArrayListOutFeomSharedPreference(sharedPreferences, "developerDatabases");
+            boolean[] restoredCheckers = getArrayFromArrayList(checkedDarabases);
+            databasesAdapter.setSelectedCheckboxArray(restoredCheckers);
+        }
+
+        if (!sharedPreferences.getString("developerFrameworks", "").equals("")) {
+            ArrayList<String> checkedFrameworks = putArrayListOutFeomSharedPreference(sharedPreferences, "developerFrameworks");
+            boolean[] restoredCheckers = getArrayFromArrayList(checkedFrameworks);
+            frameworkAdapter.setSelectedCheckboxArray(restoredCheckers);
+        }
+
+        if (!sharedPreferences.getString("developerMobiles", "").equals("")) {
+            ArrayList<String> checkedMobiles = putArrayListOutFeomSharedPreference(sharedPreferences, "developerMobiles");
+            boolean[] restoredCheckers = getArrayFromArrayList(checkedMobiles);
+            mobilesAdapter.setSelectedCheckboxArray(restoredCheckers);
+        }
+
+        if (sharedPreferences.getBoolean("developerExperience", false)) {
+            contactsFormYesButton.setChecked(true);
+        } else {
+            contactsFormNoButton.setChecked(true);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        savePreferences();
         if (item.getItemId() == android.R.id.home) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
@@ -298,6 +417,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
     @Override
     public void onBackPressed() {
+        savePreferences();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }

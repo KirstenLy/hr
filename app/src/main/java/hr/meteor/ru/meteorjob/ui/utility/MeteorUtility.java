@@ -1,8 +1,10 @@
 package hr.meteor.ru.meteorjob.ui.utility;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -12,10 +14,14 @@ import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -25,6 +31,8 @@ import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class MeteorUtility {
     public static int dpToPx(int dp, Context context) {
@@ -165,5 +173,28 @@ public class MeteorUtility {
         languageArrayList.add(context.getString(R.string.developer_technology_mobile_8));
         languageArrayList.add(context.getString(R.string.developer_technology_mobile_9));
         return languageArrayList;
+    }
+
+    public static void putArrayListOnSharedPreference(ArrayList<String> arrayList, SharedPreferences.Editor editor, String key) {
+        Gson gson = new Gson();
+        String json = gson.toJson(arrayList);
+        editor.putString(key, json);
+    }
+
+    public static ArrayList<String> putArrayListOutFeomSharedPreference(SharedPreferences sharedPreferences, String key) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
+
+        String json = sharedPreferences.getString(key, null);
+        return gson.fromJson(json, type);
+    }
+
+    public static boolean[] getArrayFromArrayList(ArrayList<String> arrayList) {
+        boolean[] restoredCheckers = new boolean[arrayList.size()];
+        for (int i = 0; i < arrayList.size(); i++) {
+            restoredCheckers[i] = Boolean.valueOf(arrayList.get(i));
+        }
+        return restoredCheckers;
     }
 }
