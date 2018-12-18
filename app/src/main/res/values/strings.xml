@@ -118,8 +118,8 @@
     <string name="manager_hint_comment">Дополнительная информация</string>
 
     <!-- Profession Strings -->
-    <string name="profession_get_resume">Приложить резюме(.doc):</string>
-    <string name="profession_get_task">Приложить пример кода или выполненное тестовое задание(.doc):</string>
+    <string name="profession_get_resume">Приложить резюме:</string>
+    <string name="profession_get_task">Приложить пример кода или выполненное тестовое задание:</string>
     <string name="profession_download_task">Скачать тестовое задание для web/android:</string>
 
 </resources>
