@@ -198,10 +198,10 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
                 if (responseArray.get("Status").equals("success")) {
                     DialogUtility.showErrorDialog(ManagerProfessionActivity.this, getString(R.string.success_data_send), false);
                 } else {
-                    String responseFromServer = responseArray.get("Error");
-                    String fileFormat = responseFromServer.substring(responseFromServer.lastIndexOf('/') + 1);
-                    String errorText = String.format(getString(R.string.error_file_format), fileFormat);
-                    DialogUtility.showErrorDialog(ManagerProfessionActivity.this, errorText, false);
+//                    String responseFromServer = responseArray.get("Error");
+//                    String fileFormat = responseFromServer.substring(responseFromServer.lastIndexOf('/') + 1);
+//                    String errorText = String.format(getString(R.string.error_file_format), fileFormat);
+                    DialogUtility.showErrorDialog(ManagerProfessionActivity.this, responseArray.get("Error"), false);
                 }
             }
 

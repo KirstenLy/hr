@@ -293,10 +293,10 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
                 if (responseArray.get("Status").equals("success")) {
                     DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, getString(R.string.success_data_send), false);
                 } else {
-                    String responseFromServer = responseArray.get("Error");
-                    String fileFormat = responseFromServer.substring(responseFromServer.lastIndexOf('/') + 1);
-                    String errorText = String.format(getString(R.string.error_file_format), fileFormat);
-                    DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, errorText, false);
+//                    String responseFromServer = responseArray.get("Error");
+//                    String fileFormat = responseFromServer.substring(responseFromServer.lastIndexOf('/') + 1);
+//                    String errorText = String.format(getString(R.string.error_file_format), fileFormat);
+                    DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, responseArray.get("Error"), false);
                 }
             }
 
