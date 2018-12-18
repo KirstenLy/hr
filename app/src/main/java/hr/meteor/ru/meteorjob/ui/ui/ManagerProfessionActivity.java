@@ -2,11 +2,11 @@ package hr.meteor.ru.meteorjob.ui.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
@@ -35,9 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyPartFromFile;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getFileExternal;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromManagerObject;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.isFileExternalCorrect;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
 
 
@@ -50,6 +49,8 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     EditText name;
     EditText phone;
     EditText email;
+    EditText comment;
+    EditText question;
 
     File briefFile;
 
@@ -83,6 +84,11 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         Button sendData = findViewById(R.id.button_profession_manager_send);
         sendData.setOnClickListener(this);
+
+//        EditText answer = findViewById(R.id.edit_profession_manager_contacts_question);
+//        android.support.design.widget.TextInputLayout tt = findViewById(R.id.hint_test);
+
+        loadPreferences();
     }
 
     @Override
@@ -102,7 +108,6 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onClick(View v) {
         int elementId = v.getId();
@@ -126,25 +131,12 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         if (elementId == R.id.image_profession_manager_brief_clear) {
             userBriefFile.setText(MeteorUtility.getUnderlineSpanned(getString(R.string.manager_sent_file)));
+            briefFile = null;
         }
 
         if (elementId == R.id.button_profession_manager_send) {
             if (validationSuccess()) {
                 showLoadingDialog();
-                if (briefFile != null) {
-                    if (!isFileExternalCorrect(briefFile)) {
-                        hideLoadingDialog();
-                        DialogUtility.showErrorDialog(ManagerProfessionActivity.this, R.string.error_file_format, false);
-                        briefFile = null;
-                        return;
-                    }
-                }
-                EditText comment = findViewById(R.id.edit_profession_manager_contacts_comment);
-                EditText question = null;
-
-                if (contactsFormYesButton.isChecked()) {
-                    question = findViewById(R.id.edit_profession_manager_contacts_invisible);
-                }
 
                 ManagerData managerData = new ManagerData();
                 managerData.setName(name.getText().toString());
@@ -163,9 +155,6 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
     public boolean validationSuccess() {
         boolean isSuccess = true;
-        name = findViewById(R.id.edit_profession_manager_contacts_name);
-        phone = findViewById(R.id.edit_profession_manager_contacts_phone);
-        email = findViewById(R.id.edit_profession_manager_contacts_email);
 
         if (name.getText() == null || name.getText().length() == 0) {
             name.setError(getString(R.string.error_validation_name));
@@ -182,7 +171,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         }
 
         if (invisibleLayoutWithExtraQuestion.getVisibility() == View.VISIBLE) {
-            EditText extraQuestion = findViewById(R.id.edit_profession_manager_contacts_invisible);
+            EditText extraQuestion = findViewById(R.id.edit_profession_manager_contacts_question);
             if (extraQuestion == null || extraQuestion.getText().length() == 0) {
                 extraQuestion.setError(getString(R.string.error_validation_question));
                 isSuccess = false;
@@ -205,14 +194,88 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
             public void onResponse(Call<ResultJson> call,
                                    Response<ResultJson> response) {
                 hideLoadingDialog();
-                DialogUtility.showErrorDialog(ManagerProfessionActivity.this, R.string.success_data_send, false);
+                LinkedTreeMap<String, String> responseArray = (LinkedTreeMap<String, String>) response.body().getContent();
+                if (responseArray.get("Status").equals("success")) {
+                    DialogUtility.showErrorDialog(ManagerProfessionActivity.this, getString(R.string.success_data_send), false);
+                } else {
+                    DialogUtility.showErrorDialog(ManagerProfessionActivity.this, responseArray.get("Error"), false);
+                }
+
             }
 
             @Override
             public void onFailure(Call<ResultJson> call, Throwable t) {
                 hideLoadingDialog();
-                DialogUtility.showErrorDialog(ManagerProfessionActivity.this, R.string.error_loading_data, false);
+                DialogUtility.showErrorDialog(ManagerProfessionActivity.this, getString(R.string.error_loading_data), false);
             }
         });
+    }
+
+    public void savePreferences() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("managerName", String.valueOf(name.getText()));
+        editor.putString("managerPhone", String.valueOf(phone.getText()));
+        editor.putString("managerEmail", String.valueOf(email.getText()));
+        editor.putString("managerComment", String.valueOf(comment.getText()));
+        editor.putString("managerQuestion", String.valueOf(question.getText()));
+        editor.putBoolean("managerExperience", contactsFormYesButton.isChecked());
+        editor.apply();
+    }
+
+    public void loadPreferences() {
+        name = findViewById(R.id.edit_profession_manager_contacts_name);
+        phone = findViewById(R.id.edit_profession_manager_contacts_phone);
+        email = findViewById(R.id.edit_profession_manager_contacts_email);
+        comment = findViewById(R.id.edit_profession_manager_contacts_comment);
+        question = findViewById(R.id.edit_profession_manager_contacts_question);
+        restoreValues();
+    }
+
+    public void restoreValues() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        if (sharedPreferences.getString("managerName", "") != null) {
+            name.setText(sharedPreferences.getString("managerName", ""));
+        }
+
+        if (sharedPreferences.getString("managerPhone", "") != null) {
+            phone.setText(sharedPreferences.getString("managerPhone", ""));
+        }
+
+        if (sharedPreferences.getString("managerEmail", "") != null) {
+            email.setText(sharedPreferences.getString("managerEmail", ""));
+        }
+
+        if (sharedPreferences.getString("managerComment", "") != null) {
+            comment.setText(sharedPreferences.getString("managerComment", ""));
+        }
+
+        if (sharedPreferences.getString("managerQuestion", "") != null) {
+            question.setText(sharedPreferences.getString("managerQuestion", ""));
+        }
+        if (sharedPreferences.getBoolean("managerExperience", false)) {
+            contactsFormYesButton.setChecked(true);
+        } else {
+            setLinearLayoutParam(invisibleLayoutWithExtraQuestion, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, View.VISIBLE);
+            contactsFormNoButton.setChecked(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            savePreferences();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        savePreferences();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 }

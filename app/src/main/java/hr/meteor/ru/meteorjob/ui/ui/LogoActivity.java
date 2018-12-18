@@ -15,7 +15,7 @@ public class LogoActivity extends AbstractActivity {
         setContentView(R.layout.activity_logo);
 
         if (!isInternetActive()) {
-            DialogUtility.showErrorDialog(this, R.string.error_internet_connection, true);
+            DialogUtility.showErrorDialog(this, getString(R.string.error_internet_connection), true);
         } else {
             Runnable runnable = new Runnable() {
                 @Override

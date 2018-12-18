@@ -26,7 +26,7 @@ public class MainActivity extends AbstractActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
 
         if (!isInternetActive()) {
-            DialogUtility.showErrorDialog(this, R.string.error_internet_connection, true);
+            DialogUtility.showErrorDialog(this, getString(R.string.error_internet_connection), true);
         }
 
         createToolbar(R.id.actionbar_main, 0, R.string.actionbar_title, false);
@@ -71,6 +71,12 @@ public class MainActivity extends AbstractActivity implements View.OnClickListen
                     break;
             }
             startActivity(intent);
+            finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

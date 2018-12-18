@@ -12,7 +12,7 @@ import hr.meteor.ru.meteorjob.R;
 
 public class DialogUtility {
 
-    public static void showErrorDialog(final Context context, int textRes, final boolean isActivityClose) {
+    public static void showErrorDialog(final Context context, String error, final boolean isActivityClose) {
         final Activity activity = (Activity) context;
         final Dialog dialog = new Dialog(context, R.style.TransparentCustomDialog);
 
@@ -22,7 +22,7 @@ public class DialogUtility {
         dialog.show();
 
         TextView errorText = popupView.findViewById(R.id.error_text);
-        errorText.setText(textRes);
+        errorText.setText(error);
 
         Button finishButton = popupView.findViewById(R.id.close_button);
         finishButton.setOnClickListener(new View.OnClickListener() {

@@ -27,7 +27,7 @@ public class ResultJson<T> {
     @Expose
     private ArrayList<String> messageList;
 
-    @SerializedName("Data")
+    @SerializedName("data")
     @Expose
     private T content;
 

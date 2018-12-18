@@ -2,6 +2,7 @@ package hr.meteor.ru.meteorjob.ui.ui;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -78,13 +79,5 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://hr.fokgroup.com/vacancy/").addConverterFactory(GsonConverterFactory.create()).client(client).build();
         return retrofit.create(MeteorService.class);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

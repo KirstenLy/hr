@@ -8,6 +8,7 @@ import android.text.Spanned;
 import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
+import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -84,28 +85,11 @@ public class MeteorUtility {
     }
 
     public static MultipartBody.Part createMultipartBodyPartFromFile(File file) {
-        RequestBody requestBody;
-        String filePath = null;
-        String external;
-
         if (file != null) {
-            external = getFileExternal(file);
-            switch (external) {
-                case ("doc"): {
-                    requestBody = RequestBody.create(MediaType.parse("application/msword"), file);
-                    break;
-                }
-                case ("pdf"): {
-                    requestBody = RequestBody.create(MediaType.parse("application/pdf"), file);
-                    break;
-                }
-                case (".ppt"): {
-                    requestBody = RequestBody.create(MediaType.parse("application/vnd.ms-powerpoint"), file);
-                    break;
-                }
-                default:
-                    return null;
-            }
+            String filePath = file.toString();
+            String external = getFileExternal(file);
+            String mimeTypeFromExtension = MimeTypeMap.getSingleton().getMimeTypeFromExtension(external);
+            RequestBody requestBody = RequestBody.create(MediaType.parse(mimeTypeFromExtension), file);
             return MultipartBody.Part.createFormData("resume_file", file.toString().substring(filePath.lastIndexOf('/') + 1), requestBody);
         } else {
             return null;

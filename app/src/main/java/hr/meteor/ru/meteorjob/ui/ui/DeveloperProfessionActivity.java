@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
@@ -36,6 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyPartFromFile;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromDeveloperObject;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
@@ -189,8 +192,10 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         if (elementId == R.id.image_profession_developer_task_clear || elementId == R.id.image_profession_developer_brief_clear) {
             if (elementId == R.id.image_profession_developer_task_clear) {
                 userTaskOrCodeFile.setText(MeteorUtility.getUnderlineSpanned(getString(R.string.developer_sent_file)));
+                userTaskOrCodeFile = null;
             } else {
                 userBriefFile.setText(MeteorUtility.getUnderlineSpanned(getString(R.string.developer_sent_file)));
+                userBriefFile = null;
             }
         }
 
@@ -204,21 +209,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         if (elementId == R.id.button_profession_developer_send) {
             if (validationSuccess()) {
                 showLoadingDialog();
-                if (codeFile != null || briefFile != null) {
-                    if (codeFile != null && !codeFile.getName().endsWith(".doc")) {
-                        hideLoadingDialog();
-                        DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.error_file_format, false);
-                        codeFile = null;
-                        return;
-                    }
 
-                    if (briefFile != null && !briefFile.getName().endsWith(".doc")) {
-                        hideLoadingDialog();
-                        DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.error_file_format, false);
-                        briefFile = null;
-                        return;
-                    }
-                }
                 EditText comment = findViewById(R.id.edit_profession_developer_contacts_comment);
                 contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
 
@@ -269,21 +260,8 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), json);
 
-        RequestBody reqFileOne;
-        RequestBody reqFileTwo;
-        MultipartBody.Part fileOneBody = null;
-        MultipartBody.Part fileTwoBody = null;
-
-        if (codeFile != null) {
-            String path = codeFile.toString();
-            reqFileOne = RequestBody.create(MediaType.parse("application/msword"), codeFile);
-            fileOneBody = MultipartBody.Part.createFormData("code_file", path.substring(path.lastIndexOf('/') + 1), reqFileOne);
-        }
-        if (briefFile != null) {
-            String path = briefFile.toString();
-            reqFileTwo = RequestBody.create(MediaType.parse("application/msword"), briefFile);
-            fileTwoBody = MultipartBody.Part.createFormData("brief_file", path.substring(path.lastIndexOf('/') + 1), reqFileTwo);
-        }
+        MultipartBody.Part fileOneBody = createMultipartBodyPartFromFile(codeFile);
+        MultipartBody.Part fileTwoBody = createMultipartBodyPartFromFile(briefFile);
 
         Call<ResultJson> call = getMeteorService().postDeveloperData(jsonBody, fileOneBody, fileTwoBody);
 
@@ -292,15 +270,36 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             public void onResponse(Call<ResultJson> call,
                                    Response<ResultJson> response) {
                 hideLoadingDialog();
-                DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.success_data_send, false);
+                LinkedTreeMap<String, String> responseArray = (LinkedTreeMap<String, String>) response.body().getContent();
+                if (responseArray.get("Status").equals("success")) {
+                    DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, getString(R.string.success_data_send), false);
+                } else {
+                    DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, responseArray.get("Error"), false);
+                }
             }
 
             @Override
             public void onFailure(Call<ResultJson> call, Throwable t) {
                 hideLoadingDialog();
-                DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, R.string.error_loading_data, false);
+                DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, getString(R.string.error_loading_data), false);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 }
 
