@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import hr.meteor.ru.meteorjob.R;
@@ -31,14 +33,27 @@ public class DeveloperTechnologiesAdapter extends RecyclerView.Adapter<Developer
 
     @Override
     public void onBindViewHolder(final DeveloperTechnologiesAdapter.ViewHolder viewHolder, final int i) {
-        viewHolder.techName.setText(techNameList.get(i));
+        TextView techName = viewHolder.techName;
+        final CheckBox techCheckBox = viewHolder.techCheckbox;
+
+        techName.setText(techNameList.get(i));
+
         if (selectedCheckboxArray[i]) {
-            viewHolder.techCheckbox.setChecked(true);
+            techCheckBox.setChecked(true);
         }
-        viewHolder.techCheckbox.setOnClickListener(new View.OnClickListener() {
+
+        techCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedCheckboxArray[i] = !selectedCheckboxArray[i];
+            }
+        });
+
+        techName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedCheckboxArray[i] = !selectedCheckboxArray[i];
+                techCheckBox.setChecked(!techCheckBox.isChecked());
             }
         });
     }

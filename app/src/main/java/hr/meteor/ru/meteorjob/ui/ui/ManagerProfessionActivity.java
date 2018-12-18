@@ -22,6 +22,8 @@ import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
@@ -185,6 +187,8 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         RequestBody jsonBody =
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), json);
+
+        List<MultipartBody.Part> fileList = new ArrayList<>();
 
         MultipartBody.Part fileBody = createMultipartBodyPartFromFile(briefFile);
 

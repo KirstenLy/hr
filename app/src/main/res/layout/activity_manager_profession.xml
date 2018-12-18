@@ -68,6 +68,27 @@
             </RelativeLayout>
             <!-- /Form with question about skills -->
 
+            <!-- Field with text about necessary field -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_large"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/image_size_small"
+                    android:layout_height="@dimen/image_size_small"
+                    android:src="@drawable/ic_sun" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_necessary_field"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+            <!-- /Field with text about necessary field -->
+
             <!-- Form with user's callback data -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,6 +109,7 @@
                         android:id="@+id/edit_profession_manager_contacts_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_sun"
                         android:gravity="start"
                         android:hint="@string/developer_hint_name"
                         android:inputType="textPersonName" />
@@ -106,6 +128,7 @@
                         android:id="@+id/edit_profession_manager_contacts_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_sun"
                         android:gravity="start"
                         android:hint="@string/manager_hint_phone"
                         android:inputType="phone" />
@@ -123,6 +146,7 @@
                         android:id="@+id/edit_profession_manager_contacts_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_sun"
                         android:gravity="start"
                         android:hint="@string/manager_hint_email"
                         android:inputType="textEmailAddress" />
@@ -151,6 +175,7 @@
                             android:id="@+id/edit_profession_manager_contacts_question"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:drawableRight="@drawable/ic_sun"
                             android:gravity="start"
                             android:inputType="textMultiLine"
                             android:lines="4"

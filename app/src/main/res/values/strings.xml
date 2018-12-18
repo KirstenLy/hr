@@ -14,6 +14,7 @@
     <string name="default_ok">Oк</string>
     <string name="default_send">Отправить</string>
     <string name="default_choose_file">Выберите файл</string>
+    <string name="default_necessary_field">- поля, обязательные для заполнения</string>
 
     <!-- Errors -->
     <string name="error_retrofit_connection">Нет ответа от сервера</string>

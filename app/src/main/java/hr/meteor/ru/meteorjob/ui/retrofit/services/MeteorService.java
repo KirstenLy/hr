@@ -1,5 +1,7 @@
 package hr.meteor.ru.meteorjob.ui.retrofit.services;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -18,5 +20,14 @@ public interface MeteorService {
     Call<ResultJson> postDeveloperData(@Part("Data") RequestBody json,
                                        @Part MultipartBody.Part fileOne,
                                        @Part MultipartBody.Part fileTwo);
+
+
+//    @Multipart
+//    @POST("developer")
+//    Call<ResultJson> postDeveloperData(@Part("Data") RequestBody json,
+//                                       @Part MultipartBody.Part fileOne,
+//                                       @Part MultipartBody.Part fileTwo);
+
+//    @Part List<MultipartBody.Part> files
 
 }
