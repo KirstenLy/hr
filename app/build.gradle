@@ -47,4 +47,11 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
     implementation 'com.gtomato.android.library:carouselview:2.0.1'
+
+    implementation 'com.beloo.widget:ChipsLayoutManager:0.3.7@aar'
+    implementation 'com.robertlevonyan.view:MaterialChipView:1.2.5'
+
+    implementation 'com.xiaofeng.android:flowlayoutmanager:1.2.3.2'
+
+    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -84,8 +85,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/default_necessary_field"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/default_necessary_field" />
             </LinearLayout>
             <!-- /Field with text about necessary field -->
 
@@ -228,26 +229,35 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingBottom="@dimen/padding_default">
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="@dimen/margin_small">
+
+                    <ImageView
+                        android:id="@+id/img_profession_manager_add_file"
+                        android:layout_width="@dimen/image_size_small"
+                        android:layout_height="@dimen/image_size_small"
+                        android:src="@drawable/ic_add_file" />
 
                     <TextView
-                        android:id="@+id/text_profession_manager_get_brief"
+                        android:id="@+id/text_profession_manager_add_file"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="@string/developer_sent_file"
-                        android:textColor="@android:color/holo_blue_dark" />
-
-                    <ImageView
-                        android:id="@+id/image_profession_manager_brief_clear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/padding_default"
-                        android:src="@drawable/ic_delete" />
+                        android:text="@string/default_insert_file"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textSize="@dimen/text_size_medium" />
                 </LinearLayout>
-            </LinearLayout><!-- /Form with user's brief file -->
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_profession_manager_files"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_default">
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+            <!-- /Form with user's brief file -->
 
             <View
                 android:layout_width="fill_parent"
@@ -261,6 +271,16 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_small"
                 android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_profession_manager_agreement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_default"
+                    android:text="@string/app_name"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorGrey"
+                    android:textColorLink="@android:color/holo_blue_dark" />
 
                 <com.andexert.library.RippleView
                     android:id="@+id/more"

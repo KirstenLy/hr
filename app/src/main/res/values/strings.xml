@@ -15,6 +15,11 @@
     <string name="default_send">Отправить</string>
     <string name="default_choose_file">Выберите файл</string>
     <string name="default_necessary_field">- поля, обязательные для заполнения</string>
+    <string name="default_insert_file"><u>Прикрепить файл</u></string>
+    <string name="default_accept_agreement">Нажимая кнопку Отправить, вы принимаете условия Пользовательского соглашения</string>
+
+    <!-- URL's -->
+    <string name="url_agreement">http://it-meteor.ru/privacy-policy.html</string>
 
     <!-- Errors -->
     <string name="error_retrofit_connection">Нет ответа от сервера</string>
@@ -30,6 +35,7 @@
     <string name="error_validation_mail">Некорректный e - mail</string>
     <string name="error_validation_question">Это обязательное поле</string>
     <string name="error_file_format">Недопустимый формат файла: %s</string>
+    <string name="error_multiply_files">Этот файл уже есть в списке</string>
 
     <!-- Complete -->
     <string name="success_data_send">Данные успешно отправлены!</string>
@@ -54,7 +60,6 @@
     <string name="developer_hint_phone">Ваш телефон</string>
     <string name="developer_hint_email">Ваш email</string>
     <string name="developer_hint_comment">Дополнительная информация</string>
-
 
     <!-- Web -->
     <string name="developer_language_web_title">Выберите технологии, которыми Вы владеете:</string>

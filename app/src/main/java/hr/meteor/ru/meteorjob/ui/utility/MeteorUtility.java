@@ -104,6 +104,29 @@ public class MeteorUtility {
         }
     }
 
+    public static ArrayList<MultipartBody.Part> createMultipartBodyList(ArrayList<File> fileList) {
+        if (fileList != null) {
+            ArrayList<MultipartBody.Part> resultList = new ArrayList<>();
+            Log.d("OkHttpTAG", String.valueOf(fileList.size()));
+            Log.d("OkHttpTAG", String.valueOf(fileList.toString()));
+            for (int i = 0; i < fileList.size(); i++) {
+                File file = fileList.get(i);
+
+                String filePath = file.toString();
+                String external = getFileExternal(file);
+                Log.d("OkHttpTAG", external);
+                if (external.length() == 0 || external.contains("/")) {
+                    continue;
+                }
+                String mimeTypeFromExtension = MimeTypeMap.getSingleton().getMimeTypeFromExtension(external);
+                RequestBody requestBody = RequestBody.create(MediaType.parse(mimeTypeFromExtension), file);
+                resultList.add(MultipartBody.Part.createFormData("resume_file " + i, file.toString().substring(filePath.lastIndexOf('/') + 1), requestBody));
+            }
+            return resultList;
+        } else {
+            return null;
+        }
+    }
 
     public static void setLinearLayoutParam(LinearLayout linearLayout, int weight, int height, int visibility) {
         linearLayout.setVisibility(visibility);
@@ -111,13 +134,6 @@ public class MeteorUtility {
         params.weight = weight;
         params.height = height;
         linearLayout.setLayoutParams(params);
-    }
-
-    public static void setFileNameOnTextView(String filePath, TextView textView, Uri fileUri) {
-        File file = new File(filePath);
-        if (file.length() > 0) {
-            textView.setText(file.getName());
-        }
     }
 
     public static ArrayList<String> initializeLanguageList(Context context) {

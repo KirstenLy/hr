@@ -7,7 +7,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.gtomato.android.ui.transformer.CoverFlowViewTransformer;
+import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer;
+import com.gtomato.android.ui.transformer.InverseTimeMachineViewTransformer;
 import com.gtomato.android.ui.transformer.LinearViewTransformer;
+import com.gtomato.android.ui.transformer.TimeMachineViewTransformer;
 import com.gtomato.android.ui.widget.CarouselView;
 
 import java.util.ArrayList;
@@ -36,9 +40,9 @@ public class MainActivity extends AbstractActivity implements View.OnClickListen
         professionList.add(new Profession(2, R.drawable.ic_profession_manager, getString(R.string.profession_manager)));
 
         carousel = findViewById(R.id.carousel);
-        carousel.setTransformer(new LinearViewTransformer());
+        carousel.setTransformer(new FlatMerryGoRoundTransformer());
         carousel.setAdapter(new ProfessionListAdapter(getApplicationContext(), professionList));
-        carousel.setInfinite(true);
+        carousel.setInfinite(false);
         carousel.setEnableFling(false);
 
         carousel.setOnItemClickListener(new IntentChooser());

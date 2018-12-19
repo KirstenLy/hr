@@ -3,9 +3,22 @@ package hr.meteor.ru.meteorjob.ui.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,16 +29,21 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
+import com.beloo.widget.chipslayoutmanager.gravity.IChildGravityResolver;
+import com.beloo.widget.chipslayoutmanager.layouter.breaker.IRowBreaker;
 import com.google.gson.internal.LinkedTreeMap;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
+import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import hr.meteor.ru.meteorjob.R;
+import hr.meteor.ru.meteorjob.ui.adapters.ProfessionFilesAdapter;
 import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
@@ -37,30 +55,43 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyPartFromFile;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getArrayFromArrayList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromManagerObject;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOnSharedPreference;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFeomSharedPreference;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
 
 
 public class ManagerProfessionActivity extends AbstractActivity implements View.OnClickListener {
-    TextView userBriefFile;
-    LinearLayout invisibleLayoutWithExtraQuestion;
+    private LinearLayout invisibleLayoutWithExtraQuestion;
 
-    RadioButton contactsFormYesButton;
-    RadioButton contactsFormNoButton;
-    EditText name;
-    EditText phone;
-    EditText email;
-    EditText comment;
-    EditText question;
+    private RadioButton contactsFormYesButton;
+    private RadioButton contactsFormNoButton;
+    private EditText name;
+    private EditText phone;
+    private EditText email;
+    private EditText comment;
+    private EditText question;
 
-    File briefFile;
+    private ProfessionFilesAdapter professionFilesAdapter;
+
+    private ArrayList<File> filesList = new ArrayList<>();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && resultCode == Activity.RESULT_OK) {
-            briefFile = Utils.getFileForUri(data.getData());
-            userBriefFile.setText(briefFile.getName());
+            List<Uri> files = Utils.getSelectedFilesFromResult(data);
+
+            for (Uri uri : files) {
+                File file = Utils.getFileForUri(uri);
+                if (!filesList.contains(file)) {
+                    filesList.add(file);
+                }
+                professionFilesAdapter.setFileList(filesList);
+                professionFilesAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -78,50 +109,65 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         invisibleLayoutWithExtraQuestion = findViewById(R.id.layout_professions_manager_contacts_invisible);
 
-        userBriefFile = findViewById(R.id.text_profession_manager_get_brief);
-        userBriefFile.setOnClickListener(this);
+        ImageView addFileField = findViewById(R.id.img_profession_manager_add_file);
+        addFileField.setOnClickListener(this);
 
-        ImageView clearUserBriefFile = findViewById(R.id.image_profession_manager_brief_clear);
-        clearUserBriefFile.setOnClickListener(this);
+        TextView addFileTextField = findViewById(R.id.text_profession_manager_add_file);
+        addFileTextField.setOnClickListener(this);
 
         Button sendData = findViewById(R.id.button_profession_manager_send);
         sendData.setOnClickListener(this);
 
-//        EditText answer = findViewById(R.id.edit_profession_manager_contacts_question);
-//        android.support.design.widget.TextInputLayout tt = findViewById(R.id.hint_test);
+        SpannableString agreementText = new SpannableString(getString(R.string.default_accept_agreement));
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                String url = getString(R.string.url_agreement);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+            }
+        };
+        
+        agreementText.setSpan(clickableSpan, 48, 76, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        TextView agreement = findViewById(R.id.text_profession_manager_agreement);
+        agreement.setText(agreementText);
+        agreement.setMovementMethod(LinkMovementMethod.getInstance());
+        agreement.setHighlightColor(Color.BLUE);
+
+        FlowLayoutManager flowLayoutManager = new FlowLayoutManager();
+        flowLayoutManager.setAutoMeasureEnabled(true);
+        flowLayoutManager.removeItemPerLineLimit();
+
+        RecyclerView filesRecycler = findViewById(R.id.recycler_profession_manager_files);
+        filesRecycler.setLayoutManager(flowLayoutManager);
+        professionFilesAdapter = new ProfessionFilesAdapter(this, filesList);
+        filesRecycler.setAdapter(professionFilesAdapter);
 
         loadPreferences();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        boolean isDefaultStringText = userBriefFile.getText().toString().equals(getString(R.string.manager_sent_file));
-        if (userBriefFile != null && !isDefaultStringText) {
-            outState.putString("userBriefFileKey", String.valueOf(userBriefFile.getText()));
-        }
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (userBriefFile != null && savedInstanceState.getString("userBriefFileKey") != null) {
-            userBriefFile.setText(savedInstanceState.getString("userBriefFileKey"));
-        }
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        boolean isDefaultStringText = userBriefFile.getText().toString().equals(getString(R.string.manager_sent_file));
+//        if (userBriefFile != null && !isDefaultStringText) {
+//            outState.putString("userBriefFileKey", String.valueOf(userBriefFile.getText()));
+//        }
+//        super.onSaveInstanceState(outState);
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        if (userBriefFile != null && savedInstanceState.getString("userBriefFileKey") != null) {
+//            userBriefFile.setText(savedInstanceState.getString("userBriefFileKey"));
+//        }
+//    }
 
     @Override
     public void onClick(View v) {
         int elementId = v.getId();
-
-        if (elementId == R.id.text_profession_manager_get_brief) {
-            Intent intent = new Intent(this, FilePickerActivity.class);
-            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-            intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
-            intent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
-            startActivityForResult(intent, TAKE_USER_BRIEF_FILE_REQUEST);
-        }
 
         if (elementId == R.id.radiobutton_profession_manager_yes) {
             setLinearLayoutParam(invisibleLayoutWithExtraQuestion, LinearLayout.LayoutParams.MATCH_PARENT, 0, View.INVISIBLE);
@@ -131,9 +177,13 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
             setLinearLayoutParam(invisibleLayoutWithExtraQuestion, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, View.VISIBLE);
         }
 
-        if (elementId == R.id.image_profession_manager_brief_clear) {
-            userBriefFile.setText(MeteorUtility.getUnderlineSpanned(getString(R.string.manager_sent_file)));
-            briefFile = null;
+        if (elementId == R.id.img_profession_manager_add_file || elementId == R.id.text_profession_manager_add_file) {
+            Intent intent = new Intent(this, FilePickerActivity.class);
+            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, true);
+            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+            intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+            intent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+            startActivityForResult(intent, TAKE_USER_BRIEF_FILE_REQUEST);
         }
 
         if (elementId == R.id.button_profession_manager_send) {
@@ -188,11 +238,9 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), json);
 
-        List<MultipartBody.Part> fileList = new ArrayList<>();
+        List<MultipartBody.Part> requestFileList = createMultipartBodyList((ArrayList<File>) professionFilesAdapter.getFileList());
 
-        MultipartBody.Part fileBody = createMultipartBodyPartFromFile(briefFile);
-
-        Call<ResultJson> call = getMeteorService().postManagerData(jsonBody, fileBody);
+        Call<ResultJson> call = getMeteorService().postManagerData(jsonBody, requestFileList);
         call.enqueue(new Callback<ResultJson>() {
             @Override
             public void onResponse(Call<ResultJson> call,
@@ -226,6 +274,14 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         editor.putString("managerComment", String.valueOf(comment.getText()));
         editor.putString("managerQuestion", String.valueOf(question.getText()));
         editor.putBoolean("managerExperience", contactsFormYesButton.isChecked());
+
+        ArrayList<File> fileList = (ArrayList<File>) professionFilesAdapter.getFileList();
+        ArrayList<String> fileNamesPaths = new ArrayList<>();
+
+        for (int i = 0; i < fileList.size(); i++) {
+            fileNamesPaths.add(fileList.get(i).toString());
+        }
+        putArrayListOnSharedPreference(fileNamesPaths, editor, "managerFilesNames");
         editor.apply();
     }
 
@@ -240,25 +296,35 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
     public void restoreValues() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        if (sharedPreferences.getString("managerName", "") != null) {
+        if (!sharedPreferences.getString("managerName", "").equals("")) {
             name.setText(sharedPreferences.getString("managerName", ""));
         }
 
-        if (sharedPreferences.getString("managerPhone", "") != null) {
+        if (!sharedPreferences.getString("managerPhone", "").equals("")) {
             phone.setText(sharedPreferences.getString("managerPhone", ""));
         }
 
-        if (sharedPreferences.getString("managerEmail", "") != null) {
+        if (!sharedPreferences.getString("managerEmail", "").equals("")) {
             email.setText(sharedPreferences.getString("managerEmail", ""));
         }
 
-        if (sharedPreferences.getString("managerComment", "") != null) {
+        if (!sharedPreferences.getString("managerComment", "").equals("")) {
             comment.setText(sharedPreferences.getString("managerComment", ""));
         }
 
-        if (sharedPreferences.getString("managerQuestion", "") != null) {
+        if (!sharedPreferences.getString("managerQuestion", "").equals("")) {
             question.setText(sharedPreferences.getString("managerQuestion", ""));
         }
+
+        if (!sharedPreferences.getString("managerFilesNames", "").equals("")) {
+            ArrayList<String> filePaths = putArrayListOutFeomSharedPreference(sharedPreferences, "managerFilesNames");
+            for (int i = 0; i < filePaths.size(); i++) {
+                filesList.add(new File(filePaths.get(i)));
+            }
+            professionFilesAdapter.setFileList(filesList);
+            professionFilesAdapter.notifyDataSetChanged();
+        }
+
         if (sharedPreferences.getBoolean("managerExperience", false)) {
             contactsFormYesButton.setChecked(true);
         } else {

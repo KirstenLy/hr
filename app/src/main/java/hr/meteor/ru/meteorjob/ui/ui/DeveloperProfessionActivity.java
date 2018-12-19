@@ -57,22 +57,22 @@ import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFeo
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
-    TextView userTaskOrCodeFile;
-    TextView userBriefFile;
-    EditText name;
-    EditText phone;
-    EditText email;
-    RadioButton contactsFormYesButton;
-    RadioButton contactsFormNoButton;
-    EditText comment;
+    private TextView userTaskOrCodeFile;
+    private TextView userBriefFile;
+    private EditText name;
+    private EditText phone;
+    private EditText email;
+    private RadioButton contactsFormYesButton;
+    private RadioButton contactsFormNoButton;
+    private EditText comment;
 
-    DeveloperTechnologiesAdapter languagesAdapter;
-    DeveloperTechnologiesAdapter databasesAdapter;
-    DeveloperTechnologiesAdapter frameworkAdapter;
-    DeveloperTechnologiesAdapter mobilesAdapter;
+    private DeveloperTechnologiesAdapter languagesAdapter;
+    private DeveloperTechnologiesAdapter databasesAdapter;
+    private DeveloperTechnologiesAdapter frameworkAdapter;
+    private DeveloperTechnologiesAdapter mobilesAdapter;
 
-    File codeFile;
-    File briefFile;
+    private File codeFile;
+    private File briefFile;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -327,8 +327,8 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         ArrayList<String> checkedFrameworksArrayList = new ArrayList<>();
         ArrayList<String> checkedMobilesArrayList = new ArrayList<>();
 
-        for (boolean checkedlanguage : checkedLanguages) {
-            checkedLanguagesArrayList.add(String.valueOf(checkedlanguage));
+        for (boolean checkedLanguage : checkedLanguages) {
+            checkedLanguagesArrayList.add(String.valueOf(checkedLanguage));
         }
 
         for (boolean checkedDatabase : checkedDatabases) {
@@ -360,19 +360,19 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
     public void restoreValues() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        if (sharedPreferences.getString("developerName", "") != null) {
+        if (!sharedPreferences.getString("developerName", "").equals("")) {
             name.setText(sharedPreferences.getString("developerName", ""));
         }
 
-        if (sharedPreferences.getString("developerPhone", "") != null) {
+        if (!sharedPreferences.getString("developerPhone", "").equals("")) {
             phone.setText(sharedPreferences.getString("developerPhone", ""));
         }
 
-        if (sharedPreferences.getString("developerEmail", "") != null) {
+        if (!sharedPreferences.getString("developerEmail", "").equals("")) {
             email.setText(sharedPreferences.getString("developerEmail", ""));
         }
 
-        if (sharedPreferences.getString("developerComment", "") != null) {
+        if (!sharedPreferences.getString("developerComment", "").equals("")) {
             comment.setText(sharedPreferences.getString("developerComment", ""));
         }
 
@@ -400,7 +400,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             mobilesAdapter.setSelectedCheckboxArray(restoredCheckers);
         }
 
-        if (sharedPreferences.getBoolean("developerExperience", false)) {
+        if (!sharedPreferences.getBoolean("developerExperience", false)) {
             contactsFormYesButton.setChecked(true);
         } else {
             contactsFormNoButton.setChecked(true);

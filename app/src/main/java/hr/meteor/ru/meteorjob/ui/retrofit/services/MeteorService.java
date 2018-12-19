@@ -13,7 +13,7 @@ public interface MeteorService {
     @Multipart
     @POST("manager")
     Call<ResultJson> postManagerData(@Part("Data") RequestBody json,
-                                     @Part MultipartBody.Part file);
+                                     @Part List<MultipartBody.Part> files);
 
     @Multipart
     @POST("developer")
