@@ -2,6 +2,7 @@ package hr.meteor.ru.meteorjob.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +85,10 @@ public class DeveloperTechnologiesAdapter extends RecyclerView.Adapter<Developer
 
     public String[] getSelectedTechnologiesArray() {
         ArrayList<String> selectedTechnologiesList = new ArrayList<>();
+
+        Log.d("OkHttpTAG", String.valueOf(selectedCheckboxArray.length));
+        Log.d("OkHttpTAG", techNameList.toString());
+
         for (int i = 0; i < selectedCheckboxArray.length; i++) {
             if (selectedCheckboxArray[i]) {
                 selectedTechnologiesList.add(techNameList.get(i));

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,29 +14,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import com.google.gson.reflect.TypeToken;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
+import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
 
 import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
+import hr.meteor.ru.meteorjob.ui.adapters.ProfessionFilesAdapter;
 import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
@@ -49,16 +44,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyPartFromFile;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getArrayFromArrayList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromDeveloperObject;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOnSharedPreference;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFeomSharedPreference;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFromSharedPreference;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.rvHeightCorrector;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.showDuplicatedFilesIfExist;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
-    private TextView userTaskOrCodeFile;
-    private TextView userBriefFile;
     private EditText name;
     private EditText phone;
     private EditText email;
@@ -71,19 +65,48 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     private DeveloperTechnologiesAdapter frameworkAdapter;
     private DeveloperTechnologiesAdapter mobilesAdapter;
 
-    private File codeFile;
-    private File briefFile;
+    RecyclerView codeRecycler;
+    RecyclerView briefRecycler;
+
+    private ProfessionFilesAdapter codeFilesAdapter;
+    private ProfessionFilesAdapter briefFilesAdapter;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if ((requestCode == TAKE_USER_BRIEF_FILE_REQUEST || requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) && resultCode == Activity.RESULT_OK) {
-            if (requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) {
-                codeFile = Utils.getFileForUri(data.getData());
-                userTaskOrCodeFile.setText(codeFile.getName());
-            } else {
-                briefFile = Utils.getFileForUri(data.getData());
-                userBriefFile.setText(briefFile.getName());
+        if ((requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) && resultCode == Activity.RESULT_OK) {
+            List<Uri> filesUtiList = Utils.getSelectedFilesFromResult(data);
+            ArrayList<File> filesList = (ArrayList<File>) codeFilesAdapter.getFileList();
+
+            StringBuilder duplicateNamesBuilder = new StringBuilder();
+            for (Uri uri : filesUtiList) {
+                File file = Utils.getFileForUri(uri);
+                if (!filesList.contains(file)) {
+                    filesList.add(file);
+                } else {
+                    duplicateNamesBuilder.append("\n").append(file.getName());
+                }
             }
+            rvHeightCorrector(codeRecycler);
+            codeFilesAdapter.notifyDataSetChanged();
+            showDuplicatedFilesIfExist(duplicateNamesBuilder.toString(), this);
+        }
+
+        if ((requestCode == TAKE_USER_BRIEF_FILE_REQUEST) && resultCode == Activity.RESULT_OK) {
+            List<Uri> filesUtiList = Utils.getSelectedFilesFromResult(data);
+            ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
+
+            StringBuilder duplicateNamesBuilder = new StringBuilder();
+            for (Uri uri : filesUtiList) {
+                File file = Utils.getFileForUri(uri);
+                if (!filesList.contains(file)) {
+                    filesList.add(file);
+                } else {
+                    duplicateNamesBuilder.append("\n").append(file.getName());
+                }
+            }
+            rvHeightCorrector(briefRecycler);
+            briefFilesAdapter.notifyDataSetChanged();
+            showDuplicatedFilesIfExist(duplicateNamesBuilder.toString(), this);
         }
     }
 
@@ -127,26 +150,43 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
         contactsFormNoButton = findViewById(R.id.radiobutton_profession_developer_no);
 
-        userTaskOrCodeFile = findViewById(R.id.text_profession_developer_get_task);
-        userTaskOrCodeFile.setOnClickListener(this);
-
-        ImageView clearUserTaskOrCodeFile = findViewById(R.id.image_profession_developer_task_clear);
-        clearUserTaskOrCodeFile.setOnClickListener(this);
-
         TextView webTestTaskLink = findViewById(R.id.text_profession_developer_web_task_link);
         webTestTaskLink.setOnClickListener(this);
 
         TextView androidTestTaskLink = findViewById(R.id.text_profession_developer_android_task_link);
         androidTestTaskLink.setOnClickListener(this);
 
-        userBriefFile = findViewById(R.id.text_profession_developer_get_brief);
-        userBriefFile.setOnClickListener(this);
-
-        ImageView clearUserBriefFile = findViewById(R.id.image_profession_developer_brief_clear);
-        clearUserBriefFile.setOnClickListener(this);
-
         Button sendData = findViewById(R.id.button_profession_developer_send);
         sendData.setOnClickListener(this);
+
+        LinearLayout codeFilesLayout = findViewById(R.id.layout_professions_developer_files_code);
+        codeFilesLayout.setOnClickListener(this);
+
+        LinearLayout briefFilesLayout = findViewById(R.id.layout_professions_developer_files_brief);
+        briefFilesLayout.setOnClickListener(this);
+
+        FlowLayoutManager flowLayoutManagerForCodeFiles = new FlowLayoutManager();
+        FlowLayoutManager flowLayoutManagerForBriefFiles = new FlowLayoutManager();
+
+        flowLayoutManagerForCodeFiles.setAutoMeasureEnabled(true);
+        flowLayoutManagerForBriefFiles.setAutoMeasureEnabled(true);
+
+        codeRecycler = findViewById(R.id.recycler_profession_developer_code_files);
+        briefRecycler = findViewById(R.id.recycler_profession_developer_brief_files);
+
+        codeRecycler.setLayoutManager(flowLayoutManagerForCodeFiles);
+        briefRecycler.setLayoutManager(flowLayoutManagerForBriefFiles);
+
+        codeFilesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), codeRecycler);
+        briefFilesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), briefRecycler);
+
+        codeRecycler.setAdapter(codeFilesAdapter);
+        briefRecycler.setAdapter(briefFilesAdapter);
+
+        codeRecycler.setNestedScrollingEnabled(false);
+        briefRecycler.setNestedScrollingEnabled(false);
+
+        Log.d("OkHttpTAG1", "ONCReATE " + Arrays.toString(languagesAdapter.getSelectedCheckboxArray()));
 
         loadPreferences();
     }
@@ -163,15 +203,16 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         outState.putBooleanArray("frameworksCheckboxes", frameworksSelectedCheckboxData);
         outState.putBooleanArray("mobilesCheckboxes", mobilesSelectedCheckboxData);
 
-        boolean isDefaultStringText = userTaskOrCodeFile.getText().toString().equals(getString(R.string.developer_sent_file));
-        if (userTaskOrCodeFile != null && !isDefaultStringText) {
-            outState.putString("userTaskOrCodeFileKey", String.valueOf(userTaskOrCodeFile.getText()));
+        ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
+        if (filesList != null && filesList.size() > 0) {
+            outState.putSerializable("briefFiles", filesList);
         }
 
-        isDefaultStringText = userBriefFile.getText().toString().equals(getString(R.string.developer_sent_file));
-        if (userBriefFile != null && !isDefaultStringText) {
-            outState.putString("userBriefFileKey", String.valueOf(userBriefFile.getText()));
+        filesList = (ArrayList<File>) codeFilesAdapter.getFileList();
+        if (filesList != null && filesList.size() > 0) {
+            outState.putSerializable("codeFiles", filesList);
         }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -184,12 +225,20 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         frameworkAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("frameworksCheckboxes"));
         mobilesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("mobilesCheckboxes"));
 
-        if (userTaskOrCodeFile != null && savedInstanceState.getString("userTaskOrCodeFileKey") != null) {
-            userTaskOrCodeFile.setText(savedInstanceState.getString("userTaskOrCodeFileKey"));
+        ArrayList<File> filesList;
+
+        if (savedInstanceState.getSerializable("briefFiles") != null) {
+            filesList = (ArrayList<File>) savedInstanceState.getSerializable("briefFiles");
+            briefFilesAdapter.setFileList(filesList);
+            briefFilesAdapter.notifyDataSetChanged();
+            rvHeightCorrector(briefRecycler);
         }
 
-        if (userBriefFile != null && savedInstanceState.getString("userBriefFileKey") != null) {
-            userBriefFile.setText(savedInstanceState.getString("userBriefFileKey"));
+        if (savedInstanceState.getSerializable("codeFiles") != null) {
+            filesList = (ArrayList<File>) savedInstanceState.getSerializable("codeFiles");
+            codeFilesAdapter.setFileList(filesList);
+            codeFilesAdapter.notifyDataSetChanged();
+            rvHeightCorrector(codeRecycler);
         }
     }
 
@@ -197,27 +246,18 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     public void onClick(View v) {
         int elementId = v.getId();
 
-        if (elementId == R.id.text_profession_developer_get_task || elementId == R.id.text_profession_developer_get_brief) {
+        if (elementId == R.id.layout_professions_developer_files_code
+                || elementId == R.id.layout_professions_developer_files_brief) {
             Intent intent = new Intent(this, FilePickerActivity.class);
-            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+            intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, true);
             intent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
             intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
             intent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
 
-            if (elementId == R.id.text_profession_developer_get_task) {
+            if (elementId == R.id.layout_professions_developer_files_code) {
                 startActivityForResult(intent, TAKE_USER_TASK_OR_CODE_FILE_REQUEST);
             } else {
                 startActivityForResult(intent, TAKE_USER_BRIEF_FILE_REQUEST);
-            }
-        }
-
-        if (elementId == R.id.image_profession_developer_task_clear || elementId == R.id.image_profession_developer_brief_clear) {
-            if (elementId == R.id.image_profession_developer_task_clear) {
-                userTaskOrCodeFile.setText(MeteorUtility.getUnderlineSpanned(getString(R.string.developer_sent_file)));
-                userTaskOrCodeFile = null;
-            } else {
-                userBriefFile.setText(MeteorUtility.getUnderlineSpanned(getString(R.string.developer_sent_file)));
-                userBriefFile = null;
             }
         }
 
@@ -251,6 +291,24 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        savePreferences();
+        if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        savePreferences();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+    }
+
     public boolean validationSuccess() {
         boolean isSuccess = true;
         name = findViewById(R.id.edit_profession_developer_contacts_name);
@@ -279,10 +337,14 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), json);
 
-        MultipartBody.Part fileOneBody = createMultipartBodyPartFromFile(codeFile);
-        MultipartBody.Part fileTwoBody = createMultipartBodyPartFromFile(briefFile);
+        List<MultipartBody.Part> codeFilesList = createMultipartBodyList((ArrayList<File>) codeFilesAdapter.getFileList());
+        List<MultipartBody.Part> briefFilesList = createMultipartBodyList((ArrayList<File>) briefFilesAdapter.getFileList());
 
-        Call<ResultJson> call = getMeteorService().postDeveloperData(jsonBody, fileOneBody, fileTwoBody);
+        ArrayList<MultipartBody.Part> resultList = new ArrayList<>();
+        resultList.addAll(codeFilesList);
+        resultList.addAll(briefFilesList);
+
+        Call<ResultJson> call = getMeteorService().postDeveloperData(jsonBody, resultList);
 
         call.enqueue(new Callback<ResultJson>() {
             @Override
@@ -343,7 +405,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             checkedMobilesArrayList.add(String.valueOf(checkedMobile));
         }
 
-        putArrayListOnSharedPreference(checkedMobilesArrayList, editor, "developerLanguages");
+        putArrayListOnSharedPreference(checkedLanguagesArrayList, editor, "developerLanguages");
         putArrayListOnSharedPreference(checkedDatabasesArrayList, editor, "developerDatabases");
         putArrayListOnSharedPreference(checkedFrameworksArrayList, editor, "developerFrameworks");
         putArrayListOnSharedPreference(checkedMobilesArrayList, editor, "developerMobiles");
@@ -377,27 +439,33 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         }
 
         if (!sharedPreferences.getString("developerLanguages", "").equals("")) {
-            ArrayList<String> checkedLanguages = putArrayListOutFeomSharedPreference(sharedPreferences, "developerLanguages");
+            ArrayList<String> checkedLanguages = putArrayListOutFromSharedPreference(sharedPreferences, "developerLanguages");
+
             boolean[] restoredCheckers = getArrayFromArrayList(checkedLanguages);
+
             languagesAdapter.setSelectedCheckboxArray(restoredCheckers);
+            languagesAdapter.notifyDataSetChanged();
         }
 
         if (!sharedPreferences.getString("developerDatabases", "").equals("")) {
-            ArrayList<String> checkedDarabases = putArrayListOutFeomSharedPreference(sharedPreferences, "developerDatabases");
+            ArrayList<String> checkedDarabases = putArrayListOutFromSharedPreference(sharedPreferences, "developerDatabases");
             boolean[] restoredCheckers = getArrayFromArrayList(checkedDarabases);
             databasesAdapter.setSelectedCheckboxArray(restoredCheckers);
+            languagesAdapter.notifyDataSetChanged();
         }
 
         if (!sharedPreferences.getString("developerFrameworks", "").equals("")) {
-            ArrayList<String> checkedFrameworks = putArrayListOutFeomSharedPreference(sharedPreferences, "developerFrameworks");
+            ArrayList<String> checkedFrameworks = putArrayListOutFromSharedPreference(sharedPreferences, "developerFrameworks");
             boolean[] restoredCheckers = getArrayFromArrayList(checkedFrameworks);
             frameworkAdapter.setSelectedCheckboxArray(restoredCheckers);
+            languagesAdapter.notifyDataSetChanged();
         }
 
         if (!sharedPreferences.getString("developerMobiles", "").equals("")) {
-            ArrayList<String> checkedMobiles = putArrayListOutFeomSharedPreference(sharedPreferences, "developerMobiles");
+            ArrayList<String> checkedMobiles = putArrayListOutFromSharedPreference(sharedPreferences, "developerMobiles");
             boolean[] restoredCheckers = getArrayFromArrayList(checkedMobiles);
             mobilesAdapter.setSelectedCheckboxArray(restoredCheckers);
+            languagesAdapter.notifyDataSetChanged();
         }
 
         if (!sharedPreferences.getBoolean("developerExperience", false)) {
@@ -405,24 +473,6 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         } else {
             contactsFormNoButton.setChecked(true);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        savePreferences();
-        if (item.getItemId() == android.R.id.home) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        savePreferences();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
     }
 }
 

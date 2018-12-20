@@ -18,8 +18,7 @@ public interface MeteorService {
     @Multipart
     @POST("developer")
     Call<ResultJson> postDeveloperData(@Part("Data") RequestBody json,
-                                       @Part MultipartBody.Part fileOne,
-                                       @Part MultipartBody.Part fileTwo);
+                                       @Part List<MultipartBody.Part> resultList);
 
 
 //    @Multipart

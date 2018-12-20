@@ -2,9 +2,11 @@ package hr.meteor.ru.meteorjob.ui.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.gtomato.android.ui.transformer.CoverFlowViewTransformer;
@@ -22,7 +24,7 @@ import hr.meteor.ru.meteorjob.ui.beans.Profession;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 
 public class MainActivity extends AbstractActivity implements View.OnClickListener {
-    CarouselView carousel;
+//    RecyclerView carousel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,45 +41,59 @@ public class MainActivity extends AbstractActivity implements View.OnClickListen
         professionList.add(new Profession(1, R.drawable.ic_profession_developer, getString(R.string.profession_dev)));
         professionList.add(new Profession(2, R.drawable.ic_profession_manager, getString(R.string.profession_manager)));
 
-        carousel = findViewById(R.id.carousel);
-        carousel.setTransformer(new FlatMerryGoRoundTransformer());
-        carousel.setAdapter(new ProfessionListAdapter(getApplicationContext(), professionList));
-        carousel.setInfinite(false);
-        carousel.setEnableFling(false);
+        LinearLayout managerLayout = findViewById(R.id.layout_profession_manager);
+        LinearLayout developerLayout = findViewById(R.id.layout_profession_developer);
 
-        carousel.setOnItemClickListener(new IntentChooser());
+        managerLayout.setOnClickListener(this);
+        developerLayout.setOnClickListener(this);
 
-        ImageView leftScroll = findViewById(R.id.img_main_left_arrow);
-        leftScroll.setOnClickListener(this);
+//        carousel = findViewById(R.id.carousel);
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+//        carousel.setLayoutManager(layoutManager);
+//        carousel.setAdapter(new ProfessionListAdapter(getApplicationContext(), professionList));
+//        carousel.setNestedScrollingEnabled(false);
 
-        ImageView rightScroll = findViewById(R.id.img_main_right_arrow);
-        rightScroll.setOnClickListener(this);
+//        carousel = findViewById(R.id.carousel);
+//        carousel.setTransformer(new LinearViewTransformer());
+//        carousel.setAdapter(new ProfessionListAdapter(getApplicationContext(), professionList));
+//        carousel.setInfinite(false);
+//        carousel.setEnableFling(false);
+//        carousel.setOnItemClickListener(new IntentChooser());
+
+//        ImageView leftScroll = findViewById(R.id.img_main_left_arrow);
+//        leftScroll.setOnClickListener(this);
+//
+//        ImageView rightScroll = findViewById(R.id.img_main_right_arrow);
+//        rightScroll.setOnClickListener(this);
+
+//
+//        carousel.scrollToPosition(carousel.getCurrentAdapterPosition() == 1 ? 0 : 1);
+
     }
 
     @Override
     public void onClick(View v) {
-        if (((v.getId() == R.id.img_main_left_arrow) || (v.getId() == R.id.img_main_right_arrow))) {
-            carousel.scrollToPosition(carousel.getCurrentAdapterPosition() == 1 ? 0 : 1);
+        Intent intent = new Intent();
+        switch (v.getId()) {
+            case R.id.layout_profession_manager:
+                intent = new Intent(getApplicationContext(), ManagerProfessionActivity.class);
+                break;
+            case R.id.layout_profession_developer:
+                intent = new Intent(getApplicationContext(), DeveloperProfessionActivity.class);
+                break;
         }
+        startActivity(intent);
+        finish();
     }
 
-    class IntentChooser implements CarouselView.OnItemClickListener {
-        Intent intent;
-
-        @Override
-        public void onItemClick(RecyclerView.Adapter adapter, View view, int position, int adapterPosition) {
-            switch (adapterPosition) {
-                case 0:
-                    intent = new Intent(getApplicationContext(), DeveloperProfessionActivity.class);
-                    break;
-                case 1:
-                    intent = new Intent(getApplicationContext(), ManagerProfessionActivity.class);
-                    break;
-            }
-            startActivity(intent);
-            finish();
-        }
-    }
+//    class IntentChooser implements CarouselView.OnItemClickListener {
+//        Intent intent;
+//
+//        @Override
+//        public void onItemClick(RecyclerView.Adapter adapter, View view, int position, int adapterPosition) {
+//
+//        }
+//    }
 
     @Override
     public void onBackPressed() {

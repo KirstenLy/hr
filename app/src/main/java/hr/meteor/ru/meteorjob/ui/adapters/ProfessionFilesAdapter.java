@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.chip.Chip;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,17 @@ import java.util.List;
 
 import hr.meteor.ru.meteorjob.R;
 
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.rvHeightCorrector;
+
 public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFilesAdapter.ViewHolder> {
     private Context context;
-    private int position;
-
     private List<File> fileList;
+    private RecyclerView rv;
 
-    public ProfessionFilesAdapter(Context context, List<File> fileList) {
+    public ProfessionFilesAdapter(Context context, List<File> fileList, RecyclerView rv) {
         this.context = context;
         this.fileList = fileList;
+        this.rv = rv;
     }
 
     @Override
@@ -43,6 +46,7 @@ public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFiles
                 fileList.remove(i);
                 notifyItemRemoved(i);
                 notifyItemRangeChanged(i, fileList.size());
+                rvHeightCorrector(rv);
             }
         });
     }
@@ -62,14 +66,6 @@ public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFiles
         }
     }
 
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public List<File> getFileList() {
         return fileList;
     }
@@ -77,6 +73,4 @@ public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFiles
     public void setFileList(List<File> fileList) {
         this.fileList = fileList;
     }
-
-
 }

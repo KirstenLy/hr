@@ -7,31 +7,19 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
-import com.beloo.widget.chipslayoutmanager.gravity.IChildGravityResolver;
-import com.beloo.widget.chipslayoutmanager.layouter.breaker.IRowBreaker;
 import com.google.gson.internal.LinkedTreeMap;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
@@ -56,12 +44,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyList;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyPartFromFile;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getArrayFromArrayList;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getAgreementString;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getFilesNamesList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromManagerObject;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOnSharedPreference;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFeomSharedPreference;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFromSharedPreference;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.rvHeightCorrector;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.showDuplicatedFilesIfExist;
 
 
 public class ManagerProfessionActivity extends AbstractActivity implements View.OnClickListener {
@@ -75,23 +65,29 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     private EditText comment;
     private EditText question;
 
-    private ProfessionFilesAdapter professionFilesAdapter;
-
-    private ArrayList<File> filesList = new ArrayList<>();
+    RecyclerView briefRecycler;
+    private ProfessionFilesAdapter briefFilesAdapter;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && resultCode == Activity.RESULT_OK) {
-            List<Uri> files = Utils.getSelectedFilesFromResult(data);
+        if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            List<Uri> filesUtiList = Utils.getSelectedFilesFromResult(data);
+            ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
 
-            for (Uri uri : files) {
+            StringBuilder duplicateNamesBuilder = new StringBuilder();
+
+            for (Uri uri : filesUtiList) {
                 File file = Utils.getFileForUri(uri);
                 if (!filesList.contains(file)) {
                     filesList.add(file);
+                } else {
+                    duplicateNamesBuilder.append("\n").append(file.getName());
                 }
-                professionFilesAdapter.setFileList(filesList);
-                professionFilesAdapter.notifyDataSetChanged();
             }
+
+            rvHeightCorrector(briefRecycler);
+            briefFilesAdapter.notifyDataSetChanged();
+            showDuplicatedFilesIfExist(duplicateNamesBuilder.toString(), this);
         }
     }
 
@@ -109,61 +105,61 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         invisibleLayoutWithExtraQuestion = findViewById(R.id.layout_professions_manager_contacts_invisible);
 
-        ImageView addFileField = findViewById(R.id.img_profession_manager_add_file);
-        addFileField.setOnClickListener(this);
-
-        TextView addFileTextField = findViewById(R.id.text_profession_manager_add_file);
-        addFileTextField.setOnClickListener(this);
+        LinearLayout briefFilesLayout = findViewById(R.id.layout_professions_manager_files_brief);
+        briefFilesLayout.setOnClickListener(this);
 
         Button sendData = findViewById(R.id.button_profession_manager_send);
         sendData.setOnClickListener(this);
 
-        SpannableString agreementText = new SpannableString(getString(R.string.default_accept_agreement));
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                String url = getString(R.string.url_agreement);
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
-                startActivity(intent);
-            }
-        };
-        
-        agreementText.setSpan(clickableSpan, 48, 76, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        ChipsLayoutManager chipsLayoutManager = ChipsLayoutManager.newBuilder(this)
+//                .setChildGravity(Gravity.TOP)
+//                .setScrollingEnabled(false)
+//                .setGravityResolver(new IChildGravityResolver() {
+//                    @Override
+//                    public int getItemGravity(int position) {
+//                        return Gravity.CENTER;
+//                    }
+//                })
+//                .setOrientation(ChipsLayoutManager.HORIZONTAL)
+//                .setRowStrategy(ChipsLayoutManager.STRATEGY_CENTER_DENSE)
+//                .build();
 
         TextView agreement = findViewById(R.id.text_profession_manager_agreement);
-        agreement.setText(agreementText);
+        agreement.setText(getAgreementString(this));
         agreement.setMovementMethod(LinkMovementMethod.getInstance());
         agreement.setHighlightColor(Color.BLUE);
 
         FlowLayoutManager flowLayoutManager = new FlowLayoutManager();
         flowLayoutManager.setAutoMeasureEnabled(true);
-        flowLayoutManager.removeItemPerLineLimit();
 
-        RecyclerView filesRecycler = findViewById(R.id.recycler_profession_manager_files);
-        filesRecycler.setLayoutManager(flowLayoutManager);
-        professionFilesAdapter = new ProfessionFilesAdapter(this, filesList);
-        filesRecycler.setAdapter(professionFilesAdapter);
+        briefRecycler = findViewById(R.id.recycler_profession_manager_files);
+        briefRecycler.setLayoutManager(flowLayoutManager);
+        briefFilesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), briefRecycler);
+        briefRecycler.setAdapter(briefFilesAdapter);
+        briefRecycler.setNestedScrollingEnabled(false);
 
         loadPreferences();
     }
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        boolean isDefaultStringText = userBriefFile.getText().toString().equals(getString(R.string.manager_sent_file));
-//        if (userBriefFile != null && !isDefaultStringText) {
-//            outState.putString("userBriefFileKey", String.valueOf(userBriefFile.getText()));
-//        }
-//        super.onSaveInstanceState(outState);
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        if (userBriefFile != null && savedInstanceState.getString("userBriefFileKey") != null) {
-//            userBriefFile.setText(savedInstanceState.getString("userBriefFileKey"));
-//        }
-//    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
+        if (filesList != null && filesList.size() > 0) {
+            outState.putSerializable("files", filesList);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.getSerializable("files") != null) {
+            ArrayList<File> filesList = (ArrayList<File>) savedInstanceState.getSerializable("files");
+            rvHeightCorrector(briefRecycler);
+            briefFilesAdapter.setFileList(filesList);
+            briefFilesAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -177,7 +173,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
             setLinearLayoutParam(invisibleLayoutWithExtraQuestion, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, View.VISIBLE);
         }
 
-        if (elementId == R.id.img_profession_manager_add_file || elementId == R.id.text_profession_manager_add_file) {
+        if (elementId == R.id.layout_professions_manager_files_brief) {
             Intent intent = new Intent(this, FilePickerActivity.class);
             intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, true);
             intent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
@@ -238,7 +234,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), json);
 
-        List<MultipartBody.Part> requestFileList = createMultipartBodyList((ArrayList<File>) professionFilesAdapter.getFileList());
+        List<MultipartBody.Part> requestFileList = createMultipartBodyList((ArrayList<File>) briefFilesAdapter.getFileList());
 
         Call<ResultJson> call = getMeteorService().postManagerData(jsonBody, requestFileList);
         call.enqueue(new Callback<ResultJson>() {
@@ -275,13 +271,10 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         editor.putString("managerQuestion", String.valueOf(question.getText()));
         editor.putBoolean("managerExperience", contactsFormYesButton.isChecked());
 
-        ArrayList<File> fileList = (ArrayList<File>) professionFilesAdapter.getFileList();
-        ArrayList<String> fileNamesPaths = new ArrayList<>();
-
-        for (int i = 0; i < fileList.size(); i++) {
-            fileNamesPaths.add(fileList.get(i).toString());
+        ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
+        if (filesList != null) {
+            putArrayListOnSharedPreference(getFilesNamesList(filesList), editor, "managerFilesNames");
         }
-        putArrayListOnSharedPreference(fileNamesPaths, editor, "managerFilesNames");
         editor.apply();
     }
 
@@ -316,13 +309,15 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
             question.setText(sharedPreferences.getString("managerQuestion", ""));
         }
 
-        if (!sharedPreferences.getString("managerFilesNames", "").equals("")) {
-            ArrayList<String> filePaths = putArrayListOutFeomSharedPreference(sharedPreferences, "managerFilesNames");
+        if (sharedPreferences.contains("managerFilesNames")) {
+            ArrayList<String> filePaths = putArrayListOutFromSharedPreference(sharedPreferences, "managerFilesNames");
+            ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
             for (int i = 0; i < filePaths.size(); i++) {
                 filesList.add(new File(filePaths.get(i)));
             }
-            professionFilesAdapter.setFileList(filesList);
-            professionFilesAdapter.notifyDataSetChanged();
+            rvHeightCorrector(briefRecycler);
+            briefFilesAdapter.setFileList(filesList);
+            briefFilesAdapter.notifyDataSetChanged();
         }
 
         if (sharedPreferences.getBoolean("managerExperience", false)) {

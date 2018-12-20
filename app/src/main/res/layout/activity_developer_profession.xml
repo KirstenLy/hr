@@ -171,8 +171,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/default_necessary_field"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/default_necessary_field" />
             </LinearLayout>
             <!-- /Field with text about necessary field -->
 
@@ -282,28 +282,34 @@
                     android:text="@string/profession_get_task" />
 
                 <LinearLayout
+                    android:id="@+id/layout_professions_developer_files_code"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:paddingBottom="@dimen/padding_default">
 
-                    <TextView
-                        android:id="@+id/text_profession_developer_get_task"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/manager_sent_file"
-                        android:textColor="@android:color/holo_blue_dark" />
-
                     <ImageView
-                        android:id="@+id/image_profession_developer_task_clear"
+                        android:layout_width="@dimen/image_size_small"
+                        android:layout_height="@dimen/image_size_small"
+                        android:src="@drawable/ic_add_file" />
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/padding_default"
-                        android:layout_marginRight="@dimen/padding_default"
-                        android:src="@drawable/ic_delete" />
+                        android:text="@string/default_insert_file"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textSize="@dimen/text_size_medium" />
                 </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_profession_developer_code_files"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/margin_default">
+
+                </android.support.v7.widget.RecyclerView>
             </LinearLayout>
             <!-- /Form with user's test task or code file -->
 
@@ -372,27 +378,33 @@
                     android:text="@string/profession_get_resume" />
 
                 <LinearLayout
+                    android:id="@+id/layout_professions_developer_files_brief"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:paddingBottom="@dimen/padding_default">
 
+                    <ImageView
+                        android:layout_width="@dimen/image_size_small"
+                        android:layout_height="@dimen/image_size_small"
+                        android:src="@drawable/ic_add_file" />
+
                     <TextView
-                        android:id="@+id/text_profession_developer_get_brief"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="@string/manager_sent_file"
-                        android:textColor="@android:color/holo_blue_dark" />
-
-                    <ImageView
-                        android:id="@+id/image_profession_developer_brief_clear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default"
-                        android:src="@drawable/ic_delete" />
+                        android:text="@string/default_insert_file"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textSize="@dimen/text_size_medium" />
                 </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_profession_developer_brief_files"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/margin_default" />
+
             </LinearLayout>
             <!-- /Form with user's brief file -->
 

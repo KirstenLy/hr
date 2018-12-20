@@ -27,6 +27,8 @@ public class ProfessionListAdapter extends RecyclerView.Adapter<ProfessionListAd
     @Override
     public ProfessionListAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_profession, viewGroup, false);
+        int height = viewGroup.getMeasuredHeight() / 2;
+        view.setMinimumHeight(height);
         return new ViewHolder(view);
     }
 

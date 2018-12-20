@@ -228,19 +228,18 @@
                     android:text="@string/profession_get_resume" />
 
                 <LinearLayout
+                    android:id="@+id/layout_professions_manager_files_brief"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_margin="@dimen/margin_small">
 
                     <ImageView
-                        android:id="@+id/img_profession_manager_add_file"
                         android:layout_width="@dimen/image_size_small"
                         android:layout_height="@dimen/image_size_small"
                         android:src="@drawable/ic_add_file" />
 
                     <TextView
-                        android:id="@+id/text_profession_manager_add_file"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -253,6 +252,7 @@
                     android:id="@+id/recycler_profession_manager_files"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/margin_default">
 
                 </android.support.v7.widget.RecyclerView>

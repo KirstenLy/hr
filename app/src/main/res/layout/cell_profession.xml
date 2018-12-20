@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/padding_default"
-    android:layout_marginRight="@dimen/padding_default">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_default">
 
     <ImageView
         android:id="@+id/img_profession_cell"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
         android:src="@drawable/logo" />
 
     <TextView
         android:id="@+id/text_professional_cell_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/img_profession_cell"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_gravity="center_vertical"
         android:fontFamily="sans-serif"
         android:includeFontPadding="false"
-        android:paddingTop="@dimen/padding_medium"
         android:text="@string/logo_text"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/text_size_big"
         android:textStyle="italic" />
-</RelativeLayout>
+</LinearLayout>

@@ -1,21 +1,28 @@
 package hr.meteor.ru.meteorjob.ui.utility;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
+import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.muddzdev.styleabletoast.StyleableToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import hr.meteor.ru.meteorjob.R;
+import hr.meteor.ru.meteorjob.ui.adapters.ProfessionFilesAdapter;
 import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
 import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
 import okhttp3.MediaType;
@@ -40,9 +48,6 @@ public class MeteorUtility {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
 
-    public static Spanned getUnderlineSpanned(String string) {
-        return Html.fromHtml("<u>" + string + "</u>");
-    }
 
     public static boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -84,43 +89,24 @@ public class MeteorUtility {
         return json.toString();
     }
 
-    public static boolean isFileExternalCorrect(File file) {
-        return file.getName().endsWith(".doc") || file.getName().endsWith(".pdf") || file.getName().endsWith(".ppt");
-    }
-
     public static String getFileExternal(File file) {
         return file.toString().substring(file.toString().lastIndexOf('.') + 1);
     }
 
-    public static MultipartBody.Part createMultipartBodyPartFromFile(File file) {
-        if (file != null) {
-            String filePath = file.toString();
-            String external = getFileExternal(file);
-            String mimeTypeFromExtension = MimeTypeMap.getSingleton().getMimeTypeFromExtension(external);
-            RequestBody requestBody = RequestBody.create(MediaType.parse(mimeTypeFromExtension), file);
-            return MultipartBody.Part.createFormData("resume_file", file.toString().substring(filePath.lastIndexOf('/') + 1), requestBody);
-        } else {
-            return null;
-        }
-    }
 
     public static ArrayList<MultipartBody.Part> createMultipartBodyList(ArrayList<File> fileList) {
         if (fileList != null) {
             ArrayList<MultipartBody.Part> resultList = new ArrayList<>();
-            Log.d("OkHttpTAG", String.valueOf(fileList.size()));
-            Log.d("OkHttpTAG", String.valueOf(fileList.toString()));
             for (int i = 0; i < fileList.size(); i++) {
                 File file = fileList.get(i);
-
                 String filePath = file.toString();
                 String external = getFileExternal(file);
-                Log.d("OkHttpTAG", external);
                 if (external.length() == 0 || external.contains("/")) {
                     continue;
                 }
                 String mimeTypeFromExtension = MimeTypeMap.getSingleton().getMimeTypeFromExtension(external);
                 RequestBody requestBody = RequestBody.create(MediaType.parse(mimeTypeFromExtension), file);
-                resultList.add(MultipartBody.Part.createFormData("resume_file " + i, file.toString().substring(filePath.lastIndexOf('/') + 1), requestBody));
+                resultList.add(MultipartBody.Part.createFormData("resume_file " + file.getName(), file.toString().substring(filePath.lastIndexOf('/') + 1), requestBody));
             }
             return resultList;
         } else {
@@ -192,17 +178,37 @@ public class MeteorUtility {
     }
 
     public static void putArrayListOnSharedPreference(ArrayList<String> arrayList, SharedPreferences.Editor editor, String key) {
-        Gson gson = new Gson();
-        String json = gson.toJson(arrayList);
-        editor.putString(key, json);
+        if (arrayList == null) {
+            editor.putString(key, null);
+        } else {
+            Log.d("OkHttpTAG1", "FUNCTION PUT BEFORE" + arrayList.toString());
+            Gson gson = new Gson();
+            String json = gson.toJson(arrayList);
+            Log.d("OkHttpTAG1", "FUNCTION PUT AFTER" + json);
+            editor.putString(key, json);
+        }
     }
 
-    public static ArrayList<String> putArrayListOutFeomSharedPreference(SharedPreferences sharedPreferences, String key) {
+    public static ArrayList<String> getFilesNamesList(ArrayList<File> filesList) {
+        if (filesList != null && filesList.size() > 0) {
+            ArrayList<String> fileNamesPaths = new ArrayList<>();
+
+            for (int i = 0; i < filesList.size(); i++) {
+                fileNamesPaths.add(filesList.get(i).toString());
+            }
+            return fileNamesPaths;
+        }
+        return null;
+    }
+
+    public static ArrayList<String> putArrayListOutFromSharedPreference(SharedPreferences
+                                                                                sharedPreferences, String key) {
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<String>>() {
         }.getType();
 
         String json = sharedPreferences.getString(key, null);
+        Log.d("OkHttpTAG1", "FUNCTION " + json);
         return gson.fromJson(json, type);
     }
 
@@ -212,5 +218,33 @@ public class MeteorUtility {
             restoredCheckers[i] = Boolean.valueOf(arrayList.get(i));
         }
         return restoredCheckers;
+    }
+
+    public static void showDuplicatedFilesIfExist(String fileNames, Context context) {
+        if (fileNames.length() != 0) {
+            String filesNames = String.format(context.getString(R.string.error_repeat_files), fileNames);
+            StyleableToast.makeText(context, filesNames, Toast.LENGTH_LONG, R.style.ToastValidationError).show();
+        }
+    }
+
+    public static void rvHeightCorrector(RecyclerView rv) {
+        int size = ((ProfessionFilesAdapter) rv.getAdapter()).getFileList().size();
+        rv.setMinimumHeight(130 * size);
+    }
+
+    public static SpannableString getAgreementString(final Context context) {
+        SpannableString agreementText = new SpannableString(context.getString(R.string.default_accept_agreement));
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                String url = context.getString(R.string.url_agreement);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                context.startActivity(intent);
+            }
+        };
+
+        agreementText.setSpan(clickableSpan, 48, 76, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return agreementText;
     }
 }
