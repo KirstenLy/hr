@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -154,12 +153,11 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/layout_professions_manager_contacts_invisible"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
                     android:paddingBottom="@dimen/padding_default"
                     android:visibility="invisible">
 
@@ -172,7 +170,7 @@
                         android:paddingLeft="@dimen/padding_default"
                         android:paddingRight="@dimen/padding_default">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/edit_profession_manager_contacts_question"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -180,10 +178,11 @@
                             android:gravity="start"
                             android:inputType="textMultiLine"
                             android:lines="4"
-                            android:maxLines="4" />
+                            android:maxLines="4"
+                            android:textSize="@dimen/text_size_small" />
 
                     </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
+                </RelativeLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -240,17 +239,17 @@
                         android:src="@drawable/ic_add_file" />
 
                     <TextView
+                        style="@style/linkStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="@string/default_insert_file"
-                        android:textColor="@android:color/holo_blue_dark"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:text="@string/default_insert_file" />
+
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_profession_manager_files"
-                    android:layout_width="wrap_content"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/margin_default">
@@ -277,6 +276,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_default"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
                     android:text="@string/app_name"
                     android:textAlignment="center"
                     android:textColor="@color/colorGrey"

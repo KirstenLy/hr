@@ -4,27 +4,32 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
-import com.nononsenseapps.filepicker.Utils;
-import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,6 +41,12 @@ import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -48,18 +59,16 @@ import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getAgreementString
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getFilesNamesList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromManagerObject;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOnSharedPreference;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFromSharedPreference;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreEditText;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreFilesClips;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreRadioButtons;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.rvHeightCorrector;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.showDuplicatedFilesIfExist;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.updateFileListOnIntentResult;
 
 
 public class ManagerProfessionActivity extends AbstractActivity implements View.OnClickListener {
-    private LinearLayout invisibleLayoutWithExtraQuestion;
+    private RelativeLayout invisibleLayoutWithExtraQuestion;
 
     private RadioButton contactsFormYesButton;
     private RadioButton contactsFormNoButton;
@@ -77,7 +86,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             String duplicateFiles = updateFileListOnIntentResult(data, briefFilesAdapter);
             showDuplicatedFilesIfExist(duplicateFiles, this);
-            rvHeightCorrector(briefRecycler);
+            briefRecycler.startLayoutAnimation();
         }
     }
 
@@ -101,6 +110,11 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         Button sendData = findViewById(R.id.button_profession_manager_send);
         sendData.setOnClickListener(this);
 
+        TextInputEditText editText = findViewById(R.id.edit_profession_manager_contacts_question);
+
+        editText.addTextChangedListener(new TextSizeCorrector(editText));
+
+//        Варианты layout - ов для формы с файлами. Работают не стабильно.
 //        ChipsLayoutManager chipsLayoutManager = ChipsLayoutManager.newBuilder(this)
 //                .setChildGravity(Gravity.TOP)
 //                .setScrollingEnabled(false)
@@ -113,19 +127,38 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 //                .setOrientation(ChipsLayoutManager.HORIZONTAL)
 //                .setRowStrategy(ChipsLayoutManager.STRATEGY_CENTER_DENSE)
 //                .build();
+//
+//        FlowLayoutManager flowLayoutManager = new FlowLayoutManager();
+//        flowLayoutManager.setAutoMeasureEnabled(true);
 
         TextView agreement = findViewById(R.id.text_profession_manager_agreement);
         agreement.setText(getAgreementString(this));
         agreement.setMovementMethod(LinkMovementMethod.getInstance());
         agreement.setHighlightColor(Color.BLUE);
 
-        FlowLayoutManager flowLayoutManager = new FlowLayoutManager();
-        flowLayoutManager.setAutoMeasureEnabled(true);
-
         briefRecycler = findViewById(R.id.recycler_profession_manager_files);
-        briefRecycler.setLayoutManager(flowLayoutManager);
+//        briefRecycler.setItemAnimator(null);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        briefRecycler.setItemAnimator(new ScaleInAnimator());
+//        briefRecycler.getItemAnimator().setAddDuration(1000);
+        briefRecycler.getItemAnimator().setRemoveDuration(1000);
+        briefRecycler.getItemAnimator().setMoveDuration(1000);
+        briefRecycler.getItemAnimator().setChangeDuration(1000);
+
+//        int resId = R.anim.layout_anim;
+//        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
+//        briefRecycler.setLayoutAnimation(animation);
+
+        briefRecycler.setLayoutManager(linearLayoutManager);
+
         briefFilesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), briefRecycler);
-        briefRecycler.setAdapter(briefFilesAdapter);
+
+        ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(briefFilesAdapter);
+        alphaAdapter.setFirstOnly(false);
+        alphaAdapter.setDuration(1000);
+        briefRecycler.setAdapter(alphaAdapter);
+
         briefRecycler.setNestedScrollingEnabled(false);
 
         loadPreferences();
@@ -147,7 +180,6 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
             ArrayList<File> filesList = (ArrayList<File>) savedInstanceState.getSerializable("files");
             briefFilesAdapter.setFileList(filesList);
             briefFilesAdapter.notifyDataSetChanged();
-            rvHeightCorrector(briefRecycler);
         }
     }
 
@@ -309,7 +341,35 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         restoreRadioButtons(sharedPreferences, "managerExperience", contactsFormYesButton, contactsFormNoButton, invisibleLayoutWithExtraQuestion);
 
         restoreFilesClips(sharedPreferences, "managerFilesNames", briefFilesAdapter);
+    }
 
-        rvHeightCorrector(briefRecycler);
+    public class TextSizeCorrector implements TextWatcher {
+        TextInputEditText editText;
+        boolean hint;
+
+        public TextSizeCorrector(TextInputEditText editText) {
+            this.editText = editText;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.length() == 0) {
+                hint = true;
+                editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            } else if (hint) {
+                hint = false;
+                editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
     }
 }

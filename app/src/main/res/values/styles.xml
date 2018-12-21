@@ -32,6 +32,19 @@
         <item name="android:background">@color/colorPrimaryDark</item>
     </style>
 
+    <!-- FileLink -->
+    <style name="linkStyle">
+        <item name="android:textColor">@android:color/holo_blue_dark</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+
+    <!-- HintSize -->
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">5sp</item>
+    </style>
+
+    <!-- ErrorToast -->
     <style name="ToastValidationError">
         <item name="stTextBold">true</item>
         <item name="stIconStart">@drawable/ic_sad</item>
@@ -66,11 +79,6 @@
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="TextLabel" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
 </resources>

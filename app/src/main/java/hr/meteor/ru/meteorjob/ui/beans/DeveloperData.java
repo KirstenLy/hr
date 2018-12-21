@@ -20,6 +20,10 @@ public class DeveloperData {
     @Expose
     private String isSkilled;
 
+    @SerializedName("GitHub")
+    @Expose
+    private String gitHub;
+
     @SerializedName("Comment")
     @Expose
     private String comment;
@@ -54,6 +58,14 @@ public class DeveloperData {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGitHub() {
+        return gitHub;
+    }
+
+    public void setGitHub(String gitHub) {
+        this.gitHub = gitHub;
     }
 
     public String getPhone() {
@@ -106,6 +118,14 @@ public class DeveloperData {
 
     public String[] getMobiles() {
         return mobiles;
+    }
+
+    public String getIsSkilled() {
+        return isSkilled;
+    }
+
+    public void setIsSkilled(String isSkilled) {
+        this.isSkilled = isSkilled;
     }
 
     public void setMobiles(String[] mobiles) {

@@ -17,6 +17,7 @@
     <string name="default_necessary_field">- поля, обязательные для заполнения</string>
     <string name="default_insert_file"><u>Прикрепить файлы</u></string>
     <string name="default_accept_agreement">Нажимая кнопку Отправить, вы принимаете условия Пользовательского соглашения</string>
+    <string name="default_input_email">Email для отправки тестового задания:</string>
 
     <!-- URL's -->
     <string name="url_agreement">http://it-meteor.ru/privacy-policy.html</string>
@@ -61,6 +62,9 @@
     <string name="developer_hint_phone">Ваш телефон</string>
     <string name="developer_hint_email">Ваш email</string>
     <string name="developer_hint_comment">Дополнительная информация</string>
+    <string name="developer_text_github">Добавить GitHub(ссылка или имя пользователя)</string>
+    <string name="developer_hint_github">Ваш GitHub</string>
+    <string name="developer_send_task">Приложить резюме, тестовое задание или примеры кода</string>
 
     <!-- Web -->
     <string name="developer_language_web_title">Выберите технологии, которыми Вы владеете:</string>
@@ -126,7 +130,7 @@
 
     <!-- Profession Strings -->
     <string name="profession_get_resume">Приложить резюме:</string>
-    <string name="profession_get_task">Приложить пример кода или выполненное тестовое задание:</string>
     <string name="profession_download_task">Скачать тестовое задание для web/android:</string>
+    <string name="profession_send_task_email"><u>Отправить на e-mail</u></string>
 
 </resources>

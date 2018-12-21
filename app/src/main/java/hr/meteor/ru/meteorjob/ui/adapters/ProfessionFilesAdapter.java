@@ -1,21 +1,23 @@
 package hr.meteor.ru.meteorjob.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.chip.Chip;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.io.File;
 import java.util.List;
 
 import hr.meteor.ru.meteorjob.R;
-
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.rvHeightCorrector;
+import hr.meteor.ru.meteorjob.ui.ui.LogoActivity;
+import hr.meteor.ru.meteorjob.ui.ui.MainActivity;
 
 public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFilesAdapter.ViewHolder> {
     private Context context;
@@ -38,6 +40,8 @@ public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFiles
     public void onBindViewHolder(final ProfessionFilesAdapter.ViewHolder viewHolder, final int i) {
         final Chip fileNameField = viewHolder.fileName;
 
+//        viewHolder.cellLayout.setAnimation(android.view.animation.AnimationUtils.loadAnimation(context, R.anim.animation_add));
+
         fileNameField.setText(fileList.get(i).getName());
         fileNameField.setOnCloseIconClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -45,8 +49,17 @@ public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFiles
             public void onClick(View v) {
                 fileList.remove(i);
                 notifyItemRemoved(i);
-                notifyItemRangeChanged(i, fileList.size());
-                rvHeightCorrector(rv);
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyItemRangeChanged(i, fileList.size());
+                    }
+                };
+                Handler handler = new Handler();
+                handler.postDelayed(runnable, 1000);
+//                rv.startLayoutAnimation();
+//                viewHolder.cellLayout.setAnimation(android.view.animation.AnimationUtils.loadAnimation(context, R.anim.animation_del));
             }
         });
     }
@@ -58,11 +71,12 @@ public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFiles
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private Chip fileName;
-
+        private LinearLayout cellLayout;
 
         ViewHolder(View view) {
             super(view);
             fileName = view.findViewById(R.id.text_profession_cell_files_filename);
+            cellLayout = view.findViewById(R.id.cell_layout);
         }
     }
 

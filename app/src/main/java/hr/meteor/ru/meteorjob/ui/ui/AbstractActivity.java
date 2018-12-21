@@ -24,7 +24,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public abstract class AbstractActivity extends AppCompatActivity {
-    final int TAKE_USER_TASK_OR_CODE_FILE_REQUEST = 101;
     final int TAKE_USER_BRIEF_FILE_REQUEST = 102;
     Dialog loadingDialog;
 

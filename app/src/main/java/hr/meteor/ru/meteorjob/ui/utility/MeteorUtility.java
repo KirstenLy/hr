@@ -20,6 +20,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +85,7 @@ public class MeteorUtility {
             json.put("Email", developerData.getEmail());
             json.put("HasExperience", developerData.isSkilled());
             json.put("Comment", developerData.getComment());
+            json.put("GitHub", developerData.getGitHub());
             json.put("Languages", Arrays.toString(developerData.getLanguages()));
             json.put("Databases", Arrays.toString(developerData.getDatabases()));
             json.put("Framework", Arrays.toString(developerData.getFrameworks()));
@@ -119,7 +121,7 @@ public class MeteorUtility {
         }
     }
 
-    public static void setLinearLayoutParam(LinearLayout linearLayout, int weight, int height, int visibility) {
+    public static void setLinearLayoutParam(RelativeLayout linearLayout, int weight, int height, int visibility) {
         linearLayout.setVisibility(visibility);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
         params.weight = weight;
@@ -216,7 +218,7 @@ public class MeteorUtility {
         }
     }
 
-    public static void restoreRadioButtons(SharedPreferences sharedPreferences, String key, RadioButton yesButton, RadioButton noButton, LinearLayout answerLayout) {
+    public static void restoreRadioButtons(SharedPreferences sharedPreferences, String key, RadioButton yesButton, RadioButton noButton, RelativeLayout answerLayout) {
         if (sharedPreferences.getBoolean(key, false)) {
             yesButton.setChecked(true);
         } else {

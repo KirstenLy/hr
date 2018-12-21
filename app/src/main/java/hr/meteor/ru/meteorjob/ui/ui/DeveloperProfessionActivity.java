@@ -3,13 +3,15 @@ package hr.meteor.ru.meteorjob.ui.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,12 +24,9 @@ import android.widget.Toast;
 import com.google.gson.internal.LinkedTreeMap;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
-import com.nononsenseapps.filepicker.Utils;
-import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import hr.meteor.ru.meteorjob.R;
@@ -44,24 +43,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static hr.meteor.ru.meteorjob.ui.utility.DialogUtility.showSendTaskDialog;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyList;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getArrayFromArrayList;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getAgreementString;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getFilesNamesList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromDeveloperObject;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOnSharedPreference;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFromSharedPreference;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreDeveloperFlags;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreEditText;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreFilesClips;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreRadioButtons;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.rvHeightCorrector;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.saveDeveloperFlags;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.showDuplicatedFilesIfExist;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.updateFileListOnIntentResult;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
     private EditText name;
     private EditText phone;
     private EditText email;
+    private EditText gitHub;
     private RadioButton contactsFormYesButton;
     private RadioButton contactsFormNoButton;
     private EditText comment;
@@ -71,48 +71,14 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     private DeveloperTechnologiesAdapter frameworkAdapter;
     private DeveloperTechnologiesAdapter mobilesAdapter;
 
-    RecyclerView codeRecycler;
-    RecyclerView briefRecycler;
-
-    private ProfessionFilesAdapter codeFilesAdapter;
-    private ProfessionFilesAdapter briefFilesAdapter;
+    private RecyclerView filesRecycler;
+    private ProfessionFilesAdapter filesAdapter;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if ((requestCode == TAKE_USER_TASK_OR_CODE_FILE_REQUEST) && resultCode == Activity.RESULT_OK) {
-            List<Uri> filesUtiList = Utils.getSelectedFilesFromResult(data);
-            ArrayList<File> filesList = (ArrayList<File>) codeFilesAdapter.getFileList();
-
-            StringBuilder duplicateNamesBuilder = new StringBuilder();
-            for (Uri uri : filesUtiList) {
-                File file = Utils.getFileForUri(uri);
-                if (!filesList.contains(file)) {
-                    filesList.add(file);
-                } else {
-                    duplicateNamesBuilder.append("\n").append(file.getName());
-                }
-            }
-            rvHeightCorrector(codeRecycler);
-            codeFilesAdapter.notifyDataSetChanged();
-            showDuplicatedFilesIfExist(duplicateNamesBuilder.toString(), this);
-        }
-
         if ((requestCode == TAKE_USER_BRIEF_FILE_REQUEST) && resultCode == Activity.RESULT_OK) {
-            List<Uri> filesUtiList = Utils.getSelectedFilesFromResult(data);
-            ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
-
-            StringBuilder duplicateNamesBuilder = new StringBuilder();
-            for (Uri uri : filesUtiList) {
-                File file = Utils.getFileForUri(uri);
-                if (!filesList.contains(file)) {
-                    filesList.add(file);
-                } else {
-                    duplicateNamesBuilder.append("\n").append(file.getName());
-                }
-            }
-            rvHeightCorrector(briefRecycler);
-            briefFilesAdapter.notifyDataSetChanged();
-            showDuplicatedFilesIfExist(duplicateNamesBuilder.toString(), this);
+            String duplicateFiles = updateFileListOnIntentResult(data, filesAdapter);
+            showDuplicatedFilesIfExist(duplicateFiles, this);
         }
     }
 
@@ -162,35 +128,34 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         TextView androidTestTaskLink = findViewById(R.id.text_profession_developer_android_task_link);
         androidTestTaskLink.setOnClickListener(this);
 
+        TextView agreement = findViewById(R.id.text_profession_developer_agreement);
+        agreement.setText(getAgreementString(this));
+        agreement.setMovementMethod(LinkMovementMethod.getInstance());
+        agreement.setHighlightColor(Color.BLUE);
+
         Button sendData = findViewById(R.id.button_profession_developer_send);
         sendData.setOnClickListener(this);
 
-        LinearLayout codeFilesLayout = findViewById(R.id.layout_professions_developer_files_code);
+        LinearLayout codeFilesLayout = findViewById(R.id.layout_professions_developer_files);
         codeFilesLayout.setOnClickListener(this);
 
-        LinearLayout briefFilesLayout = findViewById(R.id.layout_professions_developer_files_brief);
-        briefFilesLayout.setOnClickListener(this);
+        TextView sendTaskOnEmailWeb = findViewById(R.id.text_profession_developer_web_task_link_email);
+        sendTaskOnEmailWeb.setOnClickListener(this);
 
-        FlowLayoutManager flowLayoutManagerForCodeFiles = new FlowLayoutManager();
-        FlowLayoutManager flowLayoutManagerForBriefFiles = new FlowLayoutManager();
+        TextView sendTaskOnEmailAndroid = findViewById(R.id.text_profession_developer_android_task_link_email);
+        sendTaskOnEmailAndroid.setOnClickListener(this);
 
-        flowLayoutManagerForCodeFiles.setAutoMeasureEnabled(true);
-        flowLayoutManagerForBriefFiles.setAutoMeasureEnabled(true);
+//        FlowLayoutManager flowLayoutManagerForCodeFiles = new FlowLayoutManager();
+//        FlowLayoutManager flowLayoutManagerForBriefFiles = new FlowLayoutManager();
+//
+//        flowLayoutManagerForCodeFiles.setAutoMeasureEnabled(true);
+//        flowLayoutManagerForBriefFiles.setAutoMeasureEnabled(true);
 
-        codeRecycler = findViewById(R.id.recycler_profession_developer_code_files);
-        briefRecycler = findViewById(R.id.recycler_profession_developer_brief_files);
-
-        codeRecycler.setLayoutManager(flowLayoutManagerForCodeFiles);
-        briefRecycler.setLayoutManager(flowLayoutManagerForBriefFiles);
-
-        codeFilesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), codeRecycler);
-        briefFilesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), briefRecycler);
-
-        codeRecycler.setAdapter(codeFilesAdapter);
-        briefRecycler.setAdapter(briefFilesAdapter);
-
-        codeRecycler.setNestedScrollingEnabled(false);
-        briefRecycler.setNestedScrollingEnabled(false);
+        filesRecycler = findViewById(R.id.recycler_profession_developer_code_files);
+        filesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        filesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), filesRecycler);
+        filesRecycler.setAdapter(filesAdapter);
+        filesRecycler.setNestedScrollingEnabled(false);
 
         loadPreferences();
     }
@@ -207,14 +172,9 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         outState.putBooleanArray("frameworksCheckboxes", frameworksSelectedCheckboxData);
         outState.putBooleanArray("mobilesCheckboxes", mobilesSelectedCheckboxData);
 
-        ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
+        ArrayList<File> filesList = (ArrayList<File>) filesAdapter.getFileList();
         if (filesList != null && filesList.size() > 0) {
-            outState.putSerializable("briefFiles", filesList);
-        }
-
-        filesList = (ArrayList<File>) codeFilesAdapter.getFileList();
-        if (filesList != null && filesList.size() > 0) {
-            outState.putSerializable("codeFiles", filesList);
+            outState.putSerializable("files", filesList);
         }
 
         super.onSaveInstanceState(outState);
@@ -231,18 +191,10 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         ArrayList<File> filesList;
 
-        if (savedInstanceState.getSerializable("briefFiles") != null) {
-            filesList = (ArrayList<File>) savedInstanceState.getSerializable("briefFiles");
-            briefFilesAdapter.setFileList(filesList);
-            briefFilesAdapter.notifyDataSetChanged();
-            rvHeightCorrector(briefRecycler);
-        }
-
-        if (savedInstanceState.getSerializable("codeFiles") != null) {
-            filesList = (ArrayList<File>) savedInstanceState.getSerializable("codeFiles");
-            codeFilesAdapter.setFileList(filesList);
-            codeFilesAdapter.notifyDataSetChanged();
-            rvHeightCorrector(codeRecycler);
+        if (savedInstanceState.getSerializable("files") != null) {
+            filesList = (ArrayList<File>) savedInstanceState.getSerializable("files");
+            filesAdapter.setFileList(filesList);
+            filesAdapter.notifyDataSetChanged();
         }
     }
 
@@ -250,19 +202,14 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     public void onClick(View v) {
         int elementId = v.getId();
 
-        if (elementId == R.id.layout_professions_developer_files_code
-                || elementId == R.id.layout_professions_developer_files_brief) {
+        if (elementId == R.id.layout_professions_developer_files) {
             Intent intent = new Intent(this, FilePickerActivity.class);
             intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, true);
             intent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
             intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
             intent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
 
-            if (elementId == R.id.layout_professions_developer_files_code) {
-                startActivityForResult(intent, TAKE_USER_TASK_OR_CODE_FILE_REQUEST);
-            } else {
-                startActivityForResult(intent, TAKE_USER_BRIEF_FILE_REQUEST);
-            }
+            startActivityForResult(intent, TAKE_USER_BRIEF_FILE_REQUEST);
         }
 
         if (elementId == R.id.text_profession_developer_web_task_link || elementId == R.id.text_profession_developer_android_task_link) {
@@ -270,6 +217,10 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
             startActivity(intent);
+        }
+
+        if (elementId == R.id.text_profession_developer_web_task_link_email || elementId == R.id.text_profession_developer_android_task_link) {
+            showSendTaskDialog(this, 1);
         }
 
         if (elementId == R.id.button_profession_developer_send) {
@@ -282,6 +233,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
                 developerData.setPhone(phone.getText().toString());
                 developerData.setEmail(email.getText().toString());
                 developerData.setComment(comment.getText().toString());
+                developerData.setGitHub(gitHub.getText().toString());
                 developerData.setLanguages(languagesAdapter.getSelectedTechnologiesArray());
                 developerData.setDatabases(databasesAdapter.getSelectedTechnologiesArray());
                 developerData.setFrameworks(frameworkAdapter.getSelectedTechnologiesArray());
@@ -294,6 +246,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             }
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -318,6 +271,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         name = findViewById(R.id.edit_profession_developer_contacts_name);
         phone = findViewById(R.id.edit_profession_developer_contacts_phone);
         email = findViewById(R.id.edit_profession_developer_contacts_email);
+        gitHub = findViewById(R.id.edit_profession_developer_github);
 
         if (name.getText() == null || name.getText().length() == 0) {
             name.setError(getString(R.string.error_validation_name));
@@ -341,14 +295,9 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), json);
 
-        List<MultipartBody.Part> codeFilesList = createMultipartBodyList((ArrayList<File>) codeFilesAdapter.getFileList());
-        List<MultipartBody.Part> briefFilesList = createMultipartBodyList((ArrayList<File>) briefFilesAdapter.getFileList());
+        List<MultipartBody.Part> filesList = createMultipartBodyList((ArrayList<File>) filesAdapter.getFileList());
 
-        ArrayList<MultipartBody.Part> resultList = new ArrayList<>();
-        resultList.addAll(codeFilesList);
-        resultList.addAll(briefFilesList);
-
-        Call<ResultJson> call = getMeteorService().postDeveloperData(jsonBody, resultList);
+        Call<ResultJson> call = getMeteorService().postDeveloperData(jsonBody, filesList);
 
         call.enqueue(new Callback<ResultJson>() {
             @Override
@@ -388,15 +337,10 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         saveDeveloperFlags(editor, "developerFrameworks", frameworkAdapter);
         saveDeveloperFlags(editor, "developerMobiles", mobilesAdapter);
 
-        ArrayList<File> codeFilesList = (ArrayList<File>) codeFilesAdapter.getFileList();
-        ArrayList<File> briefFilesList = (ArrayList<File>) briefFilesAdapter.getFileList();
+        ArrayList<File> filesList = (ArrayList<File>) filesAdapter.getFileList();
 
-        if (codeFilesList != null) {
-            putArrayListOnSharedPreference(getFilesNamesList(codeFilesList), editor, "developerCodeFilesNames");
-        }
-
-        if (briefFilesList != null) {
-            putArrayListOnSharedPreference(getFilesNamesList(briefFilesList), editor, "developerBriefFilesNames");
+        if (filesList != null) {
+            putArrayListOnSharedPreference(getFilesNamesList(filesList), editor, "filesNames");
         }
         editor.apply();
     }
@@ -421,13 +365,9 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         restoreDeveloperFlags(sharedPreferences, "developerFrameworks", frameworkAdapter);
         restoreDeveloperFlags(sharedPreferences, "developerMobiles", mobilesAdapter);
 
-        restoreFilesClips(sharedPreferences, "developerCodeFilesNames", codeFilesAdapter);
-        restoreFilesClips(sharedPreferences, "developerBriefFilesNames", briefFilesAdapter);
+        restoreFilesClips(sharedPreferences, "developerCodeFilesNames", filesAdapter);
 
         restoreRadioButtons(sharedPreferences, "developerExperience", contactsFormYesButton, contactsFormNoButton, null);
-
-        rvHeightCorrector(codeRecycler);
-        rvHeightCorrector(briefRecycler);
     }
 }
 

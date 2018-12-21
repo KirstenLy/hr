@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/popup_rounded_border"
+        android:padding="@dimen/padding_default">
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/margin_default"
+            android:text="@string/default_input_email"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_size_large" />
+
+        <EditText
+            android:id="@+id/edit_popup_send_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/error_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default"
+            android:gravity="start"
+            android:hint="@string/manager_hint_email" />
+
+        <Button
+            android:id="@+id/close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_popup_send_email"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:background="@drawable/rounded_button_border"
+            android:minHeight="@dimen/button_min_height"
+            android:text="@string/default_send"
+            android:textSize="@dimen/text_size_default" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
