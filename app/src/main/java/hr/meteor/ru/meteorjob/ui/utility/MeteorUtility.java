@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Layout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ClickableSpan;
@@ -16,13 +17,16 @@ import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.muddzdev.styleabletoast.StyleableToast;
+import com.nononsenseapps.filepicker.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,8 +35,10 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import hr.meteor.ru.meteorjob.R;
+import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
 import hr.meteor.ru.meteorjob.ui.adapters.ProfessionFilesAdapter;
 import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
 import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
@@ -92,7 +98,6 @@ public class MeteorUtility {
     public static String getFileExternal(File file) {
         return file.toString().substring(file.toString().lastIndexOf('.') + 1);
     }
-
 
     public static ArrayList<MultipartBody.Part> createMultipartBodyList(ArrayList<File> fileList) {
         if (fileList != null) {
@@ -181,11 +186,84 @@ public class MeteorUtility {
         if (arrayList == null) {
             editor.putString(key, null);
         } else {
-            Log.d("OkHttpTAG1", "FUNCTION PUT BEFORE" + arrayList.toString());
             Gson gson = new Gson();
             String json = gson.toJson(arrayList);
-            Log.d("OkHttpTAG1", "FUNCTION PUT AFTER" + json);
             editor.putString(key, json);
+        }
+    }
+
+    public static String updateFileListOnIntentResult(Intent data, ProfessionFilesAdapter adapter) {
+        List<Uri> filesUtiList = Utils.getSelectedFilesFromResult(data);
+        ArrayList<File> filesList = (ArrayList<File>) adapter.getFileList();
+
+        StringBuilder duplicateNamesBuilder = new StringBuilder();
+
+        for (Uri uri : filesUtiList) {
+            File file = Utils.getFileForUri(uri);
+            if (!filesList.contains(file)) {
+                filesList.add(file);
+            } else {
+                duplicateNamesBuilder.append("\n").append(file.getName());
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+        String result = duplicateNamesBuilder.toString();
+        if (result.equals("")) {
+            return null;
+        } else {
+            return result;
+        }
+    }
+
+    public static void restoreRadioButtons(SharedPreferences sharedPreferences, String key, RadioButton yesButton, RadioButton noButton, LinearLayout answerLayout) {
+        if (sharedPreferences.getBoolean(key, false)) {
+            yesButton.setChecked(true);
+        } else {
+            noButton.setChecked(true);
+            if (answerLayout != null) {
+                setLinearLayoutParam(answerLayout, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, View.VISIBLE);
+            }
+        }
+    }
+
+    public static void restoreEditText(SharedPreferences sharedPreferences, String
+            key, EditText editText) {
+        if (sharedPreferences.contains(key)) {
+            editText.setText(sharedPreferences.getString(key, ""));
+        }
+    }
+
+    public static void restoreFilesClips(SharedPreferences sharedPreferences, String
+            key, ProfessionFilesAdapter adapter) {
+        if (sharedPreferences.contains(key)) {
+            ArrayList<String> filePaths = putArrayListOutFromSharedPreference(sharedPreferences, key);
+            ArrayList<File> filesList = (ArrayList<File>) adapter.getFileList();
+            for (int i = 0; i < filePaths.size(); i++) {
+                filesList.add(new File(filePaths.get(i)));
+            }
+            adapter.setFileList(filesList);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public static void saveDeveloperFlags(SharedPreferences.Editor editor, String key, DeveloperTechnologiesAdapter adapter) {
+        boolean[] checkedFlags = adapter.getSelectedCheckboxArray();
+        ArrayList<String> checkedFlagsArrayList = new ArrayList<>();
+
+        for (boolean checkedFlag : checkedFlags) {
+            checkedFlagsArrayList.add(String.valueOf(checkedFlag));
+        }
+
+        putArrayListOnSharedPreference(checkedFlagsArrayList, editor, key);
+    }
+
+    public static void restoreDeveloperFlags(SharedPreferences sharedPreferences, String key, DeveloperTechnologiesAdapter adapter) {
+        if (sharedPreferences.contains(key)) {
+            ArrayList<String> checkedFrameworks = putArrayListOutFromSharedPreference(sharedPreferences, key);
+            boolean[] restoredCheckers = getArrayFromArrayList(checkedFrameworks);
+            adapter.setSelectedCheckboxArray(restoredCheckers);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -208,7 +286,6 @@ public class MeteorUtility {
         }.getType();
 
         String json = sharedPreferences.getString(key, null);
-        Log.d("OkHttpTAG1", "FUNCTION " + json);
         return gson.fromJson(json, type);
     }
 
@@ -221,7 +298,7 @@ public class MeteorUtility {
     }
 
     public static void showDuplicatedFilesIfExist(String fileNames, Context context) {
-        if (fileNames.length() != 0) {
+        if (!(fileNames == null || fileNames.length() == 0)) {
             String filesNames = String.format(context.getString(R.string.error_repeat_files), fileNames);
             StyleableToast.makeText(context, filesNames, Toast.LENGTH_LONG, R.style.ToastValidationError).show();
         }

@@ -49,9 +49,13 @@ import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getFilesNamesList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromManagerObject;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOnSharedPreference;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFromSharedPreference;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreEditText;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreFilesClips;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreRadioButtons;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.rvHeightCorrector;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.setLinearLayoutParam;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.showDuplicatedFilesIfExist;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.updateFileListOnIntentResult;
 
 
 public class ManagerProfessionActivity extends AbstractActivity implements View.OnClickListener {
@@ -71,23 +75,9 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            List<Uri> filesUtiList = Utils.getSelectedFilesFromResult(data);
-            ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
-
-            StringBuilder duplicateNamesBuilder = new StringBuilder();
-
-            for (Uri uri : filesUtiList) {
-                File file = Utils.getFileForUri(uri);
-                if (!filesList.contains(file)) {
-                    filesList.add(file);
-                } else {
-                    duplicateNamesBuilder.append("\n").append(file.getName());
-                }
-            }
-
+            String duplicateFiles = updateFileListOnIntentResult(data, briefFilesAdapter);
+            showDuplicatedFilesIfExist(duplicateFiles, this);
             rvHeightCorrector(briefRecycler);
-            briefFilesAdapter.notifyDataSetChanged();
-            showDuplicatedFilesIfExist(duplicateNamesBuilder.toString(), this);
         }
     }
 
@@ -155,9 +145,9 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState.getSerializable("files") != null) {
             ArrayList<File> filesList = (ArrayList<File>) savedInstanceState.getSerializable("files");
-            rvHeightCorrector(briefRecycler);
             briefFilesAdapter.setFileList(filesList);
             briefFilesAdapter.notifyDataSetChanged();
+            rvHeightCorrector(briefRecycler);
         }
     }
 
@@ -201,6 +191,25 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            savePreferences();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        savePreferences();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+    }
+
+    //TODO Необходим рефакторинг в соответствии с требованиями для каждого поля. Нужно будет создать функцию для каждого из них.
     public boolean validationSuccess() {
         boolean isSuccess = true;
 
@@ -208,6 +217,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
             name.setError(getString(R.string.error_validation_name));
             isSuccess = false;
         }
+
         if (phone.getText() == null || phone.getText().length() == 0) {
             phone.setError(getString(R.string.error_validation_phone));
             isSuccess = false;
@@ -289,60 +299,17 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
     public void restoreValues() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        if (!sharedPreferences.getString("managerName", "").equals("")) {
-            name.setText(sharedPreferences.getString("managerName", ""));
-        }
+        restoreEditText(sharedPreferences, "managerName", name);
+        restoreEditText(sharedPreferences, "managerPhone", phone);
+        restoreEditText(sharedPreferences, "managerEmail", email);
+        restoreEditText(sharedPreferences, "managerComment", comment);
+        restoreEditText(sharedPreferences, "managerQuestion", question);
+        restoreEditText(sharedPreferences, "managerName", name);
 
-        if (!sharedPreferences.getString("managerPhone", "").equals("")) {
-            phone.setText(sharedPreferences.getString("managerPhone", ""));
-        }
+        restoreRadioButtons(sharedPreferences, "managerExperience", contactsFormYesButton, contactsFormNoButton, invisibleLayoutWithExtraQuestion);
 
-        if (!sharedPreferences.getString("managerEmail", "").equals("")) {
-            email.setText(sharedPreferences.getString("managerEmail", ""));
-        }
+        restoreFilesClips(sharedPreferences, "managerFilesNames", briefFilesAdapter);
 
-        if (!sharedPreferences.getString("managerComment", "").equals("")) {
-            comment.setText(sharedPreferences.getString("managerComment", ""));
-        }
-
-        if (!sharedPreferences.getString("managerQuestion", "").equals("")) {
-            question.setText(sharedPreferences.getString("managerQuestion", ""));
-        }
-
-        if (sharedPreferences.contains("managerFilesNames")) {
-            ArrayList<String> filePaths = putArrayListOutFromSharedPreference(sharedPreferences, "managerFilesNames");
-            ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
-            for (int i = 0; i < filePaths.size(); i++) {
-                filesList.add(new File(filePaths.get(i)));
-            }
-            rvHeightCorrector(briefRecycler);
-            briefFilesAdapter.setFileList(filesList);
-            briefFilesAdapter.notifyDataSetChanged();
-        }
-
-        if (sharedPreferences.getBoolean("managerExperience", false)) {
-            contactsFormYesButton.setChecked(true);
-        } else {
-            setLinearLayoutParam(invisibleLayoutWithExtraQuestion, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, View.VISIBLE);
-            contactsFormNoButton.setChecked(true);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            savePreferences();
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        savePreferences();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
+        rvHeightCorrector(briefRecycler);
     }
 }

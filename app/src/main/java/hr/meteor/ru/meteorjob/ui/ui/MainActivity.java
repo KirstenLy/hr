@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.gtomato.android.ui.transformer.CoverFlowViewTransformer;
@@ -41,8 +42,8 @@ public class MainActivity extends AbstractActivity implements View.OnClickListen
         professionList.add(new Profession(1, R.drawable.ic_profession_developer, getString(R.string.profession_dev)));
         professionList.add(new Profession(2, R.drawable.ic_profession_manager, getString(R.string.profession_manager)));
 
-        LinearLayout managerLayout = findViewById(R.id.layout_profession_manager);
-        LinearLayout developerLayout = findViewById(R.id.layout_profession_developer);
+        RelativeLayout managerLayout = findViewById(R.id.layout_profession_manager);
+        RelativeLayout developerLayout = findViewById(R.id.layout_profession_developer);
 
         managerLayout.setOnClickListener(this);
         developerLayout.setOnClickListener(this);

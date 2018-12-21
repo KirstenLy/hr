@@ -46,10 +46,16 @@ import retrofit2.Response;
 
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getArrayFromArrayList;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getFilesNamesList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromDeveloperObject;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOnSharedPreference;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.putArrayListOutFromSharedPreference;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreDeveloperFlags;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreEditText;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreFilesClips;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.restoreRadioButtons;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.rvHeightCorrector;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.saveDeveloperFlags;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.showDuplicatedFilesIfExist;
 
 public class DeveloperProfessionActivity extends AbstractActivity implements View.OnClickListener {
@@ -185,8 +191,6 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         codeRecycler.setNestedScrollingEnabled(false);
         briefRecycler.setNestedScrollingEnabled(false);
-
-        Log.d("OkHttpTAG1", "ONCReATE " + Arrays.toString(languagesAdapter.getSelectedCheckboxArray()));
 
         loadPreferences();
     }
@@ -379,36 +383,21 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         editor.putString("developerComment", String.valueOf(comment.getText()));
         editor.putBoolean("developerExperience", contactsFormYesButton.isChecked());
 
-        boolean[] checkedLanguages = languagesAdapter.getSelectedCheckboxArray();
-        boolean[] checkedDatabases = databasesAdapter.getSelectedCheckboxArray();
-        boolean[] checkedFrameworks = frameworkAdapter.getSelectedCheckboxArray();
-        boolean[] checkedMobiles = mobilesAdapter.getSelectedCheckboxArray();
+        saveDeveloperFlags(editor, "developerLanguages", languagesAdapter);
+        saveDeveloperFlags(editor, "developerDatabases", databasesAdapter);
+        saveDeveloperFlags(editor, "developerFrameworks", frameworkAdapter);
+        saveDeveloperFlags(editor, "developerMobiles", mobilesAdapter);
 
-        ArrayList<String> checkedLanguagesArrayList = new ArrayList<>();
-        ArrayList<String> checkedDatabasesArrayList = new ArrayList<>();
-        ArrayList<String> checkedFrameworksArrayList = new ArrayList<>();
-        ArrayList<String> checkedMobilesArrayList = new ArrayList<>();
+        ArrayList<File> codeFilesList = (ArrayList<File>) codeFilesAdapter.getFileList();
+        ArrayList<File> briefFilesList = (ArrayList<File>) briefFilesAdapter.getFileList();
 
-        for (boolean checkedLanguage : checkedLanguages) {
-            checkedLanguagesArrayList.add(String.valueOf(checkedLanguage));
+        if (codeFilesList != null) {
+            putArrayListOnSharedPreference(getFilesNamesList(codeFilesList), editor, "developerCodeFilesNames");
         }
 
-        for (boolean checkedDatabase : checkedDatabases) {
-            checkedDatabasesArrayList.add(String.valueOf(checkedDatabase));
+        if (briefFilesList != null) {
+            putArrayListOnSharedPreference(getFilesNamesList(briefFilesList), editor, "developerBriefFilesNames");
         }
-
-        for (boolean checkedFramework : checkedFrameworks) {
-            checkedFrameworksArrayList.add(String.valueOf(checkedFramework));
-        }
-
-        for (boolean checkedMobile : checkedMobiles) {
-            checkedMobilesArrayList.add(String.valueOf(checkedMobile));
-        }
-
-        putArrayListOnSharedPreference(checkedLanguagesArrayList, editor, "developerLanguages");
-        putArrayListOnSharedPreference(checkedDatabasesArrayList, editor, "developerDatabases");
-        putArrayListOnSharedPreference(checkedFrameworksArrayList, editor, "developerFrameworks");
-        putArrayListOnSharedPreference(checkedMobilesArrayList, editor, "developerMobiles");
         editor.apply();
     }
 
@@ -422,57 +411,23 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
     public void restoreValues() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        if (!sharedPreferences.getString("developerName", "").equals("")) {
-            name.setText(sharedPreferences.getString("developerName", ""));
-        }
+        restoreEditText(sharedPreferences, "developerName", name);
+        restoreEditText(sharedPreferences, "developerPhone", phone);
+        restoreEditText(sharedPreferences, "developerEmail", email);
+        restoreEditText(sharedPreferences, "developerComment", comment);
 
-        if (!sharedPreferences.getString("developerPhone", "").equals("")) {
-            phone.setText(sharedPreferences.getString("developerPhone", ""));
-        }
+        restoreDeveloperFlags(sharedPreferences, "developerLanguages", languagesAdapter);
+        restoreDeveloperFlags(sharedPreferences, "developerDatabases", databasesAdapter);
+        restoreDeveloperFlags(sharedPreferences, "developerFrameworks", frameworkAdapter);
+        restoreDeveloperFlags(sharedPreferences, "developerMobiles", mobilesAdapter);
 
-        if (!sharedPreferences.getString("developerEmail", "").equals("")) {
-            email.setText(sharedPreferences.getString("developerEmail", ""));
-        }
+        restoreFilesClips(sharedPreferences, "developerCodeFilesNames", codeFilesAdapter);
+        restoreFilesClips(sharedPreferences, "developerBriefFilesNames", briefFilesAdapter);
 
-        if (!sharedPreferences.getString("developerComment", "").equals("")) {
-            comment.setText(sharedPreferences.getString("developerComment", ""));
-        }
+        restoreRadioButtons(sharedPreferences, "developerExperience", contactsFormYesButton, contactsFormNoButton, null);
 
-        if (!sharedPreferences.getString("developerLanguages", "").equals("")) {
-            ArrayList<String> checkedLanguages = putArrayListOutFromSharedPreference(sharedPreferences, "developerLanguages");
-
-            boolean[] restoredCheckers = getArrayFromArrayList(checkedLanguages);
-
-            languagesAdapter.setSelectedCheckboxArray(restoredCheckers);
-            languagesAdapter.notifyDataSetChanged();
-        }
-
-        if (!sharedPreferences.getString("developerDatabases", "").equals("")) {
-            ArrayList<String> checkedDarabases = putArrayListOutFromSharedPreference(sharedPreferences, "developerDatabases");
-            boolean[] restoredCheckers = getArrayFromArrayList(checkedDarabases);
-            databasesAdapter.setSelectedCheckboxArray(restoredCheckers);
-            languagesAdapter.notifyDataSetChanged();
-        }
-
-        if (!sharedPreferences.getString("developerFrameworks", "").equals("")) {
-            ArrayList<String> checkedFrameworks = putArrayListOutFromSharedPreference(sharedPreferences, "developerFrameworks");
-            boolean[] restoredCheckers = getArrayFromArrayList(checkedFrameworks);
-            frameworkAdapter.setSelectedCheckboxArray(restoredCheckers);
-            languagesAdapter.notifyDataSetChanged();
-        }
-
-        if (!sharedPreferences.getString("developerMobiles", "").equals("")) {
-            ArrayList<String> checkedMobiles = putArrayListOutFromSharedPreference(sharedPreferences, "developerMobiles");
-            boolean[] restoredCheckers = getArrayFromArrayList(checkedMobiles);
-            mobilesAdapter.setSelectedCheckboxArray(restoredCheckers);
-            languagesAdapter.notifyDataSetChanged();
-        }
-
-        if (!sharedPreferences.getBoolean("developerExperience", false)) {
-            contactsFormYesButton.setChecked(true);
-        } else {
-            contactsFormNoButton.setChecked(true);
-        }
+        rvHeightCorrector(codeRecycler);
+        rvHeightCorrector(briefRecycler);
     }
 }
 
