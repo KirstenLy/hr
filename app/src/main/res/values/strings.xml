@@ -13,6 +13,7 @@
     <string name="default_loading">Загрузка…</string>
     <string name="default_ok">Oк</string>
     <string name="default_send">Отправить</string>
+    <string name="default_send_review">Отправить отклик</string>
     <string name="default_choose_file">Выберите файл</string>
     <string name="default_necessary_field">- поля, обязательные для заполнения</string>
     <string name="default_insert_file"><u>Прикрепить файлы</u></string>
@@ -44,6 +45,17 @@
 
     <!-- ActionBar -->
     <string name="actionbar_title">Выберите специальность</string>
+    <string name="actionbar_test">Выберите тест</string>
+    <string name="actionbar_test_questions">Тест №%d на вакансию %s</string>
+
+    <!-- Tests -->
+    <string name="test_start">Пройти тест</string>
+    <string name="test_question">Вопрос:</string>
+    <string name="test_question_next">Далее</string>
+    <string name="test_current_question_number">Вопрос №%d из %d</string>
+    <string name="test_question_finish">Завершить тестирование</string>
+    <string name="test_finish">Поздравляем с завершением теста!</string>
+    <string name="test_finish_show_count">Количество правильных ответов:%d</string>
 
     <!-- Professions -->
     <string name="profession_dev">Разработчик</string>
@@ -68,6 +80,7 @@
 
     <!-- Web -->
     <string name="developer_language_web_title">Выберите технологии, которыми Вы владеете:</string>
+    <string name="developer_language_web_title_intent">Выберите технологии, которыми Вы хотели бы владеть:</string>
     <!-- Languages -->
     <string name="developer_technology_languages_title">Languages</string>
     <string name="developer_technology_languages_1">PHP</string>
@@ -132,5 +145,6 @@
     <string name="profession_get_resume">Приложить резюме:</string>
     <string name="profession_download_task">Скачать тестовое задание для web/android:</string>
     <string name="profession_send_task_email"><u>Отправить на e-mail</u></string>
+    <string name="title_activity_test_questions">TestQuestionsActivity</string>
 
 </resources>

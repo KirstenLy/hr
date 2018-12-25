@@ -5,14 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.preference.PreferenceManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Layout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.View;
@@ -20,8 +15,8 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -43,18 +38,18 @@ import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
 import hr.meteor.ru.meteorjob.ui.adapters.ProfessionFilesAdapter;
 import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
 import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
+import hr.meteor.ru.meteorjob.ui.beans.TestAnswer;
+import hr.meteor.ru.meteorjob.ui.beans.TestQuestion;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class MeteorUtility {
+
     public static int dpToPx(int dp, Context context) {
         Resources r = context.getResources();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
-
 
     public static boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -90,6 +85,11 @@ public class MeteorUtility {
             json.put("Databases", Arrays.toString(developerData.getDatabases()));
             json.put("Framework", Arrays.toString(developerData.getFrameworks()));
             json.put("Mobiles", Arrays.toString(developerData.getMobiles()));
+            json.put("ExpectedLanguages", Arrays.toString(developerData.getExpectedLanguages()));
+            json.put("ExpectedDatabases", Arrays.toString(developerData.getExpectedDatabases()));
+            json.put("ExpectedFrameworks", Arrays.toString(developerData.getExpectedFrameworks()));
+            json.put("ExpectedMobiles", Arrays.toString(developerData.getExpectedMobiles()));
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -99,6 +99,12 @@ public class MeteorUtility {
 
     public static String getFileExternal(File file) {
         return file.toString().substring(file.toString().lastIndexOf('.') + 1);
+    }
+
+    public static int getCheckedPosition(RadioGroup radioGroup) {
+        int radioButtonID = radioGroup.getCheckedRadioButtonId();
+        View radioButton = radioGroup.findViewById(radioButtonID);
+        return radioGroup.indexOfChild(radioButton);
     }
 
     public static ArrayList<MultipartBody.Part> createMultipartBodyList(ArrayList<File> fileList) {
@@ -182,6 +188,39 @@ public class MeteorUtility {
         languageArrayList.add(context.getString(R.string.developer_technology_mobile_8));
         languageArrayList.add(context.getString(R.string.developer_technology_mobile_9));
         return languageArrayList;
+    }
+
+    public static ArrayList<TestQuestion> initializeTestQuestionList() {
+        ArrayList<TestQuestion> testQuestionList = new ArrayList<>();
+
+        testQuestionList.add(new TestQuestion(
+                "Question 1 title",
+                new TestAnswer[]{
+                        new TestAnswer("Activity", false),
+                        new TestAnswer("Fragment", false),
+                        new TestAnswer("Layout", true),
+                        new TestAnswer("Class", false)}
+        ));
+
+
+        testQuestionList.add(new TestQuestion(
+                "Question 2 title",
+                new TestAnswer[]{
+                        new TestAnswer("ArrayList", false),
+                        new TestAnswer("HashMap", false),
+                        new TestAnswer("LinkedList", true),
+                        new TestAnswer("LinkedHashMap", false)}
+        ));
+
+        testQuestionList.add(new TestQuestion(
+                "Question 3 title",
+                new TestAnswer[]{
+                        new TestAnswer("Integer", false),
+                        new TestAnswer("Boolean", false),
+                        new TestAnswer("String", true),
+                        new TestAnswer("Object", false)}));
+
+        return testQuestionList;
     }
 
     public static void putArrayListOnSharedPreference(ArrayList<String> arrayList, SharedPreferences.Editor editor, String key) {
@@ -306,11 +345,6 @@ public class MeteorUtility {
         }
     }
 
-    public static void rvHeightCorrector(RecyclerView rv) {
-        int size = ((ProfessionFilesAdapter) rv.getAdapter()).getFileList().size();
-        rv.setMinimumHeight(130 * size);
-    }
-
     public static SpannableString getAgreementString(final Context context) {
         SpannableString agreementText = new SpannableString(context.getString(R.string.default_accept_agreement));
         ClickableSpan clickableSpan = new ClickableSpan() {
@@ -325,5 +359,13 @@ public class MeteorUtility {
 
         agreementText.setSpan(clickableSpan, 48, 76, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return agreementText;
+    }
+
+    public static void correctMultiplyTextSize(EditText editText, Context context) {
+        if (editText.getText().toString().equals(context.getString(R.string.manager_hint_question))) {
+            editText.setTextSize(12);
+        } else {
+            editText.setTextSize(18);
+        }
     }
 }

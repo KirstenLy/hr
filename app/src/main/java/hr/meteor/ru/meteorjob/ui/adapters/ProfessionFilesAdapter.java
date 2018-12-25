@@ -2,14 +2,18 @@ package hr.meteor.ru.meteorjob.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.chip.Chip;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import java.io.File;
@@ -31,8 +35,15 @@ public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFiles
     }
 
     @Override
-    public ProfessionFilesAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_profession_files, viewGroup, false);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
         return new ViewHolder(view);
     }
 
@@ -49,15 +60,16 @@ public class ProfessionFilesAdapter extends RecyclerView.Adapter<ProfessionFiles
             public void onClick(View v) {
                 fileList.remove(i);
                 notifyItemRemoved(i);
+                notifyItemRangeChanged(i, fileList.size());
 
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyItemRangeChanged(i, fileList.size());
-                    }
-                };
-                Handler handler = new Handler();
-                handler.postDelayed(runnable, 1000);
+//                Runnable runnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                };
+//                Handler handler = new Handler();
+//                handler.postDelayed(runnable, 1000);
 //                rv.startLayoutAnimation();
 //                viewHolder.cellLayout.setAnimation(android.view.animation.AnimationUtils.loadAnimation(context, R.anim.animation_del));
             }

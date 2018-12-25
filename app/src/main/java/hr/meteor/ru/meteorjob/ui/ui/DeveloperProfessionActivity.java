@@ -36,6 +36,7 @@ import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
+import jp.wasabeef.recyclerview.animators.FadeInRightAnimator;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -70,6 +71,10 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     private DeveloperTechnologiesAdapter databasesAdapter;
     private DeveloperTechnologiesAdapter frameworkAdapter;
     private DeveloperTechnologiesAdapter mobilesAdapter;
+    private DeveloperTechnologiesAdapter expectedLanguagesAdapter;
+    private DeveloperTechnologiesAdapter expectedDatabasesAdapter;
+    private DeveloperTechnologiesAdapter expectedFrameworksAdapter;
+    private DeveloperTechnologiesAdapter expectedMobilesAdapter;
 
     private RecyclerView filesRecycler;
     private ProfessionFilesAdapter filesAdapter;
@@ -94,64 +99,84 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         RecyclerView frameworksRecycler = findViewById(R.id.recycler_profession_developer_frameworks);
         RecyclerView mobilesRecycler = findViewById(R.id.recycler_profession_developer_mobile);
 
+        RecyclerView userExpectedLanguagesRecycler = findViewById(R.id.recycler_profession_developer_languages_expected);
+        RecyclerView userExpectedDatabasesRecycler = findViewById(R.id.recycler_profession_developer_database_expected);
+        RecyclerView userExpectedFrameworksRecycler = findViewById(R.id.recycler_profession_developer_frameworks_expected);
+        RecyclerView userExpectedPreferenceRecycler = findViewById(R.id.recycler_profession_developer_mobile_expected);
+
         RecyclerView.LayoutManager layoutManagerForLanguages = new GridLayoutManager(this, 3);
         RecyclerView.LayoutManager layoutManagerForDatabases = new GridLayoutManager(this, 3);
         RecyclerView.LayoutManager layoutManagerForFrameworks = new GridLayoutManager(this, 3);
         RecyclerView.LayoutManager layoutManagerForMobile = new GridLayoutManager(this, 3);
+
+        RecyclerView.LayoutManager layoutManagerForUserExpectedLanguages = new GridLayoutManager(this, 3);
+        RecyclerView.LayoutManager layoutManagerForUserExpectedDatabases = new GridLayoutManager(this, 3);
+        RecyclerView.LayoutManager layoutManagerForUserExpectedFrameworks = new GridLayoutManager(this, 3);
+        RecyclerView.LayoutManager layoutManagerForUserExpectedMobile = new GridLayoutManager(this, 3);
 
         languagesRecycler.setLayoutManager(layoutManagerForLanguages);
         databasesRecycler.setLayoutManager(layoutManagerForDatabases);
         frameworksRecycler.setLayoutManager(layoutManagerForFrameworks);
         mobilesRecycler.setLayoutManager(layoutManagerForMobile);
 
+        userExpectedLanguagesRecycler.setLayoutManager(layoutManagerForUserExpectedLanguages);
+        userExpectedDatabasesRecycler.setLayoutManager(layoutManagerForUserExpectedDatabases);
+        userExpectedFrameworksRecycler.setLayoutManager(layoutManagerForUserExpectedFrameworks);
+        userExpectedPreferenceRecycler.setLayoutManager(layoutManagerForUserExpectedMobile);
+
         languagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
         databasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
         frameworkAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
         mobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
+
+        expectedLanguagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
+        expectedDatabasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
+        expectedFrameworksAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
+        expectedMobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
 
         languagesRecycler.setAdapter(languagesAdapter);
         databasesRecycler.setAdapter(databasesAdapter);
         frameworksRecycler.setAdapter(frameworkAdapter);
         mobilesRecycler.setAdapter(mobilesAdapter);
 
+        userExpectedLanguagesRecycler.setAdapter(expectedLanguagesAdapter);
+        userExpectedDatabasesRecycler.setAdapter(expectedDatabasesAdapter);
+        userExpectedFrameworksRecycler.setAdapter(expectedFrameworksAdapter);
+        userExpectedPreferenceRecycler.setAdapter(expectedMobilesAdapter);
+
         languagesRecycler.setNestedScrollingEnabled(false);
         databasesRecycler.setNestedScrollingEnabled(false);
         frameworksRecycler.setNestedScrollingEnabled(false);
         mobilesRecycler.setNestedScrollingEnabled(false);
 
+        userExpectedLanguagesRecycler.setNestedScrollingEnabled(false);
+        userExpectedDatabasesRecycler.setNestedScrollingEnabled(false);
+        userExpectedFrameworksRecycler.setNestedScrollingEnabled(false);
+        userExpectedPreferenceRecycler.setNestedScrollingEnabled(false);
+
         contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
         contactsFormNoButton = findViewById(R.id.radiobutton_profession_developer_no);
-
         TextView webTestTaskLink = findViewById(R.id.text_profession_developer_web_task_link);
-        webTestTaskLink.setOnClickListener(this);
-
         TextView androidTestTaskLink = findViewById(R.id.text_profession_developer_android_task_link);
-        androidTestTaskLink.setOnClickListener(this);
-
         TextView agreement = findViewById(R.id.text_profession_developer_agreement);
+        Button sendData = findViewById(R.id.button_profession_developer_send);
+        LinearLayout codeFilesLayout = findViewById(R.id.layout_professions_developer_files);
+        TextView sendTaskOnEmailWeb = findViewById(R.id.text_profession_developer_web_task_link_email);
+        TextView sendTaskOnEmailAndroid = findViewById(R.id.text_profession_developer_android_task_link_email);
+
+        webTestTaskLink.setOnClickListener(this);
+        androidTestTaskLink.setOnClickListener(this);
+        sendData.setOnClickListener(this);
+        codeFilesLayout.setOnClickListener(this);
+        sendTaskOnEmailWeb.setOnClickListener(this);
+        sendTaskOnEmailAndroid.setOnClickListener(this);
+
         agreement.setText(getAgreementString(this));
         agreement.setMovementMethod(LinkMovementMethod.getInstance());
         agreement.setHighlightColor(Color.BLUE);
 
-        Button sendData = findViewById(R.id.button_profession_developer_send);
-        sendData.setOnClickListener(this);
-
-        LinearLayout codeFilesLayout = findViewById(R.id.layout_professions_developer_files);
-        codeFilesLayout.setOnClickListener(this);
-
-        TextView sendTaskOnEmailWeb = findViewById(R.id.text_profession_developer_web_task_link_email);
-        sendTaskOnEmailWeb.setOnClickListener(this);
-
-        TextView sendTaskOnEmailAndroid = findViewById(R.id.text_profession_developer_android_task_link_email);
-        sendTaskOnEmailAndroid.setOnClickListener(this);
-
-//        FlowLayoutManager flowLayoutManagerForCodeFiles = new FlowLayoutManager();
-//        FlowLayoutManager flowLayoutManagerForBriefFiles = new FlowLayoutManager();
-//
-//        flowLayoutManagerForCodeFiles.setAutoMeasureEnabled(true);
-//        flowLayoutManagerForBriefFiles.setAutoMeasureEnabled(true);
-
         filesRecycler = findViewById(R.id.recycler_profession_developer_code_files);
+        filesRecycler.setItemAnimator(new FadeInRightAnimator());
         filesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         filesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), filesRecycler);
         filesRecycler.setAdapter(filesAdapter);
@@ -167,10 +192,20 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         boolean[] frameworksSelectedCheckboxData = frameworkAdapter.getSelectedCheckboxArray();
         boolean[] mobilesSelectedCheckboxData = mobilesAdapter.getSelectedCheckboxArray();
 
+        boolean[] userExpectedLanguagesSelectedCheckboxData = expectedLanguagesAdapter.getSelectedCheckboxArray();
+        boolean[] userExpectedDatabasesSelectedCheckboxData = expectedDatabasesAdapter.getSelectedCheckboxArray();
+        boolean[] userExpectedFrameworksSelectedCheckboxData = expectedFrameworksAdapter.getSelectedCheckboxArray();
+        boolean[] userExpectedMobilesSelectedCheckboxData = expectedMobilesAdapter.getSelectedCheckboxArray();
+
         outState.putBooleanArray("languagesCheckboxes", languagesSelectedCheckboxData);
         outState.putBooleanArray("databasesCheckboxes", databasesSelectedCheckboxData);
         outState.putBooleanArray("frameworksCheckboxes", frameworksSelectedCheckboxData);
         outState.putBooleanArray("mobilesCheckboxes", mobilesSelectedCheckboxData);
+
+        outState.putBooleanArray("expectedLanguagesCheckboxes", userExpectedLanguagesSelectedCheckboxData);
+        outState.putBooleanArray("expectedDatabasesCheckboxes", userExpectedDatabasesSelectedCheckboxData);
+        outState.putBooleanArray("expectedFrameworksCheckboxes", userExpectedFrameworksSelectedCheckboxData);
+        outState.putBooleanArray("expectedMobilesCheckboxes", userExpectedMobilesSelectedCheckboxData);
 
         ArrayList<File> filesList = (ArrayList<File>) filesAdapter.getFileList();
         if (filesList != null && filesList.size() > 0) {
@@ -188,6 +223,11 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         databasesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("databasesCheckboxes"));
         frameworkAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("frameworksCheckboxes"));
         mobilesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("mobilesCheckboxes"));
+
+        expectedLanguagesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("expectedLanguagesCheckboxes"));
+        expectedDatabasesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("expectedDatabasesCheckboxes"));
+        expectedFrameworksAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("expectedFrameworksCheckboxes"));
+        expectedMobilesAdapter.setSelectedCheckboxArray(savedInstanceState.getBooleanArray("expectedMobilesCheckboxes"));
 
         ArrayList<File> filesList;
 
@@ -219,7 +259,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             startActivity(intent);
         }
 
-        if (elementId == R.id.text_profession_developer_web_task_link_email || elementId == R.id.text_profession_developer_android_task_link) {
+        if (elementId == R.id.text_profession_developer_web_task_link_email || elementId == R.id.text_profession_developer_android_task_link_email) {
             showSendTaskDialog(this, 1);
         }
 
@@ -238,6 +278,10 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
                 developerData.setDatabases(databasesAdapter.getSelectedTechnologiesArray());
                 developerData.setFrameworks(frameworkAdapter.getSelectedTechnologiesArray());
                 developerData.setMobiles(mobilesAdapter.getSelectedTechnologiesArray());
+                developerData.setExpectedLanguages(expectedLanguagesAdapter.getSelectedTechnologiesArray());
+                developerData.setExpectedDatabases(expectedDatabasesAdapter.getSelectedTechnologiesArray());
+                developerData.setExpectedFrameworks(expectedFrameworksAdapter.getSelectedTechnologiesArray());
+                developerData.setExpectedMobiles(expectedMobilesAdapter.getSelectedTechnologiesArray());
 
                 sendData(developerData);
 
@@ -246,7 +290,6 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             }
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -337,6 +380,11 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         saveDeveloperFlags(editor, "developerFrameworks", frameworkAdapter);
         saveDeveloperFlags(editor, "developerMobiles", mobilesAdapter);
 
+        saveDeveloperFlags(editor, "expectedDeveloperLanguages", expectedLanguagesAdapter);
+        saveDeveloperFlags(editor, "expectedDeveloperDatabases", expectedDatabasesAdapter);
+        saveDeveloperFlags(editor, "expectedDeveloperFrameworks", expectedFrameworksAdapter);
+        saveDeveloperFlags(editor, "expectedDeveloperMobiles", expectedMobilesAdapter);
+
         ArrayList<File> filesList = (ArrayList<File>) filesAdapter.getFileList();
 
         if (filesList != null) {
@@ -364,6 +412,11 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         restoreDeveloperFlags(sharedPreferences, "developerDatabases", databasesAdapter);
         restoreDeveloperFlags(sharedPreferences, "developerFrameworks", frameworkAdapter);
         restoreDeveloperFlags(sharedPreferences, "developerMobiles", mobilesAdapter);
+
+        restoreDeveloperFlags(sharedPreferences, "expectedDeveloperLanguages", expectedLanguagesAdapter);
+        restoreDeveloperFlags(sharedPreferences, "expectedDeveloperDatabases", expectedDatabasesAdapter);
+        restoreDeveloperFlags(sharedPreferences, "expectedDeveloperFrameworks", expectedFrameworksAdapter);
+        restoreDeveloperFlags(sharedPreferences, "expectedDeveloperMobiles", expectedMobilesAdapter);
 
         restoreFilesClips(sharedPreferences, "developerCodeFilesNames", filesAdapter);
 

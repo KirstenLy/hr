@@ -86,9 +86,6 @@ public class DeveloperTechnologiesAdapter extends RecyclerView.Adapter<Developer
     public String[] getSelectedTechnologiesArray() {
         ArrayList<String> selectedTechnologiesList = new ArrayList<>();
 
-        Log.d("OkHttpTAG", String.valueOf(selectedCheckboxArray.length));
-        Log.d("OkHttpTAG", techNameList.toString());
-
         for (int i = 0; i < selectedCheckboxArray.length; i++) {
             if (selectedCheckboxArray[i]) {
                 selectedTechnologiesList.add(techNameList.get(i));

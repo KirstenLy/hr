@@ -28,7 +28,7 @@
     </style>
 
     <!-- ActionBar -->
-    <style name="ActionBarStyle">
+    <style name="ActionBarStyle" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/colorPrimaryDark</item>
     </style>
 

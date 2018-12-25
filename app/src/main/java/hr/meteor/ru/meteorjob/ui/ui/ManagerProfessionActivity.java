@@ -16,9 +16,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -41,12 +38,7 @@ import hr.meteor.ru.meteorjob.ui.beans.ManagerData;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
-import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.LandingAnimator;
-import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import jp.wasabeef.recyclerview.animators.FadeInRightAnimator;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -54,6 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.correctMultiplyTextSize;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getAgreementString;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getFilesNamesList;
@@ -78,15 +71,15 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     private EditText comment;
     private EditText question;
 
-    RecyclerView briefRecycler;
-    private ProfessionFilesAdapter briefFilesAdapter;
+    RecyclerView filesRecycler;
+    private ProfessionFilesAdapter filesAdapter;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == TAKE_USER_BRIEF_FILE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            String duplicateFiles = updateFileListOnIntentResult(data, briefFilesAdapter);
+            String duplicateFiles = updateFileListOnIntentResult(data, filesAdapter);
             showDuplicatedFilesIfExist(duplicateFiles, this);
-            briefRecycler.startLayoutAnimation();
+            filesRecycler.startLayoutAnimation();
         }
     }
 
@@ -97,76 +90,37 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         createToolbar(R.id.actionbar_profession_manager, 0, R.string.profession_manager, true);
 
         contactsFormYesButton = findViewById(R.id.radiobutton_profession_manager_yes);
-        contactsFormYesButton.setOnClickListener(this);
-
         contactsFormNoButton = findViewById(R.id.radiobutton_profession_manager_no);
-        contactsFormNoButton.setOnClickListener(this);
-
         invisibleLayoutWithExtraQuestion = findViewById(R.id.layout_professions_manager_contacts_invisible);
-
         LinearLayout briefFilesLayout = findViewById(R.id.layout_professions_manager_files_brief);
-        briefFilesLayout.setOnClickListener(this);
-
         Button sendData = findViewById(R.id.button_profession_manager_send);
-        sendData.setOnClickListener(this);
-
         TextInputEditText editText = findViewById(R.id.edit_profession_manager_contacts_question);
 
-        editText.addTextChangedListener(new TextSizeCorrector(editText));
+        contactsFormYesButton.setOnClickListener(this);
+        contactsFormNoButton.setOnClickListener(this);
+        briefFilesLayout.setOnClickListener(this);
+        sendData.setOnClickListener(this);
 
-//        Варианты layout - ов для формы с файлами. Работают не стабильно.
-//        ChipsLayoutManager chipsLayoutManager = ChipsLayoutManager.newBuilder(this)
-//                .setChildGravity(Gravity.TOP)
-//                .setScrollingEnabled(false)
-//                .setGravityResolver(new IChildGravityResolver() {
-//                    @Override
-//                    public int getItemGravity(int position) {
-//                        return Gravity.CENTER;
-//                    }
-//                })
-//                .setOrientation(ChipsLayoutManager.HORIZONTAL)
-//                .setRowStrategy(ChipsLayoutManager.STRATEGY_CENTER_DENSE)
-//                .build();
-//
-//        FlowLayoutManager flowLayoutManager = new FlowLayoutManager();
-//        flowLayoutManager.setAutoMeasureEnabled(true);
+        correctMultiplyTextSize(editText, this);
 
         TextView agreement = findViewById(R.id.text_profession_manager_agreement);
         agreement.setText(getAgreementString(this));
         agreement.setMovementMethod(LinkMovementMethod.getInstance());
         agreement.setHighlightColor(Color.BLUE);
 
-        briefRecycler = findViewById(R.id.recycler_profession_manager_files);
-//        briefRecycler.setItemAnimator(null);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-
-        briefRecycler.setItemAnimator(new ScaleInAnimator());
-//        briefRecycler.getItemAnimator().setAddDuration(1000);
-        briefRecycler.getItemAnimator().setRemoveDuration(1000);
-        briefRecycler.getItemAnimator().setMoveDuration(1000);
-        briefRecycler.getItemAnimator().setChangeDuration(1000);
-
-//        int resId = R.anim.layout_anim;
-//        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
-//        briefRecycler.setLayoutAnimation(animation);
-
-        briefRecycler.setLayoutManager(linearLayoutManager);
-
-        briefFilesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), briefRecycler);
-
-        ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(briefFilesAdapter);
-        alphaAdapter.setFirstOnly(false);
-        alphaAdapter.setDuration(1000);
-        briefRecycler.setAdapter(alphaAdapter);
-
-        briefRecycler.setNestedScrollingEnabled(false);
+        filesRecycler = findViewById(R.id.recycler_profession_manager_files);
+        filesRecycler.setItemAnimator(new FadeInRightAnimator());
+        filesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        filesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), filesRecycler);
+        filesRecycler.setAdapter(filesAdapter);
+        filesRecycler.setNestedScrollingEnabled(false);
 
         loadPreferences();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
+        ArrayList<File> filesList = (ArrayList<File>) filesAdapter.getFileList();
         if (filesList != null && filesList.size() > 0) {
             outState.putSerializable("files", filesList);
         }
@@ -178,8 +132,8 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState.getSerializable("files") != null) {
             ArrayList<File> filesList = (ArrayList<File>) savedInstanceState.getSerializable("files");
-            briefFilesAdapter.setFileList(filesList);
-            briefFilesAdapter.notifyDataSetChanged();
+            filesAdapter.setFileList(filesList);
+            filesAdapter.notifyDataSetChanged();
         }
     }
 
@@ -276,7 +230,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), json);
 
-        List<MultipartBody.Part> requestFileList = createMultipartBodyList((ArrayList<File>) briefFilesAdapter.getFileList());
+        List<MultipartBody.Part> requestFileList = createMultipartBodyList((ArrayList<File>) filesAdapter.getFileList());
 
         Call<ResultJson> call = getMeteorService().postManagerData(jsonBody, requestFileList);
         call.enqueue(new Callback<ResultJson>() {
@@ -313,7 +267,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         editor.putString("managerQuestion", String.valueOf(question.getText()));
         editor.putBoolean("managerExperience", contactsFormYesButton.isChecked());
 
-        ArrayList<File> filesList = (ArrayList<File>) briefFilesAdapter.getFileList();
+        ArrayList<File> filesList = (ArrayList<File>) filesAdapter.getFileList();
         if (filesList != null) {
             putArrayListOnSharedPreference(getFilesNamesList(filesList), editor, "managerFilesNames");
         }
@@ -340,36 +294,6 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         restoreRadioButtons(sharedPreferences, "managerExperience", contactsFormYesButton, contactsFormNoButton, invisibleLayoutWithExtraQuestion);
 
-        restoreFilesClips(sharedPreferences, "managerFilesNames", briefFilesAdapter);
-    }
-
-    public class TextSizeCorrector implements TextWatcher {
-        TextInputEditText editText;
-        boolean hint;
-
-        public TextSizeCorrector(TextInputEditText editText) {
-            this.editText = editText;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length() == 0) {
-                hint = true;
-                editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-            } else if (hint) {
-                hint = false;
-                editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        restoreFilesClips(sharedPreferences, "managerFilesNames", filesAdapter);
     }
 }

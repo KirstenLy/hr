@@ -44,6 +44,22 @@ public class DeveloperData {
     @Expose
     private String[] mobiles;
 
+    @SerializedName("ExpectedLanguages")
+    @Expose
+    private String[] expectedLanguages;
+
+    @SerializedName("ExpectedDatabases")
+    @Expose
+    private String[] expectedDatabases;
+
+    @SerializedName("ExpectedFrameworks")
+    @Expose
+    private String[] expectedFrameworks;
+
+    @SerializedName("ExpectedMobiles")
+    @Expose
+    private String[] expectedMobiles;
+
     public String isSkilled() {
         return isSkilled;
     }
@@ -130,5 +146,37 @@ public class DeveloperData {
 
     public void setMobiles(String[] mobiles) {
         this.mobiles = mobiles;
+    }
+
+    public String[] getExpectedLanguages() {
+        return expectedLanguages;
+    }
+
+    public void setExpectedLanguages(String[] expectedLanguages) {
+        this.expectedLanguages = expectedLanguages;
+    }
+
+    public String[] getExpectedDatabases() {
+        return expectedDatabases;
+    }
+
+    public void setExpectedDatabases(String[] expectedDatabases) {
+        this.expectedDatabases = expectedDatabases;
+    }
+
+    public String[] getExpectedFrameworks() {
+        return expectedFrameworks;
+    }
+
+    public void setExpectedFrameworks(String[] expectedFrameworks) {
+        this.expectedFrameworks = expectedFrameworks;
+    }
+
+    public String[] getExpectedMobiles() {
+        return expectedMobiles;
+    }
+
+    public void setExpectedMobiles(String[] expectedMobiles) {
+        this.expectedMobiles = expectedMobiles;
     }
 }
