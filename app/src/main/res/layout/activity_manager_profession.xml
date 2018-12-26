@@ -29,8 +29,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/border_solid_orange">
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:id="@+id/text_profession_manager_question"
@@ -56,7 +55,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_default"
                         android:paddingRight="@dimen/padding_default"
-                        android:text="@string/manager_question_skill_answer_yes" />
+                        android:text="@string/default_yes" />
 
                     <RadioButton
                         android:id="@+id/radiobutton_profession_manager_no"
@@ -68,26 +67,33 @@
             </RelativeLayout>
             <!-- /Form with question about skills -->
 
-            <!-- Field with text about necessary field -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_large"
-                android:orientation="horizontal">
+            <View
+                android:id="@+id/rectangle_at_the_top"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#DDDDDD"
+                android:visibility="visible" />
 
-                <ImageView
-                    android:layout_width="@dimen/image_size_small"
-                    android:layout_height="@dimen/image_size_small"
-                    android:src="@drawable/ic_sun" />
+            <!--&lt;!&ndash; Field with text about necessary field &ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginTop="@dimen/margin_large"-->
+                <!--android:orientation="horizontal">-->
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/default_necessary_field" />
-            </LinearLayout>
-            <!-- /Field with text about necessary field -->
+                <!--<ImageView-->
+                    <!--android:layout_width="@dimen/image_size_small"-->
+                    <!--android:layout_height="@dimen/image_size_small"-->
+                    <!--android:src="@drawable/ic_sun" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:text="@string/default_necessary_field" />-->
+            <!--</LinearLayout>-->
+            <!--&lt;!&ndash; /Field with text about necessary field &ndash;&gt;-->
 
             <!-- Form with user's callback data -->
             <LinearLayout
@@ -109,7 +115,6 @@
                         android:id="@+id/edit_profession_manager_contacts_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_sun"
                         android:gravity="start"
                         android:hint="@string/developer_hint_name"
                         android:inputType="textPersonName" />
@@ -128,7 +133,6 @@
                         android:id="@+id/edit_profession_manager_contacts_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_sun"
                         android:gravity="start"
                         android:hint="@string/manager_hint_phone"
                         android:inputType="phone" />
@@ -146,7 +150,6 @@
                         android:id="@+id/edit_profession_manager_contacts_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_sun"
                         android:gravity="start"
                         android:hint="@string/manager_hint_email"
                         android:inputType="textEmailAddress" />
@@ -174,7 +177,6 @@
                             android:id="@+id/edit_profession_manager_contacts_question"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@drawable/ic_sun"
                             android:gravity="start"
                             android:inputType="textMultiLine"
                             android:lines="4"
@@ -207,9 +209,10 @@
             <!-- /Form with user's callback data -->
 
             <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#DDDDDD"
+                android:visibility="visible" />
 
             <!-- Form with user's brief file -->
             <LinearLayout
@@ -236,7 +239,7 @@
                     <ImageView
                         android:layout_width="@dimen/image_size_small"
                         android:layout_height="@dimen/image_size_small"
-                        android:src="@drawable/ic_add_file" />
+                        android:src="@drawable/ic_paper_clip" />
 
                     <TextView
                         style="@style/linkStyle"
@@ -258,11 +261,6 @@
             </LinearLayout>
             <!-- /Form with user's brief file -->
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
-
             <!-- Send data button -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -273,12 +271,15 @@
 
                 <TextView
                     android:id="@+id/text_profession_manager_agreement"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_default"
-                    android:paddingLeft="@dimen/padding_default"
-                    android:paddingRight="@dimen/padding_default"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
                     android:text="@string/app_name"
+                    android:layout_gravity="center_horizontal"
                     android:textAlignment="center"
                     android:textColor="@color/colorGrey"
                     android:textColorLink="@android:color/holo_blue_dark" />

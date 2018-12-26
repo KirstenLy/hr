@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -14,11 +13,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import hr.meteor.ru.meteorjob.R;
+import hr.meteor.ru.meteorjob.ui.beans.TestAnswer;
 import hr.meteor.ru.meteorjob.ui.beans.TestQuestion;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getCheckedPosition;
-import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.initializeTestQuestionList;
 
 public class TestQuestionsActivity extends AbstractActivity implements View.OnClickListener {
     private RadioGroup radioButtonGroup;
@@ -41,49 +40,25 @@ public class TestQuestionsActivity extends AbstractActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_questions);
 
-        int testNumber = getIntent().getExtras().getInt("test_id", 0);
-        int professionKey = getIntent().getExtras().getInt("profession_ID", 0);
-
-        String profession = professionKey == 1 ? "Менеджер" : "Разработчик";
-        String title = String.format(getString(R.string.actionbar_test_questions), testNumber, profession);
-
-        Toolbar toolbar = findViewById(R.id.actionbar_test_questions);
-        toolbar.setTitle(title);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
+        createToolbar(R.id.actionbar_test_questions, 0, createTitleString(), false);
         questions = initializeTestQuestionList();
-        currentQuestionCounter = findViewById(R.id.text_test_current_question_number);
 
         if (savedInstanceState == null) {
             currentQuestionNumber = 0;
             correctAnswersCounter = 0;
             currentQuestion = questions.get(0);
-            currentQuestionCounter.setText(String.format(getString(R.string.test_current_question_number), 1, questions.size()));
+            viewsInitialize();
+            updateQuestionCounter();
         } else {
             currentQuestionNumber = savedInstanceState.getInt("currentQuestionNumber");
             correctAnswersCounter = savedInstanceState.getInt("correctAnswersCounter");
             currentQuestion = questions.get(currentQuestionNumber);
-            currentQuestionCounter.setText(String.format(getString(R.string.test_current_question_number), currentQuestionNumber + 1, questions.size()));
+            viewsInitialize();
+            updateQuestionCounter();
+            if (isLastQuestion()) {
+                updateNextButtonText();
+            }
         }
-
-        questionTitle = findViewById(R.id.text_test_question_title);
-        radioButton1 = findViewById(R.id.radiobutton_test_answer_1);
-        radioButton2 = findViewById(R.id.radiobutton_test_answer_2);
-        radioButton3 = findViewById(R.id.radiobutton_test_answer_3);
-        radioButton4 = findViewById(R.id.radiobutton_test_answer_4);
-        radioButtonGroup = findViewById(R.id.radiogroup_test_answers);
-        currentQuestionCounter = findViewById(R.id.text_test_current_question_number);
-        nextButton = findViewById(R.id.button_test_next);
-
-        questionTitle.setText(currentQuestion.getTitle());
-        radioButton1.setText(currentQuestion.getAnswers()[0].getTitle());
-        radioButton2.setText(currentQuestion.getAnswers()[1].getTitle());
-        radioButton3.setText(currentQuestion.getAnswers()[2].getTitle());
-        radioButton4.setText(currentQuestion.getAnswers()[3].getTitle());
-
-        nextButton.setOnClickListener(this);
     }
 
     @Override
@@ -99,22 +74,16 @@ public class TestQuestionsActivity extends AbstractActivity implements View.OnCl
 
             if (currentQuestionNumber < questions.size()) {
                 currentQuestion = questions.get(currentQuestionNumber);
-                questionTitle.animate().alpha(0.0f).setDuration(1000).setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        questionTitle.animate().alpha(1.0f).setDuration(1000);
-                        questionTitle.setText(currentQuestion.getTitle());
-                    }
-                });
-                radioButton1.animate().alpha(0.0f).setDuration(1000).setListener(new radioButtonsAnimator(radioButton1, 0));
-                radioButton2.animate().alpha(0.0f).setDuration(1000).setListener(new radioButtonsAnimator(radioButton2, 1));
-                radioButton3.animate().alpha(0.0f).setDuration(1000).setListener(new radioButtonsAnimator(radioButton3, 2));
-                radioButton4.animate().alpha(0.0f).setDuration(1000).setListener(new radioButtonsAnimator(radioButton4, 3));
 
-                currentQuestionCounter.setText(String.format(getString(R.string.test_current_question_number), currentQuestionNumber + 1, questions.size()));
-                if (currentQuestionNumber == questions.size() - 1) {
-                    nextButton.setText(R.string.test_question_finish);
+                updateQuestionTitle();
+                animateAndUpdateTextRadioButton(radioButton1, 0);
+                animateAndUpdateTextRadioButton(radioButton2, 1);
+                animateAndUpdateTextRadioButton(radioButton3, 2);
+                animateAndUpdateTextRadioButton(radioButton4, 3);
+                updateQuestionCounter();
+
+                if (isLastQuestion()) {
+                    updateNextButtonText();
                 }
             } else {
                 DialogUtility.showTestResult(this, correctAnswersCounter);
@@ -129,11 +98,97 @@ public class TestQuestionsActivity extends AbstractActivity implements View.OnCl
         super.onSaveInstanceState(outState);
     }
 
+    public void animateAndUpdateTextRadioButton(RadioButton radioButton, int position) {
+        radioButton.animate().alpha(0.0f).setDuration(1000).setListener(new radioButtonsAnimator(radioButton, position));
+    }
+
+    public void updateQuestionCounter() {
+        currentQuestionCounter.setText(String.format(getString(R.string.test_current_question_number), currentQuestionNumber + 1, questions.size()));
+    }
+
+    public void viewsInitialize() {
+        currentQuestionCounter = findViewById(R.id.text_test_current_question_number);
+        questionTitle = findViewById(R.id.text_test_question_title);
+        radioButton1 = findViewById(R.id.radiobutton_test_answer_1);
+        radioButton2 = findViewById(R.id.radiobutton_test_answer_2);
+        radioButton3 = findViewById(R.id.radiobutton_test_answer_3);
+        radioButton4 = findViewById(R.id.radiobutton_test_answer_4);
+        radioButtonGroup = findViewById(R.id.radiogroup_test_answers);
+        nextButton = findViewById(R.id.button_test_next);
+
+        questionTitle.setText(currentQuestion.getTitle());
+        radioButton1.setText(currentQuestion.getAnswers()[0].getTitle());
+        radioButton2.setText(currentQuestion.getAnswers()[1].getTitle());
+        radioButton3.setText(currentQuestion.getAnswers()[2].getTitle());
+        radioButton4.setText(currentQuestion.getAnswers()[3].getTitle());
+
+        nextButton.setOnClickListener(this);
+    }
+
+    public static ArrayList<TestQuestion> initializeTestQuestionList() {
+        ArrayList<TestQuestion> testQuestionList = new ArrayList<>();
+
+        testQuestionList.add(new TestQuestion(
+                "Question 1 title",
+                new TestAnswer[]{
+                        new TestAnswer("Activity", false),
+                        new TestAnswer("Fragment", false),
+                        new TestAnswer("Layout", true),
+                        new TestAnswer("Class", false)}
+        ));
+
+
+        testQuestionList.add(new TestQuestion(
+                "Question 2 title",
+                new TestAnswer[]{
+                        new TestAnswer("ArrayList", false),
+                        new TestAnswer("HashMap", false),
+                        new TestAnswer("LinkedList", true),
+                        new TestAnswer("LinkedHashMap", false)}
+        ));
+
+        testQuestionList.add(new TestQuestion(
+                "Question 3 title",
+                new TestAnswer[]{
+                        new TestAnswer("Integer", false),
+                        new TestAnswer("Boolean", false),
+                        new TestAnswer("String", true),
+                        new TestAnswer("Object", false)}));
+
+        return testQuestionList;
+    }
+
+    public boolean isLastQuestion() {
+        return currentQuestionNumber == questions.size() - 1;
+    }
+
+    public String createTitleString() {
+        int testNumber = getIntent().getExtras().getInt("test_id", 0);
+        int professionKey = getIntent().getExtras().getInt("profession_ID", 0);
+        String profession = professionKey == 1 ? "Менеджер" : "Разработчик";
+        return String.format(getString(R.string.actionbar_test_questions), testNumber, profession);
+    }
+
+    public void updateQuestionTitle() {
+        questionTitle.animate().alpha(0.0f).setDuration(1000).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                questionTitle.animate().alpha(1.0f).setDuration(1000);
+                questionTitle.setText(currentQuestion.getTitle());
+            }
+        });
+    }
+
+    public void updateNextButtonText() {
+        nextButton.setText(R.string.test_question_finish);
+    }
+
     public class radioButtonsAnimator extends AnimatorListenerAdapter {
         private RadioButton radioButton;
         private int position;
 
-        public radioButtonsAnimator(RadioButton radioButton, int position) {
+        radioButtonsAnimator(RadioButton radioButton, int position) {
             this.radioButton = radioButton;
             this.position = position;
         }

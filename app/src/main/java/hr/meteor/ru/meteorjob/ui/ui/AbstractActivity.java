@@ -48,10 +48,10 @@ public abstract class AbstractActivity extends AppCompatActivity {
         loadingDialog.hide();
     }
 
-    public Toolbar createToolbar(int id, int iconId, int titleId, boolean isHomeActive) {
+    public Toolbar createToolbar(int id, int iconId, String title, boolean isHomeActive) {
         Toolbar toolbar = findViewById(id);
-        if (titleId != 0) {
-            toolbar.setTitle(titleId);
+        if (title != null) {
+            toolbar.setTitle(title);
         }
         if (iconId != 0) {
             toolbar.setNavigationIcon(iconId);
@@ -61,13 +61,14 @@ public abstract class AbstractActivity extends AppCompatActivity {
         return toolbar;
     }
 
-    public MeteorService getMeteorService() {
+    public MeteorService getMeteorService(String external) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String message) {
                 Log.d("OkHttpTAG", message);
             }
         });
+
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().
                 connectTimeout(180, TimeUnit.SECONDS).
@@ -76,24 +77,24 @@ public abstract class AbstractActivity extends AppCompatActivity {
                 .addInterceptor(logging)
                 .build();
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://hr.fokgroup.com/vacancy/").addConverterFactory(GsonConverterFactory.create()).client(client).build();
+        String basUrl = "http://hr.fokgroup.com/" + external;
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(basUrl).addConverterFactory(GsonConverterFactory.create()).client(client).build();
         return retrofit.create(MeteorService.class);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        this.onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
+        savePreferences();
+        finish();
+    }
+
+    public void savePreferences() {
     }
 }

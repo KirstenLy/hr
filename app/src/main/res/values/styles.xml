@@ -5,6 +5,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:fontFamily">@font/cuprum</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -34,7 +35,7 @@
 
     <!-- FileLink -->
     <style name="linkStyle">
-        <item name="android:textColor">@android:color/holo_blue_dark</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 

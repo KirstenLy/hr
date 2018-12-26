@@ -46,7 +46,7 @@ public class TestListAdapter extends RecyclerView.Adapter<TestListAdapter.ViewHo
                 Intent intent = new Intent(context, TestQuestionsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("test_id", i + 1);
-                intent.putExtra("profession_key", professionId);
+                intent.putExtra("profession_ID", professionId);
                 context.startActivity(intent);
             }
         });

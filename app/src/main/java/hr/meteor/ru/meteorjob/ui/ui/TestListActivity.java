@@ -18,7 +18,7 @@ public class TestListActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_list);
 
-        createToolbar(R.id.actionbar_test, 0, R.string.actionbar_test, false);
+        createToolbar(R.id.actionbar_test, 0, getString(R.string.actionbar_test), false);
 
         ArrayList<Test> testList = new ArrayList<>();
         testList.add(new Test("Test 1"));

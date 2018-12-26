@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -71,7 +72,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     private EditText comment;
     private EditText question;
 
-    RecyclerView filesRecycler;
+    private RecyclerView filesRecycler;
     private ProfessionFilesAdapter filesAdapter;
 
     @Override
@@ -87,7 +88,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager_profession);
-        createToolbar(R.id.actionbar_profession_manager, 0, R.string.profession_manager, true);
+        createToolbar(R.id.actionbar_profession_manager, 0, getString(R.string.profession_manager), true);
 
         contactsFormYesButton = findViewById(R.id.radiobutton_profession_manager_yes);
         contactsFormNoButton = findViewById(R.id.radiobutton_profession_manager_no);
@@ -110,7 +111,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         filesRecycler = findViewById(R.id.recycler_profession_manager_files);
         filesRecycler.setItemAnimator(new FadeInRightAnimator());
-        filesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        filesRecycler.setLayoutManager(new GridLayoutManager(this, 2));
         filesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), filesRecycler);
         filesRecycler.setAdapter(filesAdapter);
         filesRecycler.setNestedScrollingEnabled(false);
@@ -177,22 +178,8 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            savePreferences();
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
+    public void viewsInitialize() {
 
-    @Override
-    public void onBackPressed() {
-        savePreferences();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
     }
 
     //TODO Необходим рефакторинг в соответствии с требованиями для каждого поля. Нужно будет создать функцию для каждого из них.
@@ -221,6 +208,12 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
                 isSuccess = false;
             }
         }
+
+        if (comment.getText() == null || comment.getText().length() == 0) {
+            comment.setError(getString(R.string.error_validation_comment));
+            isSuccess = false;
+        }
+
         return isSuccess;
     }
 
@@ -232,7 +225,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
 
         List<MultipartBody.Part> requestFileList = createMultipartBodyList((ArrayList<File>) filesAdapter.getFileList());
 
-        Call<ResultJson> call = getMeteorService().postManagerData(jsonBody, requestFileList);
+        Call<ResultJson> call = getMeteorService("vacancy/").postManagerData(jsonBody, requestFileList);
         call.enqueue(new Callback<ResultJson>() {
             @Override
             public void onResponse(Call<ResultJson> call,
@@ -257,6 +250,7 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         });
     }
 
+    @Override
     public void savePreferences() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -34,7 +34,7 @@
                     android:layout_width="125dp"
                     android:layout_height="125dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_profession_manager" />
+                    android:src="@drawable/manager" />
 
                 <TextView
                     android:id="@+id/text_professional_manager_name"
@@ -107,7 +107,7 @@
                     android:layout_width="125dp"
                     android:layout_height="125dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_profession_developer" />
+                    android:src="@drawable/dj" />
 
                 <TextView
                     android:id="@+id/text_professional_developer_name"

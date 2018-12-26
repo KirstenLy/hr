@@ -7,23 +7,13 @@
     android:animateLayoutChanges="true"
     android:padding="@dimen/padding_small">
 
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"></RelativeLayout>
-
     <android.support.design.chip.Chip
         android:id="@+id/text_profession_cell_files_filename"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
         android:text="@string/default_insert_file"
         android:textAlignment="center"
         app:closeIcon="@drawable/ic_delete"
         app:closeIconVisible="true" />
 
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"></RelativeLayout>
 </LinearLayout>

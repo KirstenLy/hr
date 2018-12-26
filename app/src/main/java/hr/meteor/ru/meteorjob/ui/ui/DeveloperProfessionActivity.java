@@ -1,10 +1,12 @@
 package hr.meteor.ru.meteorjob.ui.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -12,15 +14,17 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chuross.library.ExpandableLayout;
 import com.google.gson.internal.LinkedTreeMap;
 import com.muddzdev.styleabletoast.StyleableToast;
 import com.nononsenseapps.filepicker.FilePickerActivity;
@@ -33,6 +37,7 @@ import hr.meteor.ru.meteorjob.R;
 import hr.meteor.ru.meteorjob.ui.adapters.DeveloperTechnologiesAdapter;
 import hr.meteor.ru.meteorjob.ui.adapters.ProfessionFilesAdapter;
 import hr.meteor.ru.meteorjob.ui.beans.DeveloperData;
+import hr.meteor.ru.meteorjob.ui.beans.TestTasksRetrofit;
 import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
 import hr.meteor.ru.meteorjob.ui.utility.DialogUtility;
 import hr.meteor.ru.meteorjob.ui.utility.MeteorUtility;
@@ -44,7 +49,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static hr.meteor.ru.meteorjob.ui.utility.DialogUtility.showSendTaskDialog;
+import static hr.meteor.ru.meteorjob.ui.utility.DialogUtility.showTestTaskDialog;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyList;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getAgreementString;
 import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getFilesNamesList;
@@ -79,6 +84,8 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     private RecyclerView filesRecycler;
     private ProfessionFilesAdapter filesAdapter;
 
+    private String testTaskUrl;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == TAKE_USER_BRIEF_FILE_REQUEST) && resultCode == Activity.RESULT_OK) {
@@ -92,7 +99,17 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_developer_profession);
 
-        createToolbar(R.id.actionbar_profession_developer, 0, R.string.profession_dev, true);
+        createToolbar(R.id.actionbar_profession_developer, 0, getString(R.string.profession_dev), true);
+
+        languagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
+        databasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
+        frameworkAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
+        mobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
+
+        expectedLanguagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
+        expectedDatabasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
+        expectedFrameworksAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
+        expectedMobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
 
         RecyclerView languagesRecycler = findViewById(R.id.recycler_profession_developer_languages);
         RecyclerView databasesRecycler = findViewById(R.id.recycler_profession_developer_database);
@@ -124,16 +141,6 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         userExpectedFrameworksRecycler.setLayoutManager(layoutManagerForUserExpectedFrameworks);
         userExpectedPreferenceRecycler.setLayoutManager(layoutManagerForUserExpectedMobile);
 
-        languagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
-        databasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
-        frameworkAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
-        mobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
-
-        expectedLanguagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
-        expectedDatabasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
-        expectedFrameworksAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
-        expectedMobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
-
         languagesRecycler.setAdapter(languagesAdapter);
         databasesRecycler.setAdapter(databasesAdapter);
         frameworksRecycler.setAdapter(frameworkAdapter);
@@ -153,6 +160,9 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         userExpectedDatabasesRecycler.setNestedScrollingEnabled(false);
         userExpectedFrameworksRecycler.setNestedScrollingEnabled(false);
         userExpectedPreferenceRecycler.setNestedScrollingEnabled(false);
+
+        RelativeLayout expand1 = findViewById(R.id.layout_profession_developer_language_expander_wrapper);
+        expand1.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_language_expander_wrapper));
 
         contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
         contactsFormNoButton = findViewById(R.id.radiobutton_profession_developer_no);
@@ -253,14 +263,19 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         }
 
         if (elementId == R.id.text_profession_developer_web_task_link || elementId == R.id.text_profession_developer_android_task_link) {
-            String url = "http://eralash.ru";
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
+            if (elementId == R.id.text_profession_developer_web_task_link) {
+                getTestTaskUrl(1);
+            } else {
+                getTestTaskUrl(2);
+            }
         }
 
         if (elementId == R.id.text_profession_developer_web_task_link_email || elementId == R.id.text_profession_developer_android_task_link_email) {
-            showSendTaskDialog(this, 1);
+            if (elementId == R.id.text_profession_developer_web_task_link_email) {
+                showTestTaskDialog(this, getMeteorService("send-test-task/"), 1);
+            } else {
+                showTestTaskDialog(this, getMeteorService("send-test-task/"), 2);
+            }
         }
 
         if (elementId == R.id.button_profession_developer_send) {
@@ -289,24 +304,6 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
                 StyleableToast.makeText(this, getString(R.string.error_validation), Toast.LENGTH_LONG, R.style.ToastValidationError).show();
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        savePreferences();
-        if (item.getItemId() == android.R.id.home) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        savePreferences();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
     }
 
     public boolean validationSuccess() {
@@ -340,7 +337,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         List<MultipartBody.Part> filesList = createMultipartBodyList((ArrayList<File>) filesAdapter.getFileList());
 
-        Call<ResultJson> call = getMeteorService().postDeveloperData(jsonBody, filesList);
+        Call<ResultJson> call = getMeteorService("vacancy/").postDeveloperData(jsonBody, filesList);
 
         call.enqueue(new Callback<ResultJson>() {
             @Override
@@ -366,6 +363,7 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         });
     }
 
+    @Override
     public void savePreferences() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -421,6 +419,106 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         restoreFilesClips(sharedPreferences, "developerCodeFilesNames", filesAdapter);
 
         restoreRadioButtons(sharedPreferences, "developerExperience", contactsFormYesButton, contactsFormNoButton, null);
+    }
+
+
+    private class Initializer extends AsyncTask<Void, Void, Void> {
+
+        public Initializer(Context context) {
+            this.context = context;
+        }
+
+        Context context;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            languagesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeLanguageList(context));
+            databasesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeDatabaseLanguageList(context));
+            frameworkAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeFrameworksList(context));
+            mobilesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeMobileTechnologiesList(context));
+
+            expectedLanguagesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeLanguageList(context));
+            expectedDatabasesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeDatabaseLanguageList(context));
+            expectedFrameworksAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeFrameworksList(context));
+            expectedMobilesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeMobileTechnologiesList(context));
+            return null;
+        }
+    }
+
+    public class ExpanderLayoutHelper implements View.OnClickListener {
+        RelativeLayout expandWrapper;
+        ImageView arrow;
+        ExpandableLayout expandableLayout;
+
+        ExpanderLayoutHelper(int relativeLayoutId) {
+            this.expandWrapper = findViewById(relativeLayoutId);
+            this.arrow = (ImageView) expandWrapper.getChildAt(1);
+            this.expandableLayout = (ExpandableLayout) expandWrapper.getChildAt(2);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (expandableLayout.isCollapsed()) {
+                expandableLayout.expand();
+                expandWrapper.getChildAt(1).animate().rotation(180f).setDuration(1000);
+            } else {
+                expandableLayout.collapse();
+                arrow.animate().rotation(0).setDuration(1000);
+            }
+        }
+    }
+
+    private void initializeLists(final Context context) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                languagesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeLanguageList(context));
+                databasesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeDatabaseLanguageList(context));
+                frameworkAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeFrameworksList(context));
+                mobilesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeMobileTechnologiesList(context));
+
+                expectedLanguagesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeLanguageList(context));
+                expectedDatabasesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeDatabaseLanguageList(context));
+                expectedFrameworksAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeFrameworksList(context));
+                expectedMobilesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeMobileTechnologiesList(context));
+            }
+        });
+    }
+
+    public void getTestTaskUrl(final int taskId) {
+        showLoadingDialog();
+        Call<ResultJson<TestTasksRetrofit>> call = getMeteorService("").getTestTasks();
+
+        call.enqueue(new Callback<ResultJson<TestTasksRetrofit>>() {
+            @Override
+            public void onResponse(Call<ResultJson<TestTasksRetrofit>> call,
+                                   Response<ResultJson<TestTasksRetrofit>> response) {
+                hideLoadingDialog();
+
+                if (response.isSuccessful() && response.body() != null) {
+                    if (taskId == 1) {
+                        testTaskUrl = response.body().getContent().getWebTaskUrl();
+                    } else {
+                        testTaskUrl = response.body().getContent().getAndroidTaskUrl();
+                    }
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(testTaskUrl));
+                    startActivity(intent);
+                } else
+
+                {
+//                    String responseFromServer = responseArray.get("Error");
+//                    String fileFormat = responseFromServer.substring(responseFromServer.lastIndexOf('/') + 1);
+//                    String errorText = String.format(getString(R.string.error_file_format), fileFormat);
+                    DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, "Error((", false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultJson<TestTasksRetrofit>> call, Throwable t) {
+                hideLoadingDialog();
+                DialogUtility.showErrorDialog(DeveloperProfessionActivity.this, getString(R.string.error_loading_data), false);
+            }
+        });
     }
 }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -68,32 +69,63 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_default"
-                android:layout_marginBottom="@dimen/margin_default"
-                android:gravity="center"
-                android:text="@string/developer_language_web_title"
-                android:textSize="@dimen/text_size_default" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/padding_profession_title"
                 android:layout_marginLeft="@dimen/padding_profession_title"
                 android:text="@string/developer_technology_languages_title" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
-
-            <!-- Technologies Recycles -->
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_profession_developer_languages"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_small">
+                android:layout_marginTop="@dimen/margin_default"
+                android:layout_marginBottom="@dimen/margin_default"
+                android:background="@drawable/button_shadow"
+                android:gravity="center"
+                android:text="@string/developer_language_web_title"
+                android:textSize="@dimen/text_size_default" />
 
-            </android.support.v7.widget.RecyclerView>
+
+            <!-- Technologies Recycles -->
+            <RelativeLayout
+                android:id="@+id/layout_profession_developer_language_expander_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingStart="@dimen/padding_default"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:text="@string/developer_technology_languages_title"
+                    android:textSize="@dimen/text_size_big" />
+
+                <ImageView
+                    android:id="@+id/img_profession_developer_language_arrow"
+                    android:layout_width="@dimen/image_size_small"
+                    android:layout_height="@dimen/image_size_small"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginRight="@dimen/margin_default"
+                    android:src="@drawable/ic_expand" />
+
+
+                <com.github.chuross.library.ExpandableLayout
+                    android:id="@+id/layout_profession_developer_language_expander"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_profession_developer_language_arrow"
+                    app:exl_duration="1000">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_profession_developer_languages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_small">
+
+                    </android.support.v7.widget.RecyclerView>
+                </com.github.chuross.library.ExpandableLayout>
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -140,9 +172,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_default"
-                android:layout_marginLeft="@dimen/padding_profession_title"
                 android:layout_marginStart="@dimen/padding_profession_title"
+                android:layout_marginLeft="@dimen/padding_profession_title"
+                android:layout_marginTop="@dimen/padding_default"
                 android:text="@string/developer_technology_mobile_title" />
 
             <View
@@ -241,9 +273,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_default"
-                android:layout_marginLeft="@dimen/padding_profession_title"
                 android:layout_marginStart="@dimen/padding_profession_title"
+                android:layout_marginLeft="@dimen/padding_profession_title"
+                android:layout_marginTop="@dimen/padding_default"
                 android:text="@string/developer_technology_mobile_title" />
 
             <View

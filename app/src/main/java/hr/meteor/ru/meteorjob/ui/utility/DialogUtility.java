@@ -8,10 +8,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.internal.LinkedTreeMap;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import hr.meteor.ru.meteorjob.R;
+import hr.meteor.ru.meteorjob.ui.retrofit.services.MeteorService;
+import hr.meteor.ru.meteorjob.ui.retrofit.services.ResultJson;
+import hr.meteor.ru.meteorjob.ui.ui.AbstractActivity;
+import hr.meteor.ru.meteorjob.ui.ui.DeveloperProfessionActivity;
 import hr.meteor.ru.meteorjob.ui.ui.MainActivity;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.createMultipartBodyList;
+import static hr.meteor.ru.meteorjob.ui.utility.MeteorUtility.getJsonFromDeveloperObject;
 
 public class DialogUtility {
 
@@ -67,9 +87,8 @@ public class DialogUtility {
         });
     }
 
-    public static void showSendTaskDialog(final Context context, int position) {
+    public static void showTestTaskDialog(final Context context, final MeteorService meteorService, final int taskKey) {
         final Dialog dialog = new Dialog(context, R.style.TransparentCustomDialog);
-
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_send_file, null);
         dialog.setContentView(popupView);
@@ -78,14 +97,40 @@ public class DialogUtility {
         final EditText email = popupView.findViewById(R.id.edit_popup_send_email);
 
         Button finishButton = popupView.findViewById(R.id.close_button);
+
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!MeteorUtility.isValidEmail(String.valueOf(email.getText()))) {
                     email.setError(context.getString(R.string.error_validation_mail));
                 } else {
-                    showErrorDialog(context, "Sended!\n" + email.getText(), false);
-                    dialog.cancel();
+                    ((DeveloperProfessionActivity) context).showLoadingDialog();
+                    Call<ResultJson> call;
+
+                    if (taskKey == 1) {
+                        call = meteorService.postWebTestTask(email.getText().toString());
+                    } else {
+                        call = meteorService.postAndroidTestTask(email.getText().toString());
+                    }
+
+                    call.enqueue(new Callback<ResultJson>() {
+                        @Override
+                        public void onResponse(Call<ResultJson> call,
+                                               Response<ResultJson> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                ((DeveloperProfessionActivity) context).hideLoadingDialog();
+                                showErrorDialog(context, "Тестовое успешно отослано на:\n" + email.getText() + "!", false);
+                                dialog.cancel();
+                            } else {
+                                ((DeveloperProfessionActivity) context).hideLoadingDialog();
+                                showErrorDialog(context, context.getString(R.string.error_email_send), false);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResultJson> call, Throwable t) {
+                        }
+                    });
                 }
             }
         });

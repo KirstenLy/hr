@@ -190,38 +190,7 @@ public class MeteorUtility {
         return languageArrayList;
     }
 
-    public static ArrayList<TestQuestion> initializeTestQuestionList() {
-        ArrayList<TestQuestion> testQuestionList = new ArrayList<>();
 
-        testQuestionList.add(new TestQuestion(
-                "Question 1 title",
-                new TestAnswer[]{
-                        new TestAnswer("Activity", false),
-                        new TestAnswer("Fragment", false),
-                        new TestAnswer("Layout", true),
-                        new TestAnswer("Class", false)}
-        ));
-
-
-        testQuestionList.add(new TestQuestion(
-                "Question 2 title",
-                new TestAnswer[]{
-                        new TestAnswer("ArrayList", false),
-                        new TestAnswer("HashMap", false),
-                        new TestAnswer("LinkedList", true),
-                        new TestAnswer("LinkedHashMap", false)}
-        ));
-
-        testQuestionList.add(new TestQuestion(
-                "Question 3 title",
-                new TestAnswer[]{
-                        new TestAnswer("Integer", false),
-                        new TestAnswer("Boolean", false),
-                        new TestAnswer("String", true),
-                        new TestAnswer("Object", false)}));
-
-        return testQuestionList;
-    }
 
     public static void putArrayListOnSharedPreference(ArrayList<String> arrayList, SharedPreferences.Editor editor, String key) {
         if (arrayList == null) {
@@ -357,7 +326,7 @@ public class MeteorUtility {
             }
         };
 
-        agreementText.setSpan(clickableSpan, 48, 76, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        agreementText.setSpan(clickableSpan, 45, 73, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return agreementText;
     }
 
@@ -365,7 +334,7 @@ public class MeteorUtility {
         if (editText.getText().toString().equals(context.getString(R.string.manager_hint_question))) {
             editText.setTextSize(12);
         } else {
-            editText.setTextSize(18);
+            editText.setTextSize(20);
         }
     }
 }
