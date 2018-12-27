@@ -14,6 +14,8 @@
     <string name="default_ok">Oк</string>
     <string name="default_send">Отправить</string>
     <string name="default_send_review">Отправить резюме</string>
+    <string name="default_send_on_email">Отправить резюме</string>
+    <string name="default_download">Скачать</string>
     <string name="default_choose_file">Выберите файл</string>
     <string name="default_necessary_field">- поля, обязательные для заполнения</string>
     <string name="default_insert_file">Прикрепить файлы</string>
@@ -68,21 +70,21 @@
     <string name="developer_sent_phone">Телефон:</string>
     <string name="developer_sent_email">Email:</string>
     <string name="developer_sent_file"><u>Приложить</u></string>
-    <string name="developer_download_web"><u>Для web</u></string>
-    <string name="developer_download_android"><u>Для Android</u></string>
+    <string name="developer_download_web">Тестовое задание для Web</string>
+    <string name="developer_download_android">Тестовое задание для Android</string>
     <string name="developer_question_skill_answer_yes">Да, у меня есть опыт работы</string>
-    <string name="developer_question_skill_answer_no">Нет (хочу на стажировку)</string>
+    <string name="developer_question_skill_answer_no">Нет, хочу на стажировку</string>
     <string name="developer_hint_name">Ваше имя</string>
     <string name="developer_hint_phone">Ваш телефон</string>
     <string name="developer_hint_email">Ваш email</string>
     <string name="developer_hint_comment">Дополнительная информация</string>
     <string name="developer_text_github">Добавить GitHub(ссылка или имя пользователя)</string>
-    <string name="developer_hint_github">Ваш GitHub</string>
-    <string name="developer_send_task">Приложить резюме, тестовое задание или примеры кода</string>
+    <string name="developer_hint_github">Ссылка на GitHub</string>
+    <string name="developer_send_task">Прикрепить резюме, тестовое задание или примеры кода</string>
 
     <!-- Web -->
-    <string name="developer_language_web_title">Выберите технологии, которыми Вы владеете:</string>
-    <string name="developer_language_web_title_intent">Выберите технологии, которыми Вы хотели бы владеть:</string>
+    <string name="developer_language_web_title">Выбери технологии, которыми владеешь:</string>
+    <string name="developer_language_web_title_intent">Выбери технологии, которые интересны:</string>
     <!-- Languages -->
     <string name="developer_technology_languages_title">Языки</string>
     <string name="developer_technology_languages_1">PHP</string>
@@ -130,8 +132,8 @@
 
     <!-- Manager Strings -->
     <string name="manager_question_skill">Есть ли у тебя опыт работы?</string>
-    <string name="manager_question_skill_answer_yes">Да, у меня есть опыт работы</string>
-    <string name="manager_question_skill_answer_no">Нет (хочу на стажировку)</string>
+    <string name="manager_question_skill_answer_yes">Да</string>
+    <string name="manager_question_skill_answer_no">Нет, хочу на стажировку</string>
     <string name="manager_sent_name">Имя:</string>
     <string name="manager_sent_phone">Телефон:</string>
     <string name="manager_sent_email">Email:</string>

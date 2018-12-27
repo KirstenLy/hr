@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <!-- Drop Shadow Stack -->
     <item>
         <shape>
-            <corners android:radius="4dp" />
-
             <padding
                 android:bottom="1dp"
                 android:left="1dp"
@@ -13,12 +11,12 @@
                 android:top="1dp" />
 
             <solid android:color="#00CCCCCC" />
+
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <corners android:radius="4dp" />
-
             <padding
                 android:bottom="1dp"
                 android:left="1dp"
@@ -26,54 +24,56 @@
                 android:top="1dp" />
 
             <solid android:color="#10CCCCCC" />
+
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <corners android:radius="4dp" />
-
             <padding
                 android:bottom="1dp"
                 android:left="1dp"
                 android:right="1dp"
                 android:top="1dp" />
 
-            <solid android:color="#20d5d5d5" />
+            <solid android:color="#20CCCCCC" />
+
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <corners android:radius="6dp" />
-
             <padding
                 android:bottom="1dp"
                 android:left="1dp"
                 android:right="1dp"
                 android:top="1dp" />
 
-            <solid android:color="#30cbcbcb" />
+            <solid android:color="#30CCCCCC" />
+
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <corners android:radius="4dp" />
-
             <padding
                 android:bottom="1dp"
                 android:left="1dp"
                 android:right="1dp"
                 android:top="1dp" />
 
-            <solid android:color="#50bababa" />
+            <solid android:color="#50CCCCCC" />
+
+            <corners android:radius="3dp" />
         </shape>
     </item>
 
     <!-- Background -->
     <item>
         <shape>
-            <solid android:color="@color/colorGrey" />
+            <solid android:color="@android:color/white" />
 
-            <corners android:radius="4dp" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
 

@@ -10,7 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import java.util.concurrent.TimeUnit;
@@ -96,5 +98,26 @@ public abstract class AbstractActivity extends AppCompatActivity {
     }
 
     public void savePreferences() {
+    }
+
+    public class scrollEditTextHelper implements View.OnTouchListener {
+        private EditText editText;
+
+        scrollEditTextHelper(EditText editText) {
+            this.editText = editText;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (editText.hasFocus()) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_SCROLL:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        return true;
+                }
+            }
+            return false;
+        }
     }
 }

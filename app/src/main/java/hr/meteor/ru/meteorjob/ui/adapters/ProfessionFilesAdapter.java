@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.chip.Chip;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;

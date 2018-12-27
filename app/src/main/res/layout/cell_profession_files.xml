@@ -11,6 +11,7 @@
         android:id="@+id/text_profession_cell_files_filename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/cuprum"
         android:text="@string/default_insert_file"
         android:textAlignment="center"
         app:closeIcon="@drawable/ic_delete"

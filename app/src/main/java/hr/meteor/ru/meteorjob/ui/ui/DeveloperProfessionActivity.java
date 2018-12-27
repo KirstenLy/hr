@@ -9,11 +9,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,6 +85,15 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
     private DeveloperTechnologiesAdapter expectedFrameworksAdapter;
     private DeveloperTechnologiesAdapter expectedMobilesAdapter;
 
+    RecyclerView languagesRecycler;
+    RecyclerView databasesRecycler;
+    RecyclerView frameworksRecycler;
+    RecyclerView mobilesRecycler;
+    RecyclerView userExpectedLanguagesRecycler;
+    RecyclerView userExpectedDatabasesRecycler;
+    RecyclerView userExpectedFrameworksRecycler;
+    RecyclerView userExpectedPreferenceRecycler;
+
     private RecyclerView filesRecycler;
     private ProfessionFilesAdapter filesAdapter;
 
@@ -101,98 +114,59 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         createToolbar(R.id.actionbar_profession_developer, 0, getString(R.string.profession_dev), true);
 
-        languagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
-        databasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
-        frameworkAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
-        mobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
+        showLoadingDialog();
 
-        expectedLanguagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
-        expectedDatabasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
-        expectedFrameworksAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
-        expectedMobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
+        new Initializer(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        RecyclerView languagesRecycler = findViewById(R.id.recycler_profession_developer_languages);
-        RecyclerView databasesRecycler = findViewById(R.id.recycler_profession_developer_database);
-        RecyclerView frameworksRecycler = findViewById(R.id.recycler_profession_developer_frameworks);
-        RecyclerView mobilesRecycler = findViewById(R.id.recycler_profession_developer_mobile);
+//        languagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
+//        databasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
+//        frameworkAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
+//        mobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
+//
+//        expectedLanguagesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeLanguageList(this));
+//        expectedDatabasesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeDatabaseLanguageList(this));
+//        expectedFrameworksAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeFrameworksList(this));
+//        expectedMobilesAdapter = new DeveloperTechnologiesAdapter(this, MeteorUtility.initializeMobileTechnologiesList(this));
 
-        RecyclerView userExpectedLanguagesRecycler = findViewById(R.id.recycler_profession_developer_languages_expected);
-        RecyclerView userExpectedDatabasesRecycler = findViewById(R.id.recycler_profession_developer_database_expected);
-        RecyclerView userExpectedFrameworksRecycler = findViewById(R.id.recycler_profession_developer_frameworks_expected);
-        RecyclerView userExpectedPreferenceRecycler = findViewById(R.id.recycler_profession_developer_mobile_expected);
-
-        RecyclerView.LayoutManager layoutManagerForLanguages = new GridLayoutManager(this, 3);
-        RecyclerView.LayoutManager layoutManagerForDatabases = new GridLayoutManager(this, 3);
-        RecyclerView.LayoutManager layoutManagerForFrameworks = new GridLayoutManager(this, 3);
-        RecyclerView.LayoutManager layoutManagerForMobile = new GridLayoutManager(this, 3);
-
-        RecyclerView.LayoutManager layoutManagerForUserExpectedLanguages = new GridLayoutManager(this, 3);
-        RecyclerView.LayoutManager layoutManagerForUserExpectedDatabases = new GridLayoutManager(this, 3);
-        RecyclerView.LayoutManager layoutManagerForUserExpectedFrameworks = new GridLayoutManager(this, 3);
-        RecyclerView.LayoutManager layoutManagerForUserExpectedMobile = new GridLayoutManager(this, 3);
-
-        languagesRecycler.setLayoutManager(layoutManagerForLanguages);
-        databasesRecycler.setLayoutManager(layoutManagerForDatabases);
-        frameworksRecycler.setLayoutManager(layoutManagerForFrameworks);
-        mobilesRecycler.setLayoutManager(layoutManagerForMobile);
-
-        userExpectedLanguagesRecycler.setLayoutManager(layoutManagerForUserExpectedLanguages);
-        userExpectedDatabasesRecycler.setLayoutManager(layoutManagerForUserExpectedDatabases);
-        userExpectedFrameworksRecycler.setLayoutManager(layoutManagerForUserExpectedFrameworks);
-        userExpectedPreferenceRecycler.setLayoutManager(layoutManagerForUserExpectedMobile);
-
-        languagesRecycler.setAdapter(languagesAdapter);
-        databasesRecycler.setAdapter(databasesAdapter);
-        frameworksRecycler.setAdapter(frameworkAdapter);
-        mobilesRecycler.setAdapter(mobilesAdapter);
-
-        userExpectedLanguagesRecycler.setAdapter(expectedLanguagesAdapter);
-        userExpectedDatabasesRecycler.setAdapter(expectedDatabasesAdapter);
-        userExpectedFrameworksRecycler.setAdapter(expectedFrameworksAdapter);
-        userExpectedPreferenceRecycler.setAdapter(expectedMobilesAdapter);
-
-        languagesRecycler.setNestedScrollingEnabled(false);
-        databasesRecycler.setNestedScrollingEnabled(false);
-        frameworksRecycler.setNestedScrollingEnabled(false);
-        mobilesRecycler.setNestedScrollingEnabled(false);
-
-        userExpectedLanguagesRecycler.setNestedScrollingEnabled(false);
-        userExpectedDatabasesRecycler.setNestedScrollingEnabled(false);
-        userExpectedFrameworksRecycler.setNestedScrollingEnabled(false);
-        userExpectedPreferenceRecycler.setNestedScrollingEnabled(false);
-
-        RelativeLayout expand1 = findViewById(R.id.layout_profession_developer_language_expander_wrapper);
-        expand1.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_language_expander_wrapper));
 
         contactsFormYesButton = findViewById(R.id.radiobutton_profession_developer_yes);
         contactsFormNoButton = findViewById(R.id.radiobutton_profession_developer_no);
-        TextView webTestTaskLink = findViewById(R.id.text_profession_developer_web_task_link);
-        TextView androidTestTaskLink = findViewById(R.id.text_profession_developer_android_task_link);
+
+        TextView webTestTaskLink = findViewById(R.id.button_profession_developer_task_download_web);
+        TextView sendTaskOnEmailWeb = findViewById(R.id.button_profession_developer_task_send_web);
+
+        TextView androidTestTaskLink = findViewById(R.id.button_profession_developer_task_download_android);
+        TextView sendTaskOnEmailAndroid = findViewById(R.id.button_profession_developer_task_send_android);
+
         TextView agreement = findViewById(R.id.text_profession_developer_agreement);
         Button sendData = findViewById(R.id.button_profession_developer_send);
         LinearLayout codeFilesLayout = findViewById(R.id.layout_professions_developer_files);
-        TextView sendTaskOnEmailWeb = findViewById(R.id.text_profession_developer_web_task_link_email);
-        TextView sendTaskOnEmailAndroid = findViewById(R.id.text_profession_developer_android_task_link_email);
 
         webTestTaskLink.setOnClickListener(this);
+        sendTaskOnEmailWeb.setOnClickListener(this);
+
         androidTestTaskLink.setOnClickListener(this);
+        sendTaskOnEmailAndroid.setOnClickListener(this);
+
         sendData.setOnClickListener(this);
         codeFilesLayout.setOnClickListener(this);
-        sendTaskOnEmailWeb.setOnClickListener(this);
-        sendTaskOnEmailAndroid.setOnClickListener(this);
 
         agreement.setText(getAgreementString(this));
         agreement.setMovementMethod(LinkMovementMethod.getInstance());
         agreement.setHighlightColor(Color.BLUE);
 
-        filesRecycler = findViewById(R.id.recycler_profession_developer_code_files);
-        filesRecycler.setItemAnimator(new FadeInRightAnimator());
-        filesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        filesAdapter = new ProfessionFilesAdapter(this, new ArrayList<File>(), filesRecycler);
-        filesRecycler.setAdapter(filesAdapter);
-        filesRecycler.setNestedScrollingEnabled(false);
 
-        loadPreferences();
+        comment = findViewById(R.id.edit_profession_developer_contacts_comment);
+        comment.setOnTouchListener(new scrollEditTextHelper(comment));
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                loadPreferences();
+            }
+        };
+        Handler handler = new Handler();
+        handler.postDelayed(runnable, 8000);
     }
 
     @Override
@@ -262,16 +236,16 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
             startActivityForResult(intent, TAKE_USER_BRIEF_FILE_REQUEST);
         }
 
-        if (elementId == R.id.text_profession_developer_web_task_link || elementId == R.id.text_profession_developer_android_task_link) {
-            if (elementId == R.id.text_profession_developer_web_task_link) {
+        if (elementId == R.id.button_profession_developer_task_download_web || elementId == R.id.button_profession_developer_task_download_android) {
+            if (elementId == R.id.button_profession_developer_task_download_web) {
                 getTestTaskUrl(1);
             } else {
                 getTestTaskUrl(2);
             }
         }
 
-        if (elementId == R.id.text_profession_developer_web_task_link_email || elementId == R.id.text_profession_developer_android_task_link_email) {
-            if (elementId == R.id.text_profession_developer_web_task_link_email) {
+        if (elementId == R.id.button_profession_developer_task_send_web || elementId == R.id.button_profession_developer_task_send_android) {
+            if (elementId == R.id.button_profession_developer_task_send_web) {
                 showTestTaskDialog(this, getMeteorService("send-test-task/"), 1);
             } else {
                 showTestTaskDialog(this, getMeteorService("send-test-task/"), 2);
@@ -324,6 +298,11 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         if (email.getText() == null || email.getText().length() == 0 || !MeteorUtility.isValidEmail(String.valueOf(email.getText()))) {
             email.setError(getString(R.string.error_validation_mail));
+            isSuccess = false;
+        }
+
+        if (comment.getText() == null || comment.getText().length() == 0) {
+            comment.setError(getString(R.string.error_validation_comment));
             isSuccess = false;
         }
         return isSuccess;
@@ -395,7 +374,6 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         name = findViewById(R.id.edit_profession_developer_contacts_name);
         phone = findViewById(R.id.edit_profession_developer_contacts_phone);
         email = findViewById(R.id.edit_profession_developer_contacts_email);
-        comment = findViewById(R.id.edit_profession_developer_contacts_comment);
         restoreValues();
     }
 
@@ -432,16 +410,98 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
 
         @Override
         protected Void doInBackground(Void... voids) {
+            Log.d("OkHttpTAG", "INSIDE");
+            languagesRecycler = findViewById(R.id.recycler_profession_developer_languages);
+            databasesRecycler = findViewById(R.id.recycler_profession_developer_databases);
+            frameworksRecycler = findViewById(R.id.recycler_profession_developer_frameworks);
+            mobilesRecycler = findViewById(R.id.recycler_profession_developer_mobile);
+            userExpectedLanguagesRecycler = findViewById(R.id.recycler_profession_developer_expected_languages);
+            userExpectedDatabasesRecycler = findViewById(R.id.recycler_profession_developer_expected_databases);
+            userExpectedFrameworksRecycler = findViewById(R.id.recycler_profession_developer_expected_frameworks);
+            userExpectedPreferenceRecycler = findViewById(R.id.recycler_profession_developer_expected_mobile);
+
             languagesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeLanguageList(context));
             databasesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeDatabaseLanguageList(context));
             frameworkAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeFrameworksList(context));
             mobilesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeMobileTechnologiesList(context));
-
             expectedLanguagesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeLanguageList(context));
             expectedDatabasesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeDatabaseLanguageList(context));
             expectedFrameworksAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeFrameworksList(context));
             expectedMobilesAdapter = new DeveloperTechnologiesAdapter(context, MeteorUtility.initializeMobileTechnologiesList(context));
+
+            RecyclerView.LayoutManager layoutManagerForLanguages = new GridLayoutManager(context, 3);
+            RecyclerView.LayoutManager layoutManagerForDatabases = new GridLayoutManager(context, 3);
+            RecyclerView.LayoutManager layoutManagerForFrameworks = new GridLayoutManager(context, 3);
+            RecyclerView.LayoutManager layoutManagerForMobile = new GridLayoutManager(context, 3);
+
+            RecyclerView.LayoutManager layoutManagerForUserExpectedLanguages = new GridLayoutManager(context, 3);
+            RecyclerView.LayoutManager layoutManagerForUserExpectedDatabases = new GridLayoutManager(context, 3);
+            RecyclerView.LayoutManager layoutManagerForUserExpectedFrameworks = new GridLayoutManager(context, 3);
+            RecyclerView.LayoutManager layoutManagerForUserExpectedMobile = new GridLayoutManager(context, 3);
+
+            languagesRecycler.setLayoutManager(layoutManagerForLanguages);
+            databasesRecycler.setLayoutManager(layoutManagerForDatabases);
+            frameworksRecycler.setLayoutManager(layoutManagerForFrameworks);
+            mobilesRecycler.setLayoutManager(layoutManagerForMobile);
+
+            userExpectedLanguagesRecycler.setLayoutManager(layoutManagerForUserExpectedLanguages);
+            userExpectedDatabasesRecycler.setLayoutManager(layoutManagerForUserExpectedDatabases);
+            userExpectedFrameworksRecycler.setLayoutManager(layoutManagerForUserExpectedFrameworks);
+            userExpectedPreferenceRecycler.setLayoutManager(layoutManagerForUserExpectedMobile);
+
+            languagesRecycler.setNestedScrollingEnabled(false);
+            databasesRecycler.setNestedScrollingEnabled(false);
+            frameworksRecycler.setNestedScrollingEnabled(false);
+            mobilesRecycler.setNestedScrollingEnabled(false);
+
+            userExpectedLanguagesRecycler.setNestedScrollingEnabled(false);
+            userExpectedDatabasesRecycler.setNestedScrollingEnabled(false);
+            userExpectedFrameworksRecycler.setNestedScrollingEnabled(false);
+            userExpectedPreferenceRecycler.setNestedScrollingEnabled(false);
+
+            RelativeLayout expand1 = findViewById(R.id.layout_profession_developer_language_expander_wrapper);
+            RelativeLayout expand2 = findViewById(R.id.layout_profession_developer_databases_expander_wrapper);
+            RelativeLayout expand3 = findViewById(R.id.layout_profession_developer_framework_expander_wrapper);
+            RelativeLayout expand4 = findViewById(R.id.layout_profession_developer_mobile_expander_wrapper);
+
+            RelativeLayout expand5 = findViewById(R.id.layout_profession_developer_expected_language_expander_wrapper);
+            RelativeLayout expand6 = findViewById(R.id.layout_profession_developer_expected_databases_expander_wrapper);
+            RelativeLayout expand7 = findViewById(R.id.layout_profession_developer_expected_framework_expander_wrapper);
+            RelativeLayout expand8 = findViewById(R.id.layout_profession_developer_expected_mobile_expander_wrapper);
+
+            expand1.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_language_expander_wrapper));
+            expand2.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_databases_expander_wrapper));
+            expand3.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_framework_expander_wrapper));
+            expand4.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_mobile_expander_wrapper));
+
+            expand5.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_expected_language_expander_wrapper));
+            expand6.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_expected_databases_expander_wrapper));
+            expand7.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_expected_framework_expander_wrapper));
+            expand8.setOnClickListener(new ExpanderLayoutHelper(R.id.layout_profession_developer_expected_mobile_expander_wrapper));
+
+            filesRecycler = findViewById(R.id.recycler_profession_developer_code_files);
+            filesRecycler.setItemAnimator(new FadeInRightAnimator());
+            filesRecycler.setLayoutManager(new GridLayoutManager(context, 2));
+            filesAdapter = new ProfessionFilesAdapter(context, new ArrayList<File>(), filesRecycler);
+            filesRecycler.setAdapter(filesAdapter);
+            filesRecycler.setNestedScrollingEnabled(false);
             return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            languagesRecycler.setAdapter(languagesAdapter);
+            databasesRecycler.setAdapter(databasesAdapter);
+            frameworksRecycler.setAdapter(frameworkAdapter);
+            mobilesRecycler.setAdapter(mobilesAdapter);
+            userExpectedLanguagesRecycler.setAdapter(expectedLanguagesAdapter);
+            userExpectedDatabasesRecycler.setAdapter(expectedDatabasesAdapter);
+            userExpectedFrameworksRecycler.setAdapter(expectedFrameworksAdapter);
+            userExpectedPreferenceRecycler.setAdapter(expectedMobilesAdapter);
+            Log.d("OkHttpTAG", "OUTSIDE");
+            hideLoadingDialog();
         }
     }
 
@@ -460,12 +520,13 @@ public class DeveloperProfessionActivity extends AbstractActivity implements Vie
         public void onClick(View v) {
             if (expandableLayout.isCollapsed()) {
                 expandableLayout.expand();
-                expandWrapper.getChildAt(1).animate().rotation(180f).setDuration(1000);
+                expandWrapper.getChildAt(1).animate().rotation(90f).setDuration(1000);
             } else {
                 expandableLayout.collapse();
                 arrow.animate().rotation(0).setDuration(1000);
             }
         }
+
     }
 
     private void initializeLists(final Context context) {

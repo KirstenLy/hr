@@ -60,4 +60,6 @@ dependencies {
 
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.github.chuross:expandable-layout:1.0.5'
+
+    implementation 'com.codesgood:justifiedtextview:1.1.0'
 }

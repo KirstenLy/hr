@@ -19,32 +19,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="@dimen/padding_small">
+            android:orientation="vertical">
 
             <!-- Form with question about skills -->
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_default"
-                android:background="@drawable/border_solid_orange">
+                android:layout_gravity="left"
+                android:layout_marginLeft="@dimen/margin_default"
+                android:gravity="left">
 
                 <TextView
                     android:id="@+id/text_profession_manager_question"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:paddingTop="@dimen/padding_default"
                     android:paddingBottom="@dimen/padding_default"
-                    android:text="@string/manager_question_skill" />
+                    android:text="@string/manager_question_skill"
+                    android:textSize="@dimen/text_size_medium" />
 
                 <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_profession_manager_question"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
-                    android:paddingLeft="@dimen/padding_default"
                     android:paddingRight="@dimen/padding_default"
                     android:paddingBottom="@dimen/padding_default">
 
@@ -54,7 +53,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_default"
                         android:paddingRight="@dimen/padding_default"
-                        android:text="@string/developer_question_skill_answer_yes" />
+                        android:text="@string/default_yes" />
 
                     <RadioButton
                         android:id="@+id/radiobutton_profession_developer_no"
@@ -69,34 +68,25 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_profession_title"
-                android:layout_marginLeft="@dimen/padding_profession_title"
-                android:text="@string/developer_technology_languages_title" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_default"
-                android:layout_marginBottom="@dimen/margin_default"
-                android:background="@drawable/button_shadow"
+                android:background="@drawable/gr"
                 android:gravity="center"
                 android:text="@string/developer_language_web_title"
+                android:textColor="#696969"
                 android:textSize="@dimen/text_size_default" />
-
 
             <!-- Technologies Recycles -->
             <RelativeLayout
                 android:id="@+id/layout_profession_developer_language_expander_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
-                    android:paddingStart="@dimen/padding_default"
-                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingLeft="@dimen/padding_profession_title"
                     android:text="@string/developer_technology_languages_title"
                     android:textSize="@dimen/text_size_big" />
 
@@ -127,333 +117,477 @@
                 </com.github.chuross.library.ExpandableLayout>
             </RelativeLayout>
 
-            <TextView
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
+
+            <RelativeLayout
+                android:id="@+id/layout_profession_developer_databases_expander_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_profession_title"
-                android:layout_marginLeft="@dimen/padding_profession_title"
-                android:layout_marginTop="@dimen/padding_default"
-                android:text="@string/developer_technology_sql_title" />
+                android:padding="@dimen/padding_default">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/padding_profession_title"
+                    android:text="@string/developer_technology_sql_title"
+                    android:textSize="@dimen/text_size_big" />
+
+                <ImageView
+                    android:id="@+id/img_profession_developer_sql_arrow"
+                    android:layout_width="@dimen/image_size_small"
+                    android:layout_height="@dimen/image_size_small"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginRight="@dimen/margin_default"
+                    android:src="@drawable/ic_expand" />
+
+                <com.github.chuross.library.ExpandableLayout
+                    android:id="@+id/layout_profession_developer_sql_expander"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_profession_developer_sql_arrow"
+                    app:exl_duration="1000">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_profession_developer_databases"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_small">
+
+                    </android.support.v7.widget.RecyclerView>
+                </com.github.chuross.library.ExpandableLayout>
+            </RelativeLayout>
 
             <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_profession_developer_database"
+            <RelativeLayout
+                android:id="@+id/layout_profession_developer_framework_expander_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_small">
+                android:padding="@dimen/padding_default">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/padding_profession_title"
+                    android:text="@string/developer_technology_framework_title"
+                    android:textSize="@dimen/text_size_big" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_profession_title"
-                android:layout_marginLeft="@dimen/padding_profession_title"
-                android:layout_marginTop="@dimen/padding_default"
-                android:text="@string/developer_technology_framework_title" />
+                <ImageView
+                    android:id="@+id/img_profession_developer_framework_arrow"
+                    android:layout_width="@dimen/image_size_small"
+                    android:layout_height="@dimen/image_size_small"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginRight="@dimen/margin_default"
+                    android:src="@drawable/ic_expand" />
+
+
+                <com.github.chuross.library.ExpandableLayout
+                    android:id="@+id/layout_profession_developer_framework_expander"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_profession_developer_framework_arrow"
+                    app:exl_duration="1000">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_profession_developer_frameworks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_small">
+
+                    </android.support.v7.widget.RecyclerView>
+                </com.github.chuross.library.ExpandableLayout>
+            </RelativeLayout>
 
             <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_profession_developer_frameworks"
+            <RelativeLayout
+                android:id="@+id/layout_profession_developer_mobile_expander_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_small">
+                android:padding="@dimen/padding_default">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/padding_profession_title"
+                    android:text="@string/developer_technology_mobile_title"
+                    android:textSize="@dimen/text_size_big" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_profession_title"
-                android:layout_marginLeft="@dimen/padding_profession_title"
-                android:layout_marginTop="@dimen/padding_default"
-                android:text="@string/developer_technology_mobile_title" />
+                <ImageView
+                    android:id="@+id/img_profession_developer_mobile_arrow"
+                    android:layout_width="@dimen/image_size_small"
+                    android:layout_height="@dimen/image_size_small"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginRight="@dimen/margin_default"
+                    android:src="@drawable/ic_expand" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_profession_developer_mobile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_small">
+                <com.github.chuross.library.ExpandableLayout
+                    android:id="@+id/layout_profession_developer_mobile_expander"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_profession_developer_mobile_arrow"
+                    app:exl_duration="1000">
 
-            </android.support.v7.widget.RecyclerView>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_profession_developer_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_default">
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="@dimen/margin_default"
-                android:background="@color/colorPrimaryDark" />
+                    </android.support.v7.widget.RecyclerView>
+                </com.github.chuross.library.ExpandableLayout>
+            </RelativeLayout>
             <!-- /Technologies Recycles -->
 
             <!-- Technologies clients -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_default"
-                android:layout_marginBottom="@dimen/margin_default"
+                android:background="@drawable/gr"
                 android:gravity="center"
                 android:text="@string/developer_language_web_title_intent"
+                android:textColor="#696969"
                 android:textSize="@dimen/text_size_default" />
 
-            <TextView
+            <RelativeLayout
+                android:id="@+id/layout_profession_developer_expected_language_expander_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_profession_title"
-                android:layout_marginLeft="@dimen/padding_profession_title"
-                android:text="@string/developer_technology_languages_title" />
+                android:padding="@dimen/padding_default">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/padding_profession_title"
+                    android:text="@string/developer_technology_languages_title"
+                    android:textSize="@dimen/text_size_big" />
+
+                <ImageView
+                    android:id="@+id/img_profession_developer_expected_language_arrow"
+                    android:layout_width="@dimen/image_size_small"
+                    android:layout_height="@dimen/image_size_small"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginRight="@dimen/margin_default"
+                    android:src="@drawable/ic_expand" />
+
+                <com.github.chuross.library.ExpandableLayout
+                    android:id="@+id/layout_profession_developer_expected_language_expander"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_profession_developer_expected_language_arrow"
+                    app:exl_duration="1000">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_profession_developer_expected_languages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_small">
+
+                    </android.support.v7.widget.RecyclerView>
+                </com.github.chuross.library.ExpandableLayout>
+            </RelativeLayout>
 
             <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
-            <!-- Technologies Recycles -->
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_profession_developer_languages_expected"
+            <RelativeLayout
+                android:id="@+id/layout_profession_developer_expected_databases_expander_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_small">
+                android:padding="@dimen/padding_default">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/padding_profession_title"
+                    android:text="@string/developer_technology_sql_title"
+                    android:textSize="@dimen/text_size_big" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_profession_title"
-                android:layout_marginLeft="@dimen/padding_profession_title"
-                android:layout_marginTop="@dimen/padding_default"
-                android:text="@string/developer_technology_sql_title" />
+                <ImageView
+                    android:id="@+id/img_profession_developer_expected_sql_arrow"
+                    android:layout_width="@dimen/image_size_small"
+                    android:layout_height="@dimen/image_size_small"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginRight="@dimen/margin_default"
+                    android:src="@drawable/ic_expand" />
+
+
+                <com.github.chuross.library.ExpandableLayout
+                    android:id="@+id/layout_profession_developer_expected_sql_expander"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_profession_developer_expected_sql_arrow"
+                    app:exl_duration="1000">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_profession_developer_expected_databases"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_small">
+
+                    </android.support.v7.widget.RecyclerView>
+                </com.github.chuross.library.ExpandableLayout>
+            </RelativeLayout>
 
             <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_profession_developer_database_expected"
+            <RelativeLayout
+                android:id="@+id/layout_profession_developer_expected_framework_expander_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_small">
+                android:padding="@dimen/padding_default">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/padding_profession_title"
+                    android:text="@string/developer_technology_framework_title"
+                    android:textSize="@dimen/text_size_big" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_profession_title"
-                android:layout_marginLeft="@dimen/padding_profession_title"
-                android:layout_marginTop="@dimen/padding_default"
-                android:text="@string/developer_technology_framework_title" />
+                <ImageView
+                    android:id="@+id/img_profession_developer_expected_framework_arrow"
+                    android:layout_width="@dimen/image_size_small"
+                    android:layout_height="@dimen/image_size_small"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginRight="@dimen/margin_default"
+                    android:src="@drawable/ic_expand" />
+
+
+                <com.github.chuross.library.ExpandableLayout
+                    android:id="@+id/layout_profession_developer_expected_framework_expander"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_profession_developer_expected_framework_arrow"
+                    app:exl_duration="1000">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_profession_developer_expected_frameworks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_small">
+
+                    </android.support.v7.widget.RecyclerView>
+                </com.github.chuross.library.ExpandableLayout>
+            </RelativeLayout>
 
             <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_profession_developer_frameworks_expected"
+            <RelativeLayout
+                android:id="@+id/layout_profession_developer_expected_mobile_expander_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_small">
+                android:padding="@dimen/padding_default">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/padding_profession_title"
+                    android:text="@string/developer_technology_mobile_title"
+                    android:textSize="@dimen/text_size_big" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_profession_title"
-                android:layout_marginLeft="@dimen/padding_profession_title"
-                android:layout_marginTop="@dimen/padding_default"
-                android:text="@string/developer_technology_mobile_title" />
+                <ImageView
+                    android:id="@+id/img_profession_developer_expected_mobile_arrow"
+                    android:layout_width="@dimen/image_size_small"
+                    android:layout_height="@dimen/image_size_small"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_default"
+                    android:layout_marginRight="@dimen/margin_default"
+                    android:src="@drawable/ic_expand" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
+                <com.github.chuross.library.ExpandableLayout
+                    android:id="@+id/layout_profession_developer_expected_mobile_expander"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_profession_developer_expected_mobile_arrow"
+                    app:exl_duration="1000">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_profession_developer_mobile_expected"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_small">
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_profession_developer_expected_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_default">
 
-            </android.support.v7.widget.RecyclerView>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="@dimen/margin_default"
-                android:background="@color/colorPrimaryDark" />
+                    </android.support.v7.widget.RecyclerView>
+                </com.github.chuross.library.ExpandableLayout>
+            </RelativeLayout>
             <!-- Technologies client -->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
             <!-- Download test tasks form -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_small"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="@dimen/padding_default"
-                    android:text="@string/profession_download_task" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/border_solid_orange"
-                    android:orientation="vertical"
-                    android:padding="@dimen/padding_default">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:orientation="horizontal">
-
-
-                        <ImageView
-                            android:layout_width="@dimen/image_size_small"
-                            android:layout_height="@dimen/image_size_small"
-                            android:src="@drawable/ic_download_arrow" />
-
-                        <TextView
-                            android:id="@+id/text_profession_developer_web_task_link"
-                            style="@style/linkStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/developer_download_web" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/image_size_small"
-                            android:layout_height="@dimen/image_size_small"
-                            android:src="@drawable/ic_send_email" />
-
-                        <TextView
-                            android:id="@+id/text_profession_developer_web_task_link_email"
-                            style="@style/linkStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/profession_send_task_email" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="@dimen/margin_default"
-                    android:background="@drawable/border_solid_orange"
-                    android:orientation="vertical"
-                    android:padding="@dimen/padding_default">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/image_size_small"
-                            android:layout_height="@dimen/image_size_small"
-                            android:src="@drawable/ic_download_arrow" />
-
-                        <TextView
-                            android:id="@+id/text_profession_developer_android_task_link"
-                            style="@style/linkStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/developer_download_android" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/image_size_small"
-                            android:layout_height="@dimen/image_size_small"
-                            android:src="@drawable/ic_send_email" />
-
-                        <TextView
-                            android:id="@+id/text_profession_developer_android_task_link_email"
-                            style="@style/linkStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/profession_send_task_email" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-            <!-- /Download test tasks form -->
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
-
-            <!-- Field with text about necessary field -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_large"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/image_size_small"
-                    android:layout_height="@dimen/image_size_small"
-                    android:src="@drawable/ic_sun" />
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/default_necessary_field" />
-            </LinearLayout><!-- /Field with text about necessary field -->
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/padding_profession_title"
+                    android:text="@string/developer_download_web"
+                    android:textSize="@dimen/text_size_big" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <com.andexert.library.RippleView
+                        rv_centered="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.5"
+                        android:padding="@dimen/padding_small">
+
+                        <Button
+                            android:id="@+id/button_profession_developer_task_download_web"
+                            style="@style/ButtonColor"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="@string/default_download" />
+                    </com.andexert.library.RippleView>
+
+                    <com.andexert.library.RippleView
+                        rv_centered="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:padding="@dimen/padding_small">
+
+                        <Button
+                            android:id="@+id/button_profession_developer_task_send_web"
+                            style="@style/ButtonColor"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:includeFontPadding="false"
+                            android:padding="@dimen/padding_small"
+                            android:text="@string/default_send_on_email" />
+                    </com.andexert.library.RippleView>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/padding_profession_title"
+                    android:text="@string/developer_download_android"
+                    android:textSize="@dimen/text_size_big" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <com.andexert.library.RippleView
+                        rv_centered="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.5"
+                        android:padding="@dimen/padding_small">
+
+                        <Button
+                            android:id="@+id/button_profession_developer_task_download_android"
+                            style="@style/ButtonColor"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="@string/default_download" />
+                    </com.andexert.library.RippleView>
+
+                    <com.andexert.library.RippleView
+                        rv_centered="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:padding="@dimen/padding_small">
+
+                        <Button
+                            android:id="@+id/button_profession_developer_task_send_android"
+                            style="@style/ButtonColor"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:includeFontPadding="false"
+                            android:padding="@dimen/padding_small"
+                            android:text="@string/default_send_on_email" />
+                    </com.andexert.library.RippleView>
+                </LinearLayout>
+            </LinearLayout>
+            <!-- /Download test tasks form -->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
             <!-- Form with user's callback data -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_large"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -461,13 +595,13 @@
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="@dimen/padding_default"
                     android:paddingRight="@dimen/padding_default"
-                    android:paddingBottom="@dimen/padding_default">
+                    android:paddingBottom="@dimen/padding_default"
+                    app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
                     <EditText
                         android:id="@+id/edit_profession_developer_contacts_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_sun"
                         android:gravity="start"
                         android:hint="@string/developer_hint_name"
                         android:inputType="textPersonName" />
@@ -479,13 +613,13 @@
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="@dimen/padding_default"
                     android:paddingRight="@dimen/padding_default"
-                    android:paddingBottom="@dimen/padding_default">
+                    android:paddingBottom="@dimen/padding_default"
+                    app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
                     <EditText
                         android:id="@+id/edit_profession_developer_contacts_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_sun"
                         android:gravity="start"
                         android:hint="@string/developer_hint_phone"
                         android:inputType="phone" />
@@ -498,13 +632,13 @@
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="@dimen/padding_default"
                     android:paddingRight="@dimen/padding_default"
-                    android:paddingBottom="@dimen/padding_default">
+                    android:paddingBottom="@dimen/padding_default"
+                    app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
                     <EditText
                         android:id="@+id/edit_profession_developer_contacts_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_sun"
                         android:gravity="start"
                         android:hint="@string/developer_hint_email"
                         android:inputType="textEmailAddress" />
@@ -516,7 +650,8 @@
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="@dimen/padding_default"
                     android:paddingRight="@dimen/padding_default"
-                    android:paddingBottom="@dimen/padding_default">
+                    android:paddingBottom="@dimen/padding_default"
+                    app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
                     <EditText
                         android:id="@+id/edit_profession_developer_contacts_comment"
@@ -526,49 +661,50 @@
                         android:hint="@string/developer_hint_comment"
                         android:inputType="textMultiLine"
                         android:lines="4"
-                        android:maxLines="4" />
+                        android:maxLines="4"
+                        android:overScrollMode="always"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars="vertical" />
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout><!-- /Form with user's callback data -->
 
             <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
             <!-- Form with user's test task or code file -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_small"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="@dimen/padding_default"
-                    android:text="@string/developer_send_task" />
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/padding_default"
+                android:paddingTop="@dimen/padding_small"
+                android:paddingRight="@dimen/padding_default">
 
                 <LinearLayout
                     android:id="@+id/layout_professions_developer_files"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingBottom="@dimen/padding_default">
+                    android:layout_gravity="center_horizontal">
 
                     <ImageView
                         android:layout_width="@dimen/image_size_small"
                         android:layout_height="@dimen/image_size_small"
-                        android:src="@drawable/ic_add_file" />
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/margin_default"
+                        android:src="@drawable/ic_paper_clip" />
 
                     <TextView
-                        style="@style/linkStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/default_insert_file" />
+                        android:layout_gravity="center_horizontal"
+                        android:padding="@dimen/padding_default"
+                        android:text="@string/developer_send_task"
+                        android:textSize="@dimen/text_size_medium" />
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
@@ -582,20 +718,15 @@
             </LinearLayout><!-- /Form with user's test task or code file -->
 
             <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
-
-            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_default"
-                android:text="@string/developer_text_github" />
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="11dp"
+                android:paddingLeft="@dimen/padding_default"
                 android:paddingRight="@dimen/padding_default"
                 android:paddingBottom="@dimen/padding_default">
 
@@ -610,10 +741,10 @@
             </android.support.design.widget.TextInputLayout>
 
             <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorPrimaryDark" />
-
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/view_b"
+                android:visibility="visible" />
 
             <!-- Send data button -->
             <LinearLayout
@@ -623,14 +754,13 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:orientation="vertical">
 
-                <TextView
+                <com.codesgood.views.JustifiedTextView
                     android:id="@+id/text_profession_developer_agreement"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_default"
-                    android:paddingLeft="@dimen/padding_default"
-                    android:paddingRight="@dimen/padding_default"
-                    android:text="@string/app_name"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
                     android:textAlignment="center"
                     android:textColor="@color/colorGrey"
                     android:textColorLink="@android:color/holo_blue_dark" />
@@ -645,6 +775,7 @@
 
                     <Button
                         android:id="@+id/button_profession_developer_send"
+                        style="@style/ButtonColor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

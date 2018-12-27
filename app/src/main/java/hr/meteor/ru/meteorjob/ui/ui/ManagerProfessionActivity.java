@@ -93,16 +93,20 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         contactsFormYesButton = findViewById(R.id.radiobutton_profession_manager_yes);
         contactsFormNoButton = findViewById(R.id.radiobutton_profession_manager_no);
         invisibleLayoutWithExtraQuestion = findViewById(R.id.layout_professions_manager_contacts_invisible);
+        comment = findViewById(R.id.edit_profession_manager_contacts_comment);
+        question = findViewById(R.id.edit_profession_manager_contacts_question);
+
         LinearLayout briefFilesLayout = findViewById(R.id.layout_professions_manager_files_brief);
         Button sendData = findViewById(R.id.button_profession_manager_send);
-        TextInputEditText editText = findViewById(R.id.edit_profession_manager_contacts_question);
 
         contactsFormYesButton.setOnClickListener(this);
         contactsFormNoButton.setOnClickListener(this);
+        comment.setOnTouchListener(new scrollEditTextHelper(comment));
+        question.setOnTouchListener(new scrollEditTextHelper(question));
         briefFilesLayout.setOnClickListener(this);
         sendData.setOnClickListener(this);
 
-        correctMultiplyTextSize(editText, this);
+        correctMultiplyTextSize(question, this);
 
         TextView agreement = findViewById(R.id.text_profession_manager_agreement);
         agreement.setText(getAgreementString(this));
@@ -272,8 +276,6 @@ public class ManagerProfessionActivity extends AbstractActivity implements View.
         name = findViewById(R.id.edit_profession_manager_contacts_name);
         phone = findViewById(R.id.edit_profession_manager_contacts_phone);
         email = findViewById(R.id.edit_profession_manager_contacts_email);
-        comment = findViewById(R.id.edit_profession_manager_contacts_comment);
-        question = findViewById(R.id.edit_profession_manager_contacts_question);
         restoreValues();
     }
 
